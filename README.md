@@ -10,6 +10,7 @@ Notes for my master thesis @ IST
 * [IPFS and package managers](https://github.com/ipfs/notes/issues/171)
 * [Discussions and Planning about getting PubSub on IPFS/libp2p](https://github.com/libp2p/research-pubsub)
 * [Implement databases over IPFS using Persistent Balanced Trees](https://github.com/ipfs/notes/issues/161)
+* [Thoughts on the next level of content routing for ipfs](https://github.com/ipfs/notes/issues/162)
 
 More here [https://github.com/ipfs/notes](https://github.com/ipfs/notes)
 
