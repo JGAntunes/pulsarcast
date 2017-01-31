@@ -12,5 +12,7 @@ Notes for my master thesis @ IST
 More here [https://github.com/ipfs/notes](https://github.com/ipfs/notes)
 
 ## Things I still need to grasp
+
 https://github.com/ipld/specs/tree/master/ipld
+
 https://github.com/ipfs/faq/issues/16
