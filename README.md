@@ -19,7 +19,7 @@ More here [https://github.com/ipfs/notes](https://github.com/ipfs/notes)
 
 Scenario: Assembling a reliable and fast pub/sub network on top of IPFS
 
-Allow for the propagation of information in a structured manner using a pub sub pattern. The challenges could possibly be, how to route information across peers without putting too much pressure on the network (either way pub->sub, sub->pub) while giving basic guarantees like basic reliability and fast enough to be used in a real world scenario.
+Allow for the propagation of information in a structured manner using a pub sub pattern. The challenges could possibly be, how to route information across peers without putting too much pressure on the network (either way pub->sub, sub->pub) while giving basic guarantees like basic reliability and fast enough to be used in a real world scenario. Might be interesting to pursue the notion of "authenticated streams" mentioned [here](https://github.com/libp2p/research-pubsub/issues/9#issuecomment-239910454).
 
 * [IPFS and package managers](https://github.com/ipfs/notes/issues/171)
 
