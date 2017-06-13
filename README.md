@@ -1,41 +1,16 @@
-# msc-notes
-Notes for my master thesis @ IST
+# msc-thesis
+My master thesis @ IST
 
-## Possible topics to cover
+## Proposal - IPFS Pub/Sub
 
-* [S3-backed IPFS](https://github.com/ipfs/notes/issues/214) - (might be too simple/ not that interesting for a project like this?)
-* [Real world IPFS scenarios we want to test](https://github.com/ipfs/notes/issues/211) - (goal might be to build an application which enables us to test some of the desired metrics here and extract conclusions on how well IPFS performs under certain scenarios?)
-* [Making IPFS accessible for distributed archival](https://github.com/ipfs/notes/issues/210)
-* [DSL for specifying a libp2p node](https://github.com/ipfs/notes/issues/209)
-* [IPFS and package managers](https://github.com/ipfs/notes/issues/171)
-* [Discussions and Planning about getting PubSub on IPFS/libp2p](https://github.com/libp2p/research-pubsub)
-* [Implement databases over IPFS using Persistent Balanced Trees](https://github.com/ipfs/notes/issues/161)
-* [Thoughts on the next level of content routing for ipfs](https://github.com/ipfs/notes/issues/162)
+### Abstract
+One of the most prominent ways to distribute information nowadays is through the use of notifications or other methods which involve a producer of content (publisher) that shares content with other interested parts (subscribers). This publisher subscriber pattern is quite powerful and quite useful nowadays as it make it possible to build highly scalable systems at a low bandwidth cost. The goal for this work will be to have a working implementation of a pub/sub communication system into IPFS, a peer-to-peer hypermedia protocol, allowing for a fully distributed peer-to-peer pub/sub system. It is important though for this system to have a basic set of properties such as to offer reliability and/or speed, making it suitable to run different real life scenarios.
 
-More here [https://github.com/ipfs/notes](https://github.com/ipfs/notes)
+### Current implementations
+Currently IPFS has a simple working implementation of a pub/sub system under an experimental flag. This implementation relies on a simple network flood and as such is quite inefficient and costly.
+Some other implementations/architectures in the decentralized systems field that could act as reference for this work are TERA (Baldoni et al, 2007) a topic based pub sub system over an unstructured network, Meghdoot (Gupta et al, 2004) a content based pub sub system over DHT’s, Sub-2-Sub (Voulgaris et al, IPTPS 2006) a content based pub sub system over an unstructured network. All of these references were extracted from XL peer-to-peer pub/sub systems (Kermarrec and Triantafillou, 2013).
 
-## Chosen topics
-* [Discussions and Planning about getting PubSub on IPFS/libp2p](https://github.com/libp2p/research-pubsub)
-
-Scenario: Assembling a reliable and fast pub/sub network on top of IPFS
-
-Allow for the propagation of information in a structured manner using a pub sub pattern. The challenges could possibly be, how to route information across peers without putting too much pressure on the network (either way pub->sub, sub->pub) while giving basic guarantees like basic reliability and fast enough to be used in a real world scenario. Might be interesting to pursue the notion of "authenticated streams" mentioned [here](https://github.com/libp2p/research-pubsub/issues/9#issuecomment-239910454).
-
-* [IPFS and package managers](https://github.com/ipfs/notes/issues/171)
-
-Scenario: Package managers over IPFS
-
-What would be the main benefits of having package managers over IPFS? A truly distributed package manager, no need for complex infrastructures to deal with a centralized source which can easily become a bottleneck. There are already some implementations like [gx](https://github.com/whyrusleeping/gx) which might be a good starting point to look at but probably lacks in terms of having a well defined and established package manager to compare it to (unlike Node and NPM for example, or dpkg and debian). By the end, one of the main goals here would be to compare any possible implementation(s) over IPFS with a real live one in terms of resilience, performance, correctness, etc.
-
-* [Making IPFS accessible for distributed archival](https://github.com/ipfs/notes/issues/210)
-
-Scenario: Archiving large files using IPFS
-
-The archival of big datasets on IPFS could be a way to offload some of the burden to the peers while adding other important features like replication (and even maybe have specific content closer to where it's useful, although this might be way out of hand to what the focus here is). A possible goal could be to develop a solution where one could make a big dataset available without putting too much pressure on the network and that could also guarantee some other nice to have features such as replication(?)
-
-
-## Things I still need to grasp
-
-https://github.com/ipld/specs/tree/master/ipld
-
-https://github.com/ipfs/faq/issues/16
+### Challenges and problems to solve
+The solution I would like to propose would be inline with what is the IPFS philosophy to have a decoupled structure of small components that allow developers and users to use what’s best fit for their specific needs. As so, I think it would stand for an interesting challenge to have a pub/sub module (through the already used “libp2p interface” and making use of what it already has to offer) that one could easily configure according to it’s own needs, with parameters such as reliability (do I need to make sure every peer gets my messages or not?) and authentication (do I need my messages to be authenticated?).
+The problems here arise when we aim at dealing with specific parts of the system, such as the subscription model and the event delivery. Should we use topic based subscriptions only? Should we allow for content based subscriptions also? If so how can one leverage this with IPFS?  What about event delivery (routing)? Should peers handle routing in a structured manner or not? What can we do to make the event dissemination not put too much pressure on the network?
+By the end of this my goal would be to have an highly adaptive module that would allow developers and users to get a pub/sub system that is easy to reason with, configurable and allows them to make the most out of the network topology they’re working with.
