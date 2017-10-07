@@ -1,6 +1,10 @@
 # msc-thesis
 My master thesis @ IST
 
+For a recent track of the work being done check the [github issues](https://github.com/JGAntunes/msc-thesis/issues).
+
+For the relevant literature covered so far check [here](covered-literature.md).
+
 ## Proposal - IPFS Pub/Sub
 
 ### Abstract
