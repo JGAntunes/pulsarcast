@@ -37,6 +37,7 @@
 
 - New Year 🍾
 - Only 1 day to slack off 😉
+- ### PROJECT REPORT DEADLINE 📝📎 - Jan 05
 
 #### Week - Jan 08
 #### Week - Jan 15
@@ -73,7 +74,50 @@
 #### Week - May 21
 #### Week - May 28
 
-```
-... Add the rest ;)
-```
+## June
 
+#### Week - June 04
+#### Week - June 11
+#### Week - June 18
+#### Week - June 25
+
+## July
+
+#### Week - July 02
+#### Week - July 09
+#### Week - July 16
+#### Week - July 23
+#### Week - July 30
+
+## August
+
+#### Week - August 06
+#### Week - August 13
+#### Week - August 20
+#### Week - August 27
+
+## September
+
+#### Week - September 03
+#### Week - September 10
+#### Week - September 17
+#### Week - September 24
+
+## October
+
+#### Week - October 01
+#### Week - October 08
+#### Week - October 15 
+- ### SUMMARY DELIVERY DEADLINE 📝📎 - October 17
+#### Week - October 22
+#### Week - October 29
+
+## November
+
+#### Week - November 05
+#### Week - November 12
+- ### PRESENTATION DEADLINE 📝📎 - November 13
+#### Week - November 19
+#### Week - November 26
+- ### FINAL DELIVERY DEADLINE 📝📎 - November 27
+- Go to the beach and drink Mojitos ⛱️🍹🍹⛱️
