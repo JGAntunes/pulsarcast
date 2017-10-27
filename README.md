@@ -1,4 +1,4 @@
-# `Distributed P2P PubSub` - <Cool name  [SOON™](http://i0.kym-cdn.com/photos/images/original/000/117/014/GsE3k.jpg)>
+# `Scaling PubSub over the Distributed Web`
 
 - João Antunes M.Sc Thesis
 - Universidade de Lisboa, Instituto Superior Técnico
