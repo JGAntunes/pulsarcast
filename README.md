@@ -26,7 +26,7 @@ By the end of this my goal would be to have an highly adaptive module that would
 
 ## Documents
 
-- [Thesis Project Document](./thesis-project-doc)
+- [Thesis Project Document](./project-report/report.pdf)
 - [Meeting Notes](./meeting-notes)
 - [Timeline](./TIMELINE.md)
 - [Covered Literature](./covered-literature.md)
