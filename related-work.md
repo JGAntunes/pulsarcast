@@ -12,10 +12,10 @@ A lot of these systems rely on the publish/subscribe paradigm and a lot of work 
 
 Systems overview
 
-| Design Dimensions \ Systems | Gryphon | Siena | Jedi | Scribe | Meghdoot | Hermes | Rebecca | PastryStrings |     Tera    | SpiderCast | Mercury | Sub-2-Sub | PastryStrings |
-|-----------------------------|---------|-------|------|--------|----------|--------|---------|---------------|:-----------:|------------|---------|-----------|---------------|
-| Expressiveness              |         |       |      |        |          |        |         |               | Topic based |            |         |           |               |
-| State                       |         |       |      |        |          |        |         |               |             |            |         |           |               |
-| Network dependence          |         |       |      |        |          |        |         |               |             |            |         |           |               |
-| Locality awareness          |         |       |      |        |          |        |         |               |             |            |         |           |               |
-| Guarantees                  |         |       |      |        |          |        |         |               | Best effort |            |         |           |               |
+| Design Dimensions \ Systems | Gryphon | Siena | Jedi | Scribe | Meghdoot | Hermes | Rebecca | PastryStrings |     Tera    | SpiderCast | Mercury | Sub-2-Sub | Poldercast |
+|-----------------------------|---------|-------|------|--------|----------|--------|---------|---------------|:-----------:|------------|---------|-----------|------------|
+| Expressiveness              |         |       |      |        |          |        |         |               | Topic based |            |         |           |            |
+| State                       |         |       |      |        |          |        |         |               |             |            |         |           |            |
+| Network dependence          |         |       |      |        |          |        |         |               |             |            |         |           |            |
+| Locality awareness          |         |       |      |        |          |        |         |               |             |            |         |           |            |
+| Guarantees                  |         |       |      |        |          |        |         |               | Best effort |            |         |           |            |
