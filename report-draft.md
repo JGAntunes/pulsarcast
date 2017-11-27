@@ -53,10 +53,9 @@ Siena is similar to Jedi, but it forms a graph broker topology. (* still more to
 
 ### Poldercast
 
-# See Bayeux, Spidercast and Poldercast
+Note: See Bayeux and Spidercast
 
-
-Systems overview
+# Systems overview
 
 | Design Dimensions \ Systems                 | Gryphon | Siena | Jedi |   Scribe   | Meghdoot | Hermes | Rebecca | PastryStrings |     Tera    | SpiderCast | Mercury | Sub-2-Sub | Bayeux | Poldercast |
 |---------------------------------------------|:-------:|:-----:|:----:|:----------:|:--------:|:------:|:-------:|:-------------:|:-----------:|:----------:|:-------:|:---------:|:------:|:----------:|
