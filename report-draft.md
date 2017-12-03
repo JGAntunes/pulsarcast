@@ -57,18 +57,22 @@ Note: See Bayeux and Spidercast
 
 # Systems overview
 
-| Design Dimensions \ Systems                 | Gryphon | Siena | Jedi |   Scribe   | Meghdoot | Hermes | Rebecca | PastryStrings |     Tera    | SpiderCast | Mercury | Sub-2-Sub | Bayeux | Poldercast |
-|---------------------------------------------|:-------:|:-----:|:----:|:----------:|:--------:|:------:|:-------:|:-------------:|:-----------:|:----------:|:-------:|:---------:|:------:|:----------:|
-| Expressiveness                              |         |       |      |            |          |        |         |               | Topic based |            |         |           |        |            |
-| Central nodes                               |         |       |      | Rendezvous |          |        |         |               |             |            |         |           |        |            |
-| Network overlay                             |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
-| Average degree (?)                          |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
-| Structure                                   |         |       |      |    Tree    |          |        |         |               |             |            |         |           |        |            |
-| Locality awareness                          |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
-| Support for fault tolerance                 |         |       |      |            |          |        |         |               | Best effort |            |         |           |        |            |
-| Relay-free routing                          |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
-| Delivery guarantees in the absence of churn |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
-| Message duplication factor                  |         |       |      |            |          |        |         |               |             |            |         |           |        |            |
+| Systems / Properties | Expressiveness | Central nodes | Network overlay | Average degree (?) | Structure | Locality awareness | Support for fault tolerance | Relay-free routing | Delivery guarantees in the absence of churn | Message duplication factor |
+|----------------------|:--------------:|:-------------:|:---------------:|:------------------:|:---------:|:------------------:|:---------------------------:|:------------------:|:-------------------------------------------:|:--------------------------:|
+| Gryphon              |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Siena                |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Jedi                 |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Scribe               |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Meghdoot             |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Hermes               |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Rebecca              |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| PastryStrings        |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Tera                 |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| SpiderCast           |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Mercury              |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Sub-2-Sub            |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Bayeux               |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
+| Poldercast           |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
 
 - Expressiveness: subscription type (content based, topic based, etc.)
 - Central Nodes: relies in central nodes (rendezvous, brokers)
