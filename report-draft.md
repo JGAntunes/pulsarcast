@@ -95,7 +95,11 @@ Efficiency related properties:
 
 ## IPFS
 
+### IPFS diagram
+
 ![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
+
+### P2P diagram
 
 ![libp2p diagram](./diagrams/libp2p-stack-diagram.png)
 
