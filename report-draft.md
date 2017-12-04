@@ -74,18 +74,30 @@ Note: See Bayeux and Spidercast
 | Bayeux               |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
 | Poldercast           |                |               |                 |                    |           |                    |                             |                    |                                             |                            |
 
-- Expressiveness: subscription type (content based, topic based, etc.)
-- Central Nodes: relies in central nodes (rendezvous, brokers)
-- Network overlay: type of overlay used if any is required
+Design dimensions:
+- Expressiveness: subscription type (content based, topic based, type based, etc.)
+- Central Nodes: relies in central nodes (no, brokers, rendezvous)
+- Network overlay: type(s) of overlay(s) used
+- Structure: the structure the network uses, if any (e.g. tree, multidimensional euclidean space, graph, ring)
+
+Properties:
 - Average degree (still wondering if it is a relevant dimension to look at): the average degree of the network
-- Structure: the structure the network uses, if any (e.g. tree, multidimensional space, graph, ring)
-- Locality awareness: the overlay can leverage the actual geographical position of the peers in the network
-- Support for fault tolerance: speaks for itself
+- Locality awareness: can leverage locality properties of the overlay
+- Fault tolerance: speaks for itself
+- Delivery guarantees (in the absence of churn?): speaks for itself
+
+Efficiency related properties: 
 - Relay-free routing: only subscribers interested in a topic are involved in routing events
-- Delivery guarantees in the absence of churn: speaks for itself
 - Message duplication factor: speaks for itself
+- Message usefulness factor: Ratio of non operational messages (relevant for the end user) per total messages sent
 
 # Purposed solution
+
+## IPFS
+
+![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
+
+![libp2p diagram](./diagrams/libp2p-stack-diagram.png)
 
 As per what we discussed, the desired capabilities of our system will be a highly reliable system with high robustness under churn, that uses IPLD and possibly IPNS to provide a way for events to not only be persisted but also gives the peers a way to validate their data stream and request missing blocks of information. This can power applications like document collaboration tools, or chat applications with multiple levels of threads happening at once.
 
