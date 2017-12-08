@@ -24,7 +24,6 @@
   - Discuss IPLD usage, what data model will our msgs follow to be compatible with the IPLD path resolution.
 - Blockser
   - Review some of the questions on the initial report draft
-- Next steps
 
 ## Notes
 
