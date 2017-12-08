@@ -25,7 +25,7 @@
    - See https://github.com/JGAntunes/msc-thesis/pull/14#pullrequestreview-80504046
    
 - Next week:
-   - Finnish definition of relevant Design Dimensions
-   - More reading (finishing Pastry, Scribe, etc.)
-   - More writing (improve the relevant systems section, choose the 4 relevant systems to be discussed and go with it).
-   - Improve the description of our solution.
+   - [x] Finnish definition of relevant Design Dimensions
+   - [x] More reading (finishing Pastry, Scribe, etc.)
+   - [ ] More writing (improve the relevant systems section, choose the 4 relevant systems to be discussed and go with it).
+   - [x] Improve the description of our solution.
