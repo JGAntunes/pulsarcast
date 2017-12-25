@@ -9,12 +9,49 @@ Due to properties described above, a lot of applications rely on the publish/sub
 
 The solution we purpose is a pub/sub module with a strong focus on reliability, delivery guarantees and data persistence, while maintaining the ability to scale to a vast number of users, using the network infrastructure we have in place today. Our goal is to overcome the shortcomings of most of the solutions in place where, either we have to rely on a centralised or hierarchic network to have such guarantees, or we need to give up on some reliability aspects in order to have a decentralised system. There's also, to the best of our knowledge, a lack of pub sub systems with such a strong focus on persistence, which is something our solution does.
 
-- Enumerate burdens of dealing with a distributed P2P system
-- Enumerate some solutions and list they're shortcomings and how they diverge in not only expressiveness vs scaling, but also reliability vs speed
-- Purposed solution and its goals
+# - Enumerate burdens of dealing with a distributed P2P system
+# - Enumerate some solutions and list they're shortcomings and how they diverge in not only expressiveness vs scaling, but also reliability vs speed
+# - Purposed solution and its goals
+- Document structure
+
 
 # Related work
 
+## Pub Sub Systems
+
+When considering Pub Sub systems, there's a set of different options that will lay ground for the behaviour of the whole system. We call these options, design dimensions. Specifically, in our case, one  of the biggest decisions when designing a pub sub system is what kind of subscription model to use.The subscription model determines how will subscribers set which events they're interested in. There are three large approaches covered by relevant literature and that implementations usually follow:
+
+  * Topic based subscriptions
+  * Content based subscriptions
+  * Type based subscriptions
+
+Topic based subscriptions employs, as the name states, the notion of topics or subjects to allow peers to subscribe to relevant content. These topics are identified by keywords and can be naturally viewed as a group or a channel to which peers can send messages (publish) and receive messages (subscribe). This approach was one of the earliest models in the pub sub paradigm, with references ([insert reference]()), mainly due to its similarity with the group communication systems already in place at the time.
+
+The content based subscription model brought a different approach that sought to use the content of the event message itself as way to subscribers to specify the messages they were interested in. Essentially, subscribers could define fields, or conditions on those same fields that would make an event part of a subscription or not. Consider the following example of a simple message and subscription, represented using JSON.
+
+Message
+```
+{
+  exchange: "Euronext Lisboa",
+  company: "CTT",
+  order: "buy",
+  number: "100",
+  price: "5.55",
+}
+```
+
+Subscription
+```
+{
+  exchange: "Euronext Lisboa",
+  order: "buy",
+  number: ">50",
+  price: "<10",
+}
+```
+
+
+It's important to consider that not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
 Some general notes that outline what should be described here:
 
 - Relevant PubSub systems and technology:
