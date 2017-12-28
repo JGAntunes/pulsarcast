@@ -19,6 +19,8 @@ The solution we purpose is a pub/sub module with a strong focus on reliability, 
 
 ## Pub Sub Systems
 
+### Subscription Model
+
 When considering Pub Sub systems, there's a set of different options that will lay ground for the behaviour of the whole system. We call these options, design dimensions. Specifically, in our case, one  of the biggest decisions when designing a pub sub system is what kind of subscription model to use.The subscription model determines how will subscribers set which events they're interested in. There are three large approaches covered by relevant literature and that implementations usually follow:
 
   * Topic based subscriptions
@@ -63,6 +65,52 @@ Also worth referencing is the type based subscription model. (Reference to Eugst
 
 While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It's also important to note that these three categories are not strict distinct models, its quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
 
+### Network Topology 
+
+### Overlay structure
+
+- Specify the need for a overlay network on top of the physical infrastructure
+- Detail the difference between structured and unstructured overlay structures
+- Unstructured networks:
+  - Vicinity
+  - Cyclon
+  - "How robust are gossip-based communication protocols?"
+  - "Adaptive Gossip-Based Broadcast"
+- Structured networks:
+  - Pastry
+  - Chord
+  - Kademlia
+
+### Subscription management
+
+### Event dissemination
+
+### Systems
+
+#### Gryphon
+
+Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i − 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label ∗ (do not care).
+
+(Example sketch of the subscription matching system)
+
+#### Scribe
+
+#### Jedi
+
+Jedi too relies on a broker based network to build a content based pub/sub system. It developed a tree topology of broker nodes, where users were associated with leaf brokers and users’ subscriptions and events were first directed to their associated brokers. During subscription processing, subscriptions were directed up the leaf-to-root path, leaving at each intermediate node some state. During event processing, events also followed the leaf-to- root path. This guaranteed that any event and any subscription would rendezvous at (least at) the root. Any incoming event would therefore be matched against all subscriptions that have passed through each broker, this guaranteed that no subscription matching an event would go undetected. Also, while events were travelling towards the root, subscription matching could happen at each broker and events would be sent down the tree if needed be.
+
+(Example sketch of the routing system)
+
+#### Siena
+
+Siena is similar to Jedi, but it forms a graph broker topology. (* still more to add)
+
+#### Meghdoot
+
+#### Poldercast
+
+========================================
+
 Some general notes that outline what should be described here:
 
 - Relevant PubSub systems and technology:
@@ -74,40 +122,16 @@ Some general notes that outline what should be described here:
   - Recent hybrid solutions that use multiple overlays (structured and unstructured) to bring "the best of both worlds" to the table.
   - Discuss some qualities of service. Such as persistence, order, reliability and transactions.
 
-- Web technology:
+=======================================
+
+## Web technology
   - NodeJS and Javascript overview
   - The UNIX like philosophy of modularisation in JS/NodeJS
   - Introduce NPM, the package manager for Node and Javascript
   - The multiple transports that can be used for building P2P apps (TCP, UDP, WebSockets, WebRTC, UTP, ...)
-  - The JS IPFS and libp2p example, their modularisation approach and the usage of common interfaces.
+  - IPFS as a example for p2p applications. The JS IPFS and libp2p example, their modularisation approach and the usage of common interfaces. The merkle dag structure and what it offers.
 
-
-### Gryphon
-Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i − 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label ∗ (do not care).
-
-(Example sketch of the subscription matching system)
-
-### Jedi
-
-Jedi too relies on a broker based network to build a content based pub/sub system. It developed a tree topology of broker nodes, where users were associated with leaf brokers and users’ subscriptions and events were first directed to their associated brokers. During subscription processing, subscriptions were directed up the leaf-to-root path, leaving at each intermediate node some state. During event processing, events also followed the leaf-to- root path. This guaranteed that any event and any subscription would rendezvous at (least at) the root. Any incoming event would therefore be matched against all subscriptions that have passed through each broker, this guaranteed that no subscription matching an event would go undetected. Also, while events were travelling towards the root, subscription matching could happen at each broker and events would be sent down the tree if needed be.
-
-(Example sketch of the routing system)
-
-### Siena
-
-Siena is similar to Jedi, but it forms a graph broker topology. (* still more to add)
-
-### Meghdoot
-
-### Tera
-
-### Sub-2-Sub
-
-### Poldercast
-
-Note: See Bayeux and Spidercast
-
-# Systems overview
+## Systems overview
 
 | Systems / Properties | Subscription Model | Architecture | Topology | Overlay structure | Subscription Management | Event Dissemination | Locality Awareness | Relay Free Routing | Delivery Guarantees | Fault Tolerance | Average Network Degree | Message Duplication Factor | Message Usefulness Ratio |
 |----------------------|:------------------:|:------------:|:--------:|:-----------------:|:-----------------------:|:-------------------:|:------------------:|:------------------:|:-------------------:|:---------------:|:----------------------:|:--------------------------:|:------------------------:|
