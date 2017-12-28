@@ -49,9 +49,12 @@ Subscription
   price: "<10",
 }
 ```
+The example above translates a subscription to a stock exchange system, where the client would receive all the event messages for buy orders of more than 50 stock actions for a maximum price of 10€. The notion of subscription is much more complex in this model, but allows for a much more powerful and accurate message filtering.
 
+Other equally important subscription model is the type based one. (Reference to Eugster)
 
-It's important to consider that not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
+While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It's also important to note that these three categories are not strict distinct models, its quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
+
 Some general notes that outline what should be described here:
 
 - Relevant PubSub systems and technology:
