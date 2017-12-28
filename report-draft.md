@@ -65,7 +65,22 @@ Also worth referencing is the type based subscription model. (Reference to Eugst
 
 While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It's also important to note that these three categories are not strict distinct models, its quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
 
-### Network Topology 
+It's also interesting to look at the application space and notice that not all applications have the same expressiveness requirements. This makes the existence of multiple subscription models not only justifiable but required. Consider the example given above for a stock exchange system, these kind of applications have a need for a complex set of subscription patterns, quite different from the ones you would probably have for a chat or social media application, which would rely heavily in the notion of topics and groups. 
+
+### Architecture Network Topology 
+
+Independent of the subscription model used, the system approach to the network topology and its architecture is crucial as it will, not only set the way clients interact with it, but will also determine a lot of the properties that the solution will benefit from (such as scalability, reliability, etc.).
+
+Note that the goal of a pub/sub system is to permit the exchange of events in a asynchronous manner, with the decoupling of producers from consumers as previously discussed. This can be easily achieved using an entity which is responsible for receiving the messages from the producers, storing it and distributing it through the consumers. This is what we refer to as a centralised architecture, motivated by the need of this central entity. This is the approach adopted by a lot of the message queue systems like Apache Active MQ, RabbitMQ and Redis. The usual focus for applications relying on this kind of systems is on reliability and data consistency but with a low data throughput.
+
+(insert centralised arch schema)
+
+The asynchronous needs of the pub/sub paradigm also allow for a different approach on message forwarding, with both producers and consumers being responsible for storing and forwarding messages, without the need of a intermediary entity. This approach is referred to as a distributed architecture as there is no central entity that could easily become a bottleneck for the whole system. (reference for a decentralised system). These kind of systems have a great focus on scalability and, consequently, on efficient message delivery.
+
+(insert decentralised arch schema)
+
+- Mention hybrid approaches relying on brokers
+- Mention fully decentralised approaches
 
 ### Overlay structure
 
@@ -106,6 +121,8 @@ Jedi too relies on a broker based network to build a content based pub/sub syste
 Siena is similar to Jedi, but it forms a graph broker topology. (* still more to add)
 
 #### Meghdoot
+
+
 
 #### Poldercast
 
