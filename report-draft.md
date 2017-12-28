@@ -9,9 +9,9 @@ Due to properties described above, a lot of applications rely on the publish/sub
 
 The solution we purpose is a pub/sub module with a strong focus on reliability, delivery guarantees and data persistence, while maintaining the ability to scale to a vast number of users, using the network infrastructure we have in place today. Our goal is to overcome the shortcomings of most of the solutions in place where, either we have to rely on a centralised or hierarchic network to have such guarantees, or we need to give up on some reliability aspects in order to have a decentralised system. There's also, to the best of our knowledge, a lack of pub sub systems with such a strong focus on persistence, which is something our solution does.
 
-# - Enumerate burdens of dealing with a distributed P2P system
-# - Enumerate some solutions and list they're shortcomings and how they diverge in not only expressiveness vs scaling, but also reliability vs speed
-# - Purposed solution and its goals
+- Enumerate burdens of dealing with a distributed P2P system
+- Enumerate some solutions and list they're shortcomings and how they diverge in not only expressiveness vs scaling, but also reliability vs speed
+- Purposed solution and its goals
 - Document structure
 
 
@@ -25,7 +25,15 @@ When considering Pub Sub systems, there's a set of different options that will l
   * Content based subscriptions
   * Type based subscriptions
 
-Topic based subscriptions employs, as the name states, the notion of topics or subjects to allow peers to subscribe to relevant content. These topics are identified by keywords and can be naturally viewed as a group or a channel to which peers can send messages (publish) and receive messages (subscribe). This approach was one of the earliest models in the pub sub paradigm, with references ([insert reference]()), mainly due to its similarity with the group communication systems already in place at the time.
+Topic based subscriptions employs, as the name states, the notion of topics or subjects to allow peers to subscribe to relevant content. These topics are identified by keywords and can be naturally viewed as a group or a channel to which peers can send messages (publish) and receive messages (subscribe). This approach was one of the earliest models in the pub sub paradigm, with references ([insert reference] TIBCO?), mainly due to its similarity with the group communication systems already in place at the time. Some examples of the topic based approach allow to build a topic hierarchy. A specific one is using a UNIX path like approach, which allow to build topic hierarchy just like paths in a file system. Consider as an example:
+
+```
+/fruits
+/fruits/citrus
+/fruits/citrus/orange
+```
+
+The list above is an example of 3 topics, that act as 3 different tiers on a hierarchy. This allows for specialisation and the possibility to extend the subscription structure already in place.
 
 The content based subscription model brought a different approach that sought to use the content of the event message itself as way to subscribers to specify the messages they were interested in. Essentially, subscribers could define fields, or conditions on those same fields that would make an event part of a subscription or not. Consider the following example of a simple message and subscription, represented using JSON.
 
@@ -51,7 +59,7 @@ Subscription
 ```
 The example above translates a subscription to a stock exchange system, where the client would receive all the event messages for buy orders of more than 50 stock actions for a maximum price of 10€. The notion of subscription is much more complex in this model, but allows for a much more powerful and accurate message filtering.
 
-Other equally important subscription model is the type based one. (Reference to Eugster)
+Also worth referencing is the type based subscription model. (Reference to Eugster). The type based model seeks to use the type scheme of a programming language without introducing a topic hierarchy. Instead it focus on the idea that, in practice, messages part of the same topic usually are of the same type and notify the same kind of event. As such we can rely on the straightforward type-safe interpretation of messages belonging to the same topic, since most topic based systems only offer, at most, weakly typed interfaces. This, of course, comes quite handy when working with strongly typed languages such as Java and C++. One other aspect also worth mentioning is that, similar to topic based systems, the type based system also offers a notion of hierarchy through sub-typing.
 
 While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It's also important to note that these three categories are not strict distinct models, its quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
 
