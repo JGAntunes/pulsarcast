@@ -9,15 +9,28 @@ Due to properties described above, a lot of applications rely on the publish/sub
 
 The solution we purpose is a pub/sub module with a strong focus on reliability, delivery guarantees and data persistence, while maintaining the ability to scale to a vast number of users, using the network infrastructure we have in place today. Our goal is to overcome the shortcomings of most of the solutions in place where, either we have to rely on a centralised or hierarchic network to have such guarantees, or we need to give up on some reliability aspects in order to have a decentralised system. There's also, to the best of our knowledge, a lack of pub sub systems with such a strong focus on persistence, which is something our solution does.
 
-- Enumerate burdens of dealing with a distributed P2P system
-- Enumerate some solutions and list they're shortcomings and how they diverge in not only expressiveness vs scaling, but also reliability vs speed
-- Purposed solution and its goals
-- Document structure
+- Missing objectives
+- Missing document structure
 
 
 # Related work
 
 ## Pub Sub Systems
+
+========================================
+
+Some general notes that outline what should be described here:
+
+- Relevant PubSub systems and technology:
+  - First approaches follow a "centralised" broker based topology.
+  - Usage of network overlays as the substrate for pub/sub systems. Explain different network types and give examples.
+    - On one end, structured networks, that provided reliability but were costly to maintain and couldn't cope with churn
+    - On the other side, unstructured networks (such as gossip based networks), which provided high resilience to churn but lack the ability to provide reliability, with event delivery following a probabilistic best effort approach.
+  - The expressiveness of the different pub/sub systems (content based, topic based, type based, etc.) and how it influences choosing the properties above.
+  - Recent hybrid solutions that use multiple overlays (structured and unstructured) to bring "the best of both worlds" to the table.
+  - Discuss some qualities of service. Such as persistence, order, reliability and transactions.
+
+=======================================
 
 ### Subscription Model
 
@@ -97,57 +110,63 @@ Considering a distributed network architecture
   - Chord
   - Kademlia
 
+(* more to add *)
+
 ### Subscription management
 
+(* more to add *)
+
 ### Event dissemination
+
+(* more to add *)
 
 ### Systems
 
 #### Gryphon
 
-Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i − 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label ∗ (do not care).
+Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i - 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label * (do not care).
 
+(* more to add *)
 (Example sketch of the subscription matching system)
 
 #### Scribe
+
+(* more to add *)
 
 #### Jedi
 
 Jedi too relies on a broker based network to build a content based pub/sub system. It developed a tree topology of broker nodes, where users were associated with leaf brokers and users’ subscriptions and events were first directed to their associated brokers. During subscription processing, subscriptions were directed up the leaf-to-root path, leaving at each intermediate node some state. During event processing, events also followed the leaf-to- root path. This guaranteed that any event and any subscription would rendezvous at (least at) the root. Any incoming event would therefore be matched against all subscriptions that have passed through each broker, this guaranteed that no subscription matching an event would go undetected. Also, while events were travelling towards the root, subscription matching could happen at each broker and events would be sent down the tree if needed be.
 
+(* more to add *)
+
 (Example sketch of the routing system)
 
 #### Siena
 
-Siena is similar to Jedi, but it forms a graph broker topology. (* still more to add)
+Siena is similar to Jedi, but it forms a graph broker topology.
+
+(* probably only keeping either Siena or Jedi *)
+(* more to add *)
 
 #### Meghdoot
 
-
+(* more to add *)
 
 #### Poldercast
 
-========================================
-
-Some general notes that outline what should be described here:
-
-- Relevant PubSub systems and technology:
-  - First approaches follow a "centralised" broker based topology.
-  - Usage of network overlays as the substrate for pub/sub systems. Explain different network types and give examples.
-    - On one end, structured networks, that provided reliability but were costly to maintain and couldn't cope with churn
-    - On the other side, unstructured networks (such as gossip based networks), which provided high resilience to churn but lack the ability to provide reliability, with event delivery following a probabilistic best effort approach.
-  - The expressiveness of the different pub/sub systems (content based, topic based, type based, etc.) and how it influences choosing the properties above.
-  - Recent hybrid solutions that use multiple overlays (structured and unstructured) to bring "the best of both worlds" to the table.
-  - Discuss some qualities of service. Such as persistence, order, reliability and transactions.
-
-=======================================
+(* more to add *)
 
 ## Web technology
-  - NodeJS and Javascript overview
-  - The UNIX like philosophy of modularisation in JS/NodeJS
-  - Introduce NPM, the package manager for Node and Javascript
-  - The multiple transports that can be used for building P2P apps (TCP, UDP, WebSockets, WebRTC, UTP, ...)
-  - IPFS as a example for p2p applications. The JS IPFS and libp2p example, their modularisation approach and the usage of common interfaces. The merkle dag structure and what it offers.
+
+======================================
+
+- NodeJS and Javascript overview
+- The UNIX like philosophy of modularisation in JS/NodeJS
+- Introduce NPM, the package manager for Node and Javascript
+- The multiple transports that can be used for building P2P apps (TCP, UDP, WebSockets, WebRTC, UTP, ...)
+- IPFS as a example for p2p applications. The JS IPFS and libp2p example, their modularisation approach and the usage of common interfaces. The merkle dag structure and what it offers.
+
+=====================================
 
 ## Systems overview
 
@@ -200,6 +219,8 @@ Relevant metrics are metrics that are a consequence of the design decisions made
 
 # Purposed solution
 
+(Oudated stuff, missing the whole solution purposed on e-mail)
+
 ## IPFS
 
 ### IPFS diagram
@@ -211,5 +232,4 @@ Relevant metrics are metrics that are a consequence of the design decisions made
 ![libp2p diagram](./diagrams/libp2p-stack-diagram.png)
 
 As per what we discussed, the desired capabilities of our system will be a highly reliable system with high robustness under churn, that uses IPLD and possibly IPNS to provide a way for events to not only be persisted but also gives the peers a way to validate their data stream and request missing blocks of information. This can power applications like document collaboration tools, or chat applications with multiple levels of threads happening at once.
-
 (?) Need to better define the schema for the IPLD graph, since I think the way I might be seeing things might not be right.
