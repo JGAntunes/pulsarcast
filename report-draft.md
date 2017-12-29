@@ -67,22 +67,23 @@ While looking back at these different models its crucial to understand how they 
 
 It's also interesting to look at the application space and notice that not all applications have the same expressiveness requirements. This makes the existence of multiple subscription models not only justifiable but required. Consider the example given above for a stock exchange system, these kind of applications have a need for a complex set of subscription patterns, quite different from the ones you would probably have for a chat or social media application, which would rely heavily in the notion of topics and groups. 
 
-### Architecture Network Topology 
+### Network Architecture 
 
-Independent of the subscription model used, the system approach to the network topology and its architecture is crucial as it will, not only set the way clients interact with it, but will also determine a lot of the properties that the solution will benefit from (such as scalability, reliability, etc.).
+Independent of the subscription model used, the system approach to the network architecture is crucial as it will, not only set the way clients interact with it, but will also determine a lot of the properties that the solution will benefit from (such as scalability, reliability, etc.).
+
+Based on the early work of Baran (ref to Paul Baran paper), one can categorize networks in centralised, decentralised and distributed.
+
+(use Baran figure do illustrate the differences)
 
 Note that the goal of a pub/sub system is to permit the exchange of events in a asynchronous manner, with the decoupling of producers from consumers as previously discussed. This can be easily achieved using an entity which is responsible for receiving the messages from the producers, storing it and distributing it through the consumers. This is what we refer to as a centralised architecture, motivated by the need of this central entity. This is the approach adopted by a lot of the message queue systems like Apache Active MQ, RabbitMQ and Redis. The usual focus for applications relying on this kind of systems is on reliability and data consistency but with a low data throughput.
 
-(insert centralised arch schema)
+The asynchronous needs of the pub/sub paradigm also allow for a different approach on message forwarding, with both producers and consumers being responsible for storing and forwarding messages, without the need of a intermediary entity. This approach is referred to as a distributed architecture as there is no central entity that could easily become a bottleneck for the whole system. (reference for a distributed system). These kind of systems have a great focus on scalability and, consequently, on efficient message delivery.
 
-The asynchronous needs of the pub/sub paradigm also allow for a different approach on message forwarding, with both producers and consumers being responsible for storing and forwarding messages, without the need of a intermediary entity. This approach is referred to as a distributed architecture as there is no central entity that could easily become a bottleneck for the whole system. (reference for a decentralised system). These kind of systems have a great focus on scalability and, consequently, on efficient message delivery.
-
-(insert decentralised arch schema)
-
-- Mention hybrid approaches relying on brokers
-- Mention fully decentralised approaches
+Finally we have hybrid approaches to both of these extremes, were we rely on a distributed network of servers making the network topology resemble more of decentralised network as showed in figure (figure number). This is the approach followed by systems like Gryphon, Jedi and Siena, which rely on a network of broker nodes to perform the work of persisting and distributing the events in a reliable fashion.
 
 ### Overlay structure
+
+Considering a distributed network architecture
 
 - Specify the need for a overlay network on top of the physical infrastructure
 - Detail the difference between structured and unstructured overlay structures
