@@ -203,6 +203,8 @@ When focusing specifically on P2P apps, the past years have brought together a s
 
 In the application realm, there have been quite a few in the past years that seek to leverage all these new technologies and breakthroughs. One of the examples most worth mentioning is the InterPlanetary File System (IPFS) (TODO reference IPFS), a P2P hypermedia protocol designed to create a persistent, content-addressable network on top of the distributed web we have today. At the core of IPFS there's what they refer to as the Merkle DAG (TODO reference to IPFS spec on the merkle dag), a graph structure were each node is addressed and can be linked to based on the hash of its content. Each node can have links to other nodes, creating a persistent, chain like, structure that's immutable. IPFS exposes an API that allows us to interact with this structure, inserting and requesting random blobs of data, files, JSON objects and other complex structures. Having implementations in both Go and Javascript, IPFS leverages the modularity mantra in a fascinating way, focusing on creating common interfaces that allow for different pieces of the architecture to be changed and selected according to one's needs, without impacting the overall application and its top level API. These came from the observation that the web we have today is a set of different heterogeneous clients, that have different needs and resources, as such not everyone can rely on the same set of transports, storage management and discovery mechanisms. These small modules that constitute IPFS have recently been brought together under the same umbrella, as libp2p (TODO reference to libp2p), a set of packages that seek to solve common challenges in p2p applications. Interestingly enough, a recent addition to libp2p, and consequently IPFS, was a pub/sub module, with a naive implementation using a simple network flooding technique.
 
+![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
+
 ## Systems overview
 
 | Systems / Properties | Subscription Model | Architecture | Topology | Overlay structure | Subscription Management | Event Dissemination | Locality Awareness | Relay Free Routing | Delivery Guarantees | Fault Tolerance | Average Network Degree | Message Duplication Factor | Message Usefulness Ratio |
@@ -254,17 +256,18 @@ Relevant metrics are metrics that are a consequence of the design decisions made
 
 # Purposed solution
 
-(Oudated stuff, missing the whole solution purposed on e-mail)
+We now describe our purposed solution. Since our goal is to have a highly scalable system with reliability and persistence in mind, we opted for taking advantage of the IPFS ecosystem and its different modules. Our pub/sub module will then provide an alternative to the naive implementation already in place in IPFS, allowing users to choose what's more convenient for them. Besides, the existence of a previous naive implementation allows us to have a baseline for improvement, one from which we can extract metrics and relevant data. We'll start by covering our subscription model and the multiple structures that describe messages and subscriptions. We'll then cover how the system works in terms of subscription management, focusing on how are new subscriptions handled and how new topics are issued. Finally we'll cover event dissemination and overlay structure, focusing on the mechanisms we've used to bring persistence and delivery guarantees to the network.
 
-## IPFS
+## Subscription model and data structures
 
-### IPFS diagram
+Our subscription model will follow a topic based approach.It will however  have some nice properties that will make it far more expressive than what would be expected of a regular topic based system. To do this, we'll take advantage of the core structure of IPFS, the merkle dag, implemented as Inter Planetary Linked Data, or IPLD, (TODO reference to IPLD) on IPFS. IPLD follows the principles described previously on the basic structure of the merkle dag, with a focus on bringing together all the hash-linked data structures under an unified JSON-based model, that possesses a canonical serialisation process ensuring it is always serialised to the exact same sequence of bits.
 
-![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
+## Subscription management
 
-### P2P diagram
+## Event dissemination and overlay structure
+
+Since our work will be a libp2p compatible module, we'll be able to leverage the multiple modules that already exist in libp2p ecosystem. This includes network transports, discovery and routing mechanisms as well as other useful data types and utility methods. The figure (TODO insert figure number) illustrates where our work will take place and some of the other modules we'll be able to use. In order to understand it though there are some key aspects around libp2p that we need to cover first. libp2p tries to separate concerns of peer communication and data transports. In order to do that, it has different transport (TODO reference transport interface) implementations under a separate set of packages, which can then be leveraged through lip2p-swarm (TODO reference to libp2p-swarm), a connection abstraction that can deal with multiple connections under different protocols. On top of this we then have the peer communication, which can be split into two big mechanisms. On one end we have the discovery mechanisms (TODO reference to discovery interface), which focus on ways of finding and connecting to new peers. Finally we have peer routing (TODO reference to peer routing interface), which focus on transferring data between already connected peers. Our work will mostly reside in the pub/sub module itself and building/altering any needed peer routing mechanisms.
 
 ![libp2p diagram](./diagrams/libp2p-stack-diagram.png)
 
-As per what we discussed, the desired capabilities of our system will be a highly reliable system with high robustness under churn, that uses IPLD and possibly IPNS to provide a way for events to not only be persisted but also gives the peers a way to validate their data stream and request missing blocks of information. This can power applications like document collaboration tools, or chat applications with multiple levels of threads happening at once.
-(?) Need to better define the schema for the IPLD graph, since I think the way I might be seeing things might not be right.
+
