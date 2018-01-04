@@ -1,53 +1,38 @@
 
 
-# 1. Introduction
+# 1 Introduction
 
 The publish-subscribe (pub-sub) interaction paradigm is an approach that has received an increasing amount of attention recently (TODO ref to XL pubsub and many face of pubsub). This is mainly due to its special properties, that allow for full decoupling of all the communicating parties. First we should define what the publish-subscribe pattern is. In this interaction paradigm, subscribers (or consumers) sign up for events, or classes of events, from publishers (or producers) that are subsequently asynchronously delivered. Taking a closer look at this definition one can see that this comes hand in hand with the way information is consumed nowadays, with the exponential growth of social networks like Twitter and the usage of feeds such as RSS.
 
-The previously discussed decoupling can be broken in three different parts. The decoupling in time, space and synchronisation.  The time decoupling comes from the fact that publishers and subscribers do not need to be actively interacting with each other at the same time, this means that the publisher can publish some events while the subscriber is disconnected and the subscriber can be notified of an event whose publisher is disconnected. Space decoupling gives both parties the benefit of not needing to know each other in order to communicate, given that consumers and producers are focused on they are specific roles (consuming/producing) and do not care for who is doing what, or how many producers are for example. Synchronization decoupling is a consequence of the asynchronous nature of the pub-sub pattern, as publishers do not need to be blocked while producing events and subscribers can be asynchronously notified. The decoupling that this kind of system offers makes it the ideal candidate for very large networks that need a way to communicate in a efficient way. 
+The previously discussed decoupling can be broken in three different parts. The decoupling in time, space and synchronisation.  The time decoupling comes from the fact that publishers and subscribers do not need to be actively interacting with each other at the same time; this means that the publisher can publish some events while the subscriber is disconnected and the subscriber can be notified of an event whose publisher is disconnected. Space decoupling gives both parties the benefit of not needing to know each other in order to communicate, given that consumers and producers are focused on they are specific roles (consuming/producing) and do not care for who is doing what, or how many producers are for example. Synchronization decoupling is a consequence of the asynchronous nature of the pub-sub pattern, as publishers do not need to be blocked while producing events and subscribers can be asynchronously notified. The decoupling that this kind of system offers makes it the ideal candidate for very large networks that need a way to communicate in a efficient way. 
 
-Due to the properties described above, a lot of applications rely on the publish-subscribe paradigm and a lot of work as been done by companies like Twitter (TODO reference to https://www.infoq.com/presentations/Twitter-Timeline-Scalability) and LinkedIn into making these systems highly scalable, with the creation of tools like Kafka (TODO reference to http://kafka.apache.org/documentation/#design), which aim at guaranteeing low latency and high event throughput. Other examples are the multiple message queue systems like Apache Active MQ (TODO reference to http://activemq.apache.org/), RabbitMQ (TODO reference to https://www.rabbitmq.com/), Redis (TODO reference to https://redis.io/topics/pubsub), etc. These solutions are, of course, centralised and as such suffer from all the common issues that affect centralised solutions, it is quite hard to maintain and scale these systems to a large number of clients. Peer-to-Peer networks on the other hand, have proven numerous times, that this is where they shine, with examples such as Gnutella, Skype and most recently IPFS (TODO reference to IPFS). All of these systems are a living proof of the high scalability P2P can offer, with pub-sub systems over P2P networks being an active research topic with a lot of attention. 
+Due to the properties described above, a lot of applications rely on the publish-subscribe paradigm and a lot of work as been done by companies like Twitter (TODO reference to https://www.infoq.com/presentations/Twitter-Timeline-Scalability) and LinkedIn into making these systems highly scalable, with the creation of tools like Kafka (TODO reference to http://kafka.apache.org/documentation/#design), which aim at guaranteeing low latency and high event throughput. Other examples are the multiple message queue systems like Apache Active MQ (TODO reference to http://activemq.apache.org/), RabbitMQ (TODO reference to https://www.rabbitmq.com/), Redis (TODO reference to https://redis.io/topics/pubsub), etc. These solutions are, of course, centralised and as such suffer from all the common issues that affect centralised solutions: it is quite hard to maintain and scale these systems to a large number of clients. Peer-to-Peer networks on the other hand, have proven numerous times, that this is where they shine, with examples such as Gnutella, Skype and most recently IPFS (TODO reference to IPFS). All of these systems are a living proof of the high scalability P2P can offer, with pub-sub systems over P2P networks being an active research topic with a lot of attention. 
 
-## 1.1 Shortcomings of Current Solutions
+(TODO Document Roadmap)
+
+## 2 Objectives
 
 As we are going to cover in the next sections, lots of different solutions exist in the field. However, most of them either rely on a centralised or hierarchic network to have a reliable system, with stronger delivery and persistence guarantees, or end up sacrificing these same properties in order to have a decentralised system with the potential to scale to a much larger network.
 
-## 1.2 Objectives
-
 The solution we propose is a pub-sub module to IPFS with a strong focus on reliability, delivery guarantees and data persistence, while maintaining the ability to scale to a vast number of users, using the network infrastructure we have in place today. There is also, to the best of our knowledge, a lack of pub-sub systems with such a strong focus on persistence, which is something our solution does.
 
-## 1.3 Document Roadmap
+# 3 Related Work
 
-(TODO)
+(TODO intro section)
 
-# Related work
+## 3.1 Distributed Publish-Subscribe Paradigm
 
-## Pub Sub Systems
-
-========================================
-
-Some general notes that outline what should be described here:
-
-- Relevant PubSub systems and technology:
-  - First approaches follow a "centralised" broker based topology.
-  - Usage of network overlays as the substrate for pub-sub systems. Explain different network types and give examples.
-    - On one end, structured networks, that provided reliability but were costly to maintain and could not cope with churn
-    - On the other side, unstructured networks (such as gossip based networks), which provided high resilience to churn but lack the ability to provide reliability, with event delivery following a probabilistic best effort approach.
-  - The expressiveness of the different pub-sub systems (content based, topic based, type based, etc.) and how it influences choosing the properties above.
-  - Recent hybrid solutions that use multiple overlays (structured and unstructured) to bring "the best of both worlds" to the table.
-  - Discuss some qualities of service. Such as persistence, order, reliability and transactions.
-
-=======================================
+(TODO intro section)
 
 ### Subscription Model
 
-When considering pub-sub systems, there is a set of different options that will lay ground for the behaviour of the whole system. We call these options, design dimensions. Specifically, in our case, one  of the biggest decisions when designing a pub-sub system is what kind of subscription model to use.The subscription model determines how will subscribers set which events they are interested in. There are three large approaches covered by relevant literature and that implementations usually follow:
+When considering pub-sub systems, there is a set of different options that will lay ground for the behaviour of the whole system. We call these options, design dimensions. Specifically, in our case, one  of the biggest decisions when designing a pub-sub system is what kind of subscription model to use.The subscription model determines how subscribers will define which events they are interested in. There are three major approaches covered by relevant literature (TODO reference many faces of pubsub and  XL PubSub) and that implementations usually follow:
 
   * Topic based subscriptions
   * Content based subscriptions
   * Type based subscriptions
 
-Topic based subscriptions employs, as the name states, the notion of topics or subjects to allow peers to subscribe to relevant content. These topics are identified by keywords and can be naturally viewed as a group or a channel to which peers can send messages (publish) and receive messages (subscribe). This approach was one of the earliest models in the pub-sub paradigm, with references (TODO reference to TIBCO?), mainly due to its similarity with the group communication systems already in place at the time. Some examples of the topic based approach allow to build a topic hierarchy. A specific one is using a UNIX path like approach, which allow to build topic hierarchy just like paths in a file system. Consider as an example:
+**Topic based subscriptions** employs, as the name states, the notion of topics or subjects to allow participants to subscribe to relevant content. These topics are identified by keywords and can be naturally viewed as a group or a channel to which participants can send messages (publish) and receive messages (subscribe). This approach was one of the earliest models in the pub-sub paradigm, with references (TODO reference to TIBCO?), mainly due to its similarity with the group communication systems already in place at the time. Some examples of the topic based approach allow to build a topic hierarchy. A specific one is using a UNIX path like approach, which allows to build topic hierarchy just like paths in a file system. Consider as an example:
 
 ```
 /fruits
@@ -55,9 +40,9 @@ Topic based subscriptions employs, as the name states, the notion of topics or s
 /fruits/citrus/orange
 ```
 
-The list above is an example of 3 topics, that act as 3 different tiers on a hierarchy. This allows for specialisation and the possibility to extend the subscription structure already in place. There exists a lot of solutions that cover the topic based subscription scenario. Specifically in the distributed/decentralised area we have solutions like Scribe (TODO reference Scribe), Bayeux (TODO reference Bayeux), Tera (TODO reference Tera) and Poldercast (TODO reference Poldercast).
+The list above is an example of 3 topics, that act as 3 different tiers on a hierarchy. This allows for specialisation and the possibility to extend the subscription structure already in place. There are numerous solutions that cover the topic based subscription scenario. Specifically in the distributed/decentralised area we have solutions like Scribe (TODO reference Scribe), Bayeux (TODO reference Bayeux), Tera (TODO reference Tera) and Poldercast (TODO reference Poldercast).
 
-The content based subscription model brought a different approach that sought to use the content of the event message itself as way to subscribers to specify the messages they were interested in (TODO reference "An Efficient Multicast Protocol for Content-Based Publish-Subscribe Systems"). Essentially, subscribers could define fields, or conditions on those same fields that would make an event part of a subscription or not. Consider the following example of a simple message and subscription, represented using JSON (TODO reference to JSON).
+The **content based** subscription model brought a different approach that sought to use the content of the event message itself as a way for subscribers to specify the messages they were interested in (TODO reference "An Efficient Multicast Protocol for Content-Based Publish-Subscribe Systems"). Essentially, subscribers could define fields, or conditions on those same fields that would make an event match a subscription or not. Consider the following example of a simple message and subscription, represented using JSON (TODO reference to JSON).
 
 Message
 ```
@@ -79,13 +64,13 @@ Subscription
   price: "<10",
 }
 ```
-The example above translates a subscription to a stock exchange system, where the client would receive all the event messages for buy orders of more than 50 stock actions for a maximum price of 10€. The notion of subscription is much more complex in this model, but allows for a much more powerful and accurate message filtering. Usually in order to implement this, systems rely on the definition of schemas as a way to create subscriptions. Some examples of solutions that follow a content based subscription model are Gryphon (TODO reference Gryphon), Jedi (TODO reference Jedi), Siena (TODO reference Siena), Meghdoot (TODO reference Meghdoot), Mercury (TODO reference Mercury) and Sub-2-sub (TODO reference Sub-2-sub). 
+The example above translates into a subscription to a stock exchange pub-sub system, where the client would receive all the event messages for buy orders of more than 50 stock actions for a maximum price of 10€. The notion of subscription is much more complex in this model, but allows for a much more powerful, expressive and  accurate message filtering. Usually, in order to implement this, systems rely on the definition of schemas as a way to create subscriptions. Some examples of solutions that follow a content based subscription model are Gryphon (TODO reference Gryphon), Jedi (TODO reference Jedi), Siena (TODO reference Siena), Meghdoot (TODO reference Meghdoot), Mercury (TODO reference Mercury) and Sub-2-sub (TODO reference Sub-2-sub). 
 
-Also worth referencing is the type based subscription model. (TODO reference to Eugster). The type based model seeks to use the type scheme of a programming language without introducing a topic hierarchy. Instead it focuses on the idea that, in practice, messages part of the same topic usually are of the same type and notify the same kind of event. As such we can rely on a straightforward type-safe interpretation of messages belonging to the same topic, since most topic based systems only offer, at most, weakly typed interfaces. This, of course, comes quite handy when working with strongly typed languages such as Java and C++. One other aspect also worth mentioning is that, similar to topic based systems, the type based system also offers a notion of hierarchy through sub-typing. In this area, Hermes (TODO reference Hermes) is a reference system implemented on top of a distributed network.
+Also worth referencing is the **type based subscription model**. (TODO reference to Eugster). The type based model seeks to use the type scheme of a programming language without introducing a topic hierarchy. Instead it focuses on the idea that, in practice, messages part of the same topic usually are of the same type and notify the same kind of event. As such we can rely on a straightforward type-safe interpretation of messages belonging to the same topic, since most topic based systems only offer, at most, weakly typed interfaces. This, of course, comes quite handy when working with strongly typed languages such as Java and C++. One other aspect also worth mentioning is that, similar to topic based systems, the type based system also offers a notion of hierarchy through sub-typing. In this area, Hermes (TODO reference Hermes) is a reference system implemented on top of a distributed network.
 
-While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It is also important to note that these three categories are not strict distinct models, its quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
+While looking back at these different models its crucial to understand how they are tied to the expressiveness of the system as a whole. Choosing a topic based subscription model will allow for an easier implementation when it comes to message filtering at each node, but it will clearly affect the capabilities of the system. On the other end, a content based subscription model allows for a lot more expressiveness in subscription definition, but it makes it a lot harder to implement a scalable way of filtering messages. It is also important to note that these three categories are not strict distinct models, but somewhat fluid and subject to hybridisation, as is quite possible to have solutions in between, such as content based filtering through the use of special topics, or content based filtering only for pre-set fields. As such, not all approaches are easy to categorise and, for some specific scenarios and systems, the line is quite thin between the multiple subscription models.
 
-It is also interesting to look at the application space and notice that not all applications have the same expressiveness requirements. This makes the existence of multiple subscription models not only justifiable but required. Consider the example given above for a stock exchange system, these kind of applications have a need for a complex set of subscription patterns, quite different from the ones you would probably have for a chat or social media application, which would rely heavily in the notion of topics and groups. 
+It is also interesting to look at the application space and notice that not all applications have the same expressiveness requirements. This makes the existence of multiple subscription models not only justifiable but required. Consider the example given above for a stock exchange system: these kind of applications have a need for a complex set of subscription patterns, quite different from the ones you would probably have for a chat or social media application, which would rely heavily in the notion of topics and groups. 
 
 ### Network Architecture 
 
@@ -158,19 +143,19 @@ For topic based systems, an alternative to building dissemination trees that rel
 
 A different approach to managing subscriptions and disseminating events in topic based systems is by having an overlay for each different topic. The idea is that by clustering nodes one can afford an easier event dissemination as well as an easy way of matching events with subscribers, since it is just a matter of propagating a given event inside its overlay. In order to keep everything connected, a general overlay can be used, that will allow all the nodes to have visibility on the whole set of topics. In this scenario, subscriptions are simply represented as being part of a specific network of peers, that could take any form or shape, or even be unstructured. For an unstructured network, the propagation of events could be a simple flooding algorithm, as it happens in Tera. Tera (TODO reference to Tera), a topic based pub-sub system, follows an approach close to this one. It keeps two distinct gossip based overlays, one responsible for keeping state on entrypoints for each topic (peers which are subscribed to a given topic and that can act as dissemination points for it) and another used to keep the subscribers of each topic. This clustering approach, where subscribers of a given topic are kept in a topic specific overlay, helps out in the dissemination step after an event has been published and reached the cluster. Another example following this approach is Poldercast (TODO reference to poldercast), which uses a set of three different overlays to keep the pub-sub network running. We will cover Poldercast more thoroughly later on. 
 
-### Systems
+## 3.2 Relevant Pub-Sub Systems 
 
-#### Gryphon 
+### Gryphon 
 Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i - 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label * (do not care).
 
 (* more to add *)
 (Example sketch of the subscription matching system)
 
-#### Scribe
+### Scribe
 
 (* more to add *)
 
-#### Jedi
+### Jedi
 
 Jedi too relies on a broker based network to build a content based pub-sub system. It developed a tree topology of broker nodes, where users were associated with leaf brokers and users’ subscriptions and events were first directed to their associated brokers. During subscription processing, subscriptions were directed up the leaf-to-root path, leaving at each intermediate node some state. During event processing, events also followed the leaf-to- root path. This guaranteed that any event and any subscription would rendezvous at (least at) the root. Any incoming event would therefore be matched against all subscriptions that have passed through each broker, this guaranteed that no subscription matching an event would go undetected. Also, while events were travelling towards the root, subscription matching could happen at each broker and events would be sent down the tree if needed be.
 
@@ -178,38 +163,22 @@ Jedi too relies on a broker based network to build a content based pub-sub syste
 
 (Example sketch of the routing system)
 
-#### Siena
+### Siena
 
 Siena is similar to Jedi, but it forms a graph broker topology.
 
 (* probably only keeping either Siena or Jedi *)
 (* more to add *)
 
-#### Meghdoot
+### Meghdoot
 
 (* more to add *)
 
-#### Poldercast
+### Poldercast
 
 (* more to add *)
 
-## Web technologies
-
-When building any kind of network focused system nowadays, there is no question that one should take the full potential of the web and all its relevant pieces. Browsers are a lot more complex and allow for a vast world of possibilities in terms of applications that can be built on top of it. P2P applications are no exception here. In the next sections we will cover a set of technologies that allow for a modern distributed application to run, not only on desktops and servers we are used to, but also on browsers and other different platforms.
-
-It is indisputable that one cannot think of modern web development without speaking of Javascript (TODO reference javascript). Javascript is a lightweight, interpreted, programming language, known as the scripting language for the web. Initially created with the purpose of allowing the creation of simple interactions and animations in web pages it is now one of the main programming languages for the web (TODO reference to stack overflow survey https://insights.stackoverflow.com/survey/2017) used, not only for client side programming, but also for server side. Since Javascript has different runtimes, it became necessary to create a standardised base from which the multiple browser vendors and runtime maintainers could work with. Hence  ECMAScript (TODO reference ecmascript), the standard for the Javascript implementation. 
-
-As it was previously said, Javascript nowadays is not restrict to browsers only. NodeJS (TODO reference to NodeJS) was the first successful implementation of a Javascript runtime, built on top of Chrome's V8 JavaScript engine (TODO reference V8), allowing to run what is commonly referred to as server side Javascript. One can write and run Javascript programs in multiple architectures and operating systems, with access to a set of common native libraries that allow to interact with relevant parts of the system (TODO reference to NodeJS API) such as network, filesystem and others. A key aspect in NodeJS was the way it choose to deal with the lack of support from Javascript for multithreading, by making use of an event loop that powers an event-driven architecture capable of asynchronous I/O.
-
-Yet another key element in the NodeJS and Javascript ecosystem is NPM (TODO reference to NPM), its package manager. NPM was one of the main drivers of a philosophy that is deeply ingrained in the JS ecosystem which focuses on building small reusable packages that everyone can use and build on top of. This is heavily inspired by the UNIX philosophy summarised by Doug McIlroy (TODO reference?) - "Write programs that do one thing and do it well. Write programs that work together". This approach ended up being a major differentiator on how modern web applications are developed and currently NPM is one of the largest package registries in the world (TODO reference http://blog.npmjs.org/post/143451680695/how-many-npm-users-are-there). This mindset though is really important, for it allows applications to be built on top of previously published packages, making modularity and code reusability core values of the ecosystem. Even more interesting is the sudden possibility offered by having the same programming language supporting different environments (browsers, servers, desktops, etc.), all of this powered by a common way of publishing and sharing code.
-
-When focusing specifically on P2P apps, the past years have brought together a set of new network protocols that empower communication between client browsers in a real-time fashion and also provide alternatives to TCP (TODO reference TCP). WebSockets (TODO reference to websocket) aimed at providing a real-time, full-duplex communication between clients and servers over TCP, but it was WebRTC (TODO reference webrtc) that paved the way for new P2P applications that could run in the browser. WebRTC focuses on powering real-time communications, like audio/video stream or just arbitrary data, between browsers, without the need of an intermediary. This of course is a real break through in the P2P field as it allows browsers to receive incoming connections. On other hand, alternatives to the TCP transport, such as UTP (TODO reference to UTP) and QUIC (TODO reference QUIC), came through, seeking to bring reliability and order delivery without the poor latency and congestion control issues of TCP. This provided new suitable alternatives to communication between peers on top of UDP, a transport that has been vital in P2P applications that need an affordable way to perform NAT (TODO reference NAT) traversal.
-
-In the application realm, there have been quite a few in the past years that seek to leverage all these new technologies and breakthroughs. One of the examples most worth mentioning is the InterPlanetary File System (IPFS) (TODO reference IPFS), a P2P hypermedia protocol designed to create a persistent, content-addressable network on top of the distributed web we have today. At the core of IPFS there is what they refer to as the Merkle DAG (TODO reference to IPFS spec on the merkle dag), a graph structure were each node is addressed and can be linked to based on the hash of its content. Each node can have links to other nodes, creating a persistent, chain like, structure that is immutable. IPFS exposes an API that allows us to interact with this structure, inserting and requesting random blobs of data, files, JSON objects and other complex structures. Having implementations in both Go and Javascript, IPFS leverages the modularity mantra in a fascinating way, focusing on creating common interfaces that allow for different pieces of the architecture to be changed and selected according to one's needs, without impacting the overall application and its top level API. These came from the observation that the web we have today is a set of different heterogeneous clients, that have different needs and resources, as such not everyone can rely on the same set of transports, storage management and discovery mechanisms. These small modules that constitute IPFS have recently been brought together under the same umbrella, as libp2p (TODO reference to libp2p), a set of packages that seek to solve common challenges in p2p applications. Interestingly enough, a recent addition to libp2p, and consequently IPFS, was a pub-sub module, with a naive implementation using a simple network flooding technique.
-
-![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
-
-## Systems overview
+### Systems overview
 
 | Systems / Properties | Subscription Model | Architecture | Topology | Overlay structure | Subscription Management | Event Dissemination | Locality Awareness | Relay Free Routing | Delivery Guarantees | Fault Tolerance | Average Network Degree | Message Duplication Factor | Message Usefulness Ratio |
 |----------------------|:------------------:|:------------:|:--------:|:-----------------:|:-----------------------:|:-------------------:|:------------------:|:------------------:|:-------------------:|:---------------:|:----------------------:|:--------------------------:|:------------------------:|
@@ -258,17 +227,35 @@ Relevant metrics are metrics that are a consequence of the design decisions made
   - Message duplication factor
   - Message usefulness ratio (operational msgs vs actual messages relevant for the applications)
 
-# Purposed solution
+## 3.3  Web technologies
+
+When building any kind of network focused system nowadays, there is no question that one should take the full potential of the web and all its relevant pieces. Browsers are a lot more complex and allow for a vast world of possibilities in terms of applications that can be built on top of it. P2P applications are no exception here. In the next sections we will cover a set of technologies that allow for a modern distributed application to run, not only on desktops and servers we are used to, but also on browsers and other different platforms.
+
+It is indisputable that one cannot think of modern web development without speaking of Javascript (TODO reference javascript). Javascript is a lightweight, interpreted, programming language, known as the scripting language for the web. Initially created with the purpose of allowing the creation of simple interactions and animations in web pages it is now one of the main programming languages for the web (TODO reference to stack overflow survey https://insights.stackoverflow.com/survey/2017) used, not only for client side programming, but also for server side. Since Javascript has different runtimes, it became necessary to create a standardised base from which the multiple browser vendors and runtime maintainers could work with. Hence  ECMAScript (TODO reference ecmascript), the standard for the Javascript implementation. 
+
+As it was previously said, Javascript nowadays is not restrict to browsers only. NodeJS (TODO reference to NodeJS) was the first successful implementation of a Javascript runtime, built on top of Chrome's V8 JavaScript engine (TODO reference V8), allowing to run what is commonly referred to as server side Javascript. One can write and run Javascript programs in multiple architectures and operating systems, with access to a set of common native libraries that allow to interact with relevant parts of the system (TODO reference to NodeJS API) such as network, filesystem and others. A key aspect in NodeJS was the way it choose to deal with the lack of support from Javascript for multithreading, by making use of an event loop that powers an event-driven architecture capable of asynchronous I/O.
+
+Yet another key element in the NodeJS and Javascript ecosystem is NPM (TODO reference to NPM), its package manager. NPM was one of the main drivers of a philosophy that is deeply ingrained in the JS ecosystem which focuses on building small reusable packages that everyone can use and build on top of. This is heavily inspired by the UNIX philosophy summarised by Doug McIlroy (TODO reference?) - "Write programs that do one thing and do it well. Write programs that work together". This approach ended up being a major differentiator on how modern web applications are developed and currently NPM is one of the largest package registries in the world (TODO reference http://blog.npmjs.org/post/143451680695/how-many-npm-users-are-there). This mindset though is really important, for it allows applications to be built on top of previously published packages, making modularity and code reusability core values of the ecosystem. Even more interesting is the sudden possibility offered by having the same programming language supporting different environments (browsers, servers, desktops, etc.), all of this powered by a common way of publishing and sharing code.
+
+When focusing specifically on P2P apps, the past years have brought together a set of new network protocols that empower communication between client browsers in a real-time fashion and also provide alternatives to TCP (TODO reference TCP). WebSockets (TODO reference to websocket) aimed at providing a real-time, full-duplex communication between clients and servers over TCP, but it was WebRTC (TODO reference webrtc) that paved the way for new P2P applications that could run in the browser. WebRTC focuses on powering real-time communications, like audio/video stream or just arbitrary data, between browsers, without the need of an intermediary. This of course is a real break through in the P2P field as it allows browsers to receive incoming connections. On other hand, alternatives to the TCP transport, such as UTP (TODO reference to UTP) and QUIC (TODO reference QUIC), came through, seeking to bring reliability and order delivery without the poor latency and congestion control issues of TCP. This provided new suitable alternatives to communication between peers on top of UDP, a transport that has been vital in P2P applications that need an affordable way to perform NAT (TODO reference NAT) traversal.
+
+In the application realm, there have been quite a few in the past years that seek to leverage all these new technologies and breakthroughs. One of the examples most worth mentioning is the InterPlanetary File System (IPFS) (TODO reference IPFS), a P2P hypermedia protocol designed to create a persistent, content-addressable network on top of the distributed web we have today. At the core of IPFS there is what they refer to as the Merkle DAG (TODO reference to IPFS spec on the merkle dag), a graph structure were each node is addressed and can be linked to based on the hash of its content. Each node can have links to other nodes, creating a persistent, chain like, structure that is immutable. IPFS exposes an API that allows us to interact with this structure, inserting and requesting random blobs of data, files, JSON objects and other complex structures. Having implementations in both Go and Javascript, IPFS leverages the modularity mantra in a fascinating way, focusing on creating common interfaces that allow for different pieces of the architecture to be changed and selected according to one's needs, without impacting the overall application and its top level API. These came from the observation that the web we have today is a set of different heterogeneous clients, that have different needs and resources, as such not everyone can rely on the same set of transports, storage management and discovery mechanisms. These small modules that constitute IPFS have recently been brought together under the same umbrella, as libp2p (TODO reference to libp2p), a set of packages that seek to solve common challenges in p2p applications. Interestingly enough, a recent addition to libp2p, and consequently IPFS, was a pub-sub module, with a naive implementation using a simple network flooding technique.
+
+![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
+
+## 3.4 Analysis and Discussion
+
+# 4 Proposed solution
 
 We now describe our purposed solution. Since our goal is to have a highly scalable system with reliability and persistence in mind, we opted for taking advantage of the IPFS ecosystem and its different modules. Our pub-sub module will then provide an alternative to the naive implementation already in place in IPFS, allowing users to choose what is more convenient for them. Besides, the existence of a previous naive implementation allows us to have a baseline for improvement, one from which we can extract metrics and relevant data. We will start by covering our subscription model and the multiple structures that describe messages and subscriptions. We will then cover how the system works in terms of subscription management, focusing on how are new subscriptions handled and how new topics are issued. Finally we will cover event dissemination and overlay structure, focusing on the mechanisms we have used to bring persistence and delivery guarantees to the network.
 
-## Subscription model and data structures
+## 4.1 Subscription model and data structures
 
 Our subscription model will follow a topic based approach.It will however  have some nice properties that will make it far more expressive than what would be expected of a regular topic based system. To do this, we will take advantage of the core structure of IPFS, the merkle dag, implemented as Inter Planetary Linked Data, or IPLD, (TODO reference to IPLD) on IPFS. IPLD follows the principles described previously on the basic structure of the merkle dag, with a focus on bringing together all the hash-linked data structures under an unified JSON-based model, that possesses a canonical serialisation process ensuring it is always serialised to the exact same sequence of bits.
 
-## Subscription management
+## 4.2 Subscription management
 
-## Event dissemination and overlay structure
+## 4.3 Event dissemination and overlay structure
 
 Since our work will be a libp2p compatible module, we will be able to leverage the multiple modules that already exist in libp2p ecosystem. This includes network transports, discovery and routing mechanisms as well as other useful data types and utility methods. The figure (TODO insert figure number) illustrates where our work will take place and some of the other modules we will be able to use. In order to understand it though there are some key aspects around libp2p that we need to cover first. libp2p tries to separate concerns of peer communication and data transports. In order to do that, it has different transport (TODO reference transport interface) implementations under a separate set of packages, which can then be leveraged through lip2p-swarm (TODO reference to libp2p-swarm), a connection abstraction that can deal with multiple connections under different protocols. On top of this we then have the peer communication, which can be split into two big mechanisms. On one end we have the discovery mechanisms (TODO reference to discovery interface), which focus on ways of finding and connecting to new peers. Finally we have peer routing (TODO reference to peer routing interface), which focus on transferring data between already connected peers. Our work will mostly reside in the pub-sub module itself and building/altering any needed peer routing mechanisms.
 
