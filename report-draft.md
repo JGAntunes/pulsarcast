@@ -24,7 +24,7 @@ The solution we propose is a pub-sub module to IPFS with a strong focus on relia
 
 (TODO intro section)
 
-### Subscription Model
+### 3.1.1 Subscription Model
 
 When considering pub-sub systems, there is a set of different options that will lay ground for the behaviour of the whole system. We call these options, design dimensions. Specifically, in our case, one  of the biggest decisions when designing a pub-sub system is what kind of subscription model to use.The subscription model determines how subscribers will define which events they are interested in. There are three major approaches covered by relevant literature (TODO reference many faces of pubsub and  XL PubSub) and that implementations usually follow:
 
@@ -72,7 +72,7 @@ While looking back at these different models its crucial to understand how they 
 
 It is also interesting to look at the application space and notice that not all applications have the same expressiveness requirements. This makes the existence of multiple subscription models not only justifiable but required. Consider the example given above for a stock exchange system: these kind of applications have a need for a complex set of subscription patterns, quite different from the ones you would probably have for a chat or social media application, which would rely heavily in the notion of topics and groups. 
 
-### Network Architecture 
+### 3.1.2 Network Architecture 
 
 Independent of the subscription model used, the system approach to the network architecture is crucial as it will, not only set the way clients interact with it, but will also determine a lot of the properties that the solution will benefit from (such as scalability, reliability, etc.).
 
@@ -119,7 +119,7 @@ Other popular examples in the DHT field are **Pastry** and **Tapestry** (that we
 
 **Hybrid overlays**: As with everything discussed so far, not every solution lies in each end of the spectrum, and overlay structure is no different. Recent research has been pushing more and more towards hybrid solutions that take advantages of both sides. Such example is **Vicinity** (TODO reference to paper) which employs Cyclon (discussed above) as a peer sampling service to help out in building an ideal structure that links nodes based on their proximity (for some notion of proximity, e.g. latency, localisation, etc.). In the end, we get a structured overlay, generated from a unstructured, gossip based, overlay (hence the hybrid solution). More importantly, this overlay will have properties that guarantee that it is an almost ideal structure for a given proximity metric. The Vicinity system discusses that the usage of probabilistic mechanisms helps out in keeping an healthy and reliable structure.
 
-### Subscription Management and Event Dissemination.
+### 3.1.3 Subscription Management and Event Dissemination.
 
 Now that we have set the underlying structures that power up the network, it is time to cover the specific requirements of a pub-sub system. We have two different aspects to cover: subscription management and event dissemination. By subscription management we refer to a set of key factors that will determine the overall performance of the pub-sub system, specifically in terms of matching events with subscribers, the selected representation for subscriptions, registering new subscriptions and deleting subscriptions. Event dissemination dictates how will the events be propagated through the system, in a way that avoids burdening specific nodes, but assures that all the subscription requirements are met. It is natural that in some ways these two aspects are connected (e.g. the way we store our subscriptions will probably impose a set of restrictions in how our events will be propagated) but it is still possible to make a clear distinction between how they work and their role in the overall system. 
 
@@ -127,7 +127,7 @@ As discussed before, in order to match subscribers with publishers, some kind of
 
 One interesting property of topic based systems in a decentralised and distributed scenario is that their subscription management and event dissemination can be easily implemented with an application level multicast system if we cluster subscribers of some topic/group in a single structure (e.g. a multicast tree). For example, consider the topic `/foobar` issued by a particular node in a pub-sub system. If , when new subscriptions are issued to this node, a tree like structure is built that allows events related to this topic to flow accordingly, disseminating a new event in `/foobar` is just a matter of sending the event to the root of the tree. From there, dissemination can flow blindly through the multiple links. Subscriptions are then represented as simple dissemination trees for each topic, which, interestingly enough, end up also representing how the actual events will be propagated in each topic. The root node (or nodes) acts as a rendezvous which, as the name suggests, it is where events are targeted at and new subscriptions issued to. The core idea is that, by relying on such nodes, eventually, all the system state will be synchronised (all the events will be propagated to the expected nodes and no subscription is left unattended). This does not mean that other nodes cannot cache state though, the idea of the rendezvous is to have a basic reassurance in subscription management and event dissemination. Ideally this would be implemented in a distributed fashion, keeping as much pressure out of the rendezvous node as possible. This is the approach followed by Scribe (TODO reference to Scribe) and Bayeux (TODO reference Bayeux).
 
-The usage of rendezvous nodes and tree like structures to represent subscriptions is not something particular to topic based systems. There are examples of these techniques in content based systems also, specifically Gryphon (TODO reference Gryphon), Siena (TODO reference Siena) and Jedi (TODO reference Jedi). Hermes (TODO reference to Hermes) on the other hand is an example of the same mechanisms with a type based subscription model. A more detailed description of how this is done in Gryphon, Siena and Scribe will be made further along, since they have different approaches motivated by their different options in network architecture and subscription model.
+The usage of rendezvous nodes and tree like structures to represent subscriptions is not something particular to topic based systems. There are examples of these techniques in content based systems also, specifically Gryphon (TODO reference Gryphon) and Jedi (TODO reference Jedi). Hermes (TODO reference to Hermes) on the other hand is an example of the same mechanisms with a type based subscription model. A more detailed description of how this is done in Gryphon and Scribe will be made further along, since they have different approaches motivated by their different options in network architecture and subscription model.
 
 For content based systems though, a common approach is to use multidimensional spaces as a way to represent subscriptions. The idea is to have each dimension refer to a specific attribute of the pub-sub schema.
 
@@ -147,42 +147,51 @@ For topic based systems, an alternative to building dissemination trees that rel
 
 A different approach to managing subscriptions and disseminating events in topic based systems is by having an overlay for each different topic. The idea is that by clustering nodes one can afford an easier event dissemination as well as an easy way of matching events with subscribers, since it is just a matter of propagating a given event inside its overlay. In order to keep everything connected, a general overlay can be used, that will allow all the nodes to have visibility on the whole set of topics. In this scenario, subscriptions are simply represented as being part of a specific network of peers, that could take any form or shape, or even be unstructured. For an unstructured network, the propagation of events could be a simple flooding algorithm, as it happens in Tera. Tera (TODO reference to Tera), a topic based pub-sub system, follows an approach close to this one. It keeps two distinct gossip based overlays, one responsible for keeping state on entrypoints for each topic (peers which are subscribed to a given topic and that can act as dissemination points for it) and another used to keep the subscribers of each topic. This clustering approach, where subscribers of a given topic are kept in a topic specific overlay, helps out in the dissemination step after an event has been published and reached the cluster. Another example following this approach is Poldercast (TODO reference to poldercast), which uses a set of three different overlays to keep the pub-sub network running. We will cover Poldercast more thoroughly later on. 
 
-## 3.2 Relevant Pub-Sub Systems 
+## 3.2 Relevant Pub-Sub Systems
 
-### Gryphon 
-Gryphon relies on a broker based network to build a content based subscription system. In the Gryphon approach, subscriptions take the form of a schema consisting of attributes, such as A1,..., An, and are stored in the form of a tree. A subscription specifying a value V1 to the first attribute of the schema, A1, will follow from the tree root the edge labeled with V1. If no such edge exists, one will be created. For Ai = Vi, the subscription will follow at level i - 1 the edge with label Vi. If a subscription does not name an attribute at level i, then it will follow the edge with label * (do not care).
+We now describe in further detail the systems which most resemble the work we are going to do. 
+
+### 3.2.1 Gryphon
+
+Gryphon (TODO reference to Gryphon) is a (TODO centralised?) content based pub-sub system developed at IBM using an interesting approach to match events with subscriptions (TODO reference "Matching events in a content-based subscription system"). Gryphon relied on a distributed broker based network to build a hierarchic tree structure representing the subscription schema. Considering a schema with multiple attributes - A1,...,An - each level on the subscription tree would represent a specific attribute. So, for example, if we were to have an event with a value V1 for the attribute A1, at the root node (which represents the attribute A1) the link followed by the event would be the one that would represent the value V1. The event would then be propagated through the multiple branches of the tree until it arrived at the broker node that represented all the specific values for that event. From there it would then be propagated to all the subscribers registered with that broker node. Figure (TODO reference figure) illustrates this approach.
+
+(TODO Example sketch of the subscription matching system)
+
+When a client issues a new subscription, the same approach will be followed until the subscription arrives at the broker node that represents it. If by some reason, the tree does not have an edge for a specific value of an attribute, a new edge will be created. During both of these approaches (subscription and event propagation), a subscription or event that does not name an attribute at a given level will follow the edge with label * (do not care).
+
+Gryphon has been successfully deployed over the Internet for real-time sports score distribution at the Grand Slam Tennis events, Ryder Cup, and for monitoring and statistics reporting at the Sydney Olympics (TODO reference to https://www.research.ibm.com/distributedmessaging/gryphon.html). In 2001, during the Wimbledon tournament, it managed to withstand almost 100,000 concurrently connected clients.
+
+### 3.2.2 Siena
+
+Siena(TODO reference to Siena) is a content based pub-sub system built on top a centralised broker mesh topology. Siena does not make any assumptions on how the communication between servers and client-server works, as this is not vital for the system to work. Instead, for server to server communication, it provides a set of options ranging from P2P communication to a more hierarchical structure, each with its respective advantages and shortcomings.
+
+Events in Siena are treated as a set of typed attributes with values. Consequently, subscriptions (or *event filters* as they are referred to in Siena) select events by specifying a set of attributes and constraints on its values.
+
+Supports advertisements 
+
+### 3.2.3 Scribe
+
+Scribe(TODO reference to Scribe) is a topic based pub-sub system built on top of a fully decentralised network (P2P). In order to do this it relies on Pastry DHT as its overlay structure. This allows it to leverage the robustness, self-organisation, locality and reliability properties of Pastry. Pastry DHT is at all similar to the DHTs described in the previous section (Chord and Kademlia), with a specific effort on achieving good network locality and a routing mechanism close to that of Kademlia.
+
+Scribe subscriptions are represented by a multicast tree, with each different tree representing a specific topic (or *group* as it is referred in Scribe). The root of this tree acts as the rendezvous node for the group. Each group has a *groupId* assigned to it, as such, the rendezvous node will be the one with the closest ID in the network. This multicast tree is built by joining the multiple Pastry routes from each group member to the rendezvous. This dynamic process happens whenever a new node decides to join a group. In order to do that, it asks Pastry to route a *JOIN* message with the *groupId* as the key. At each node along the path, the Scribe forward method is invoked to check it this node is already part of this group (also called a *forwarder*). If it is, it accepts the *JOIN* request and sets the node as its child, else, this node will become a *forwarder* for the group, sets the requesting node as its child and it sends a *JOIN* request to this group. Note that any node can be a *forwarder* for any group, it does not be an active part of it (i.e. subscriber or publisher).
+
+Disseminating an event in a group is a matter of disseminating it through its respective multicast tree. Fault tolerance mechanisms can be implemented on top of this system but, out of the box, Scribe provides only best effort delivery. As for the rendezvous nodes, their state can be replicated across the k closest nodes in the leaf set of the root node. Whenever a failure is detected by a children, it will issue a *JOIN* message which, thanks to Pastry's properties will be routed to a new root node which has access to the previous state of the rendezvous.
+
+### 3.2.4 Meghdoot
 
 (* more to add *)
-(Example sketch of the subscription matching system)
 
-### Scribe
+### 3.2.5 Poldercast
 
-(* more to add *)
+Poldercast(TODO reference to Poldercast) is a recent pub-sub system with a strong focus on scalability, robustness, efficiency and fault tolerance. It follows a topic based model and follows a fully decentralised architecture. The key detail about this system is that it tries to blend deterministic propagation over a structured overlay, with probabilistic dissemination through gossip based unstructured overlays. In order to do this, Poldercast uses 3 different overlays. Two of them, Cyclon and Vicinity, we covered in the previous section and the third one closely resembles Chord in many ways.
 
-### Jedi
+Poldercast subscriptions are represented as a structured ring overlay. Each topic has its own overlay in fact, with all subscribers (and only them) of the corresponding topic connected to it. This overlay is maintained by a module referred to as the *Rings Module* and its overall mechanisms closely resemble Chord's ones. In order for each node to have visibility across the whole pub-sub network, Vicinity, with the help of Cyclon, will be responsible for keeping an updated set of peers participating in each of the available topics in the network. Subscribing to a topic will then be a matter of consulting this set of peers and joining the specific overlay for the topic.
 
-Jedi too relies on a broker based network to build a content based pub-sub system. It developed a tree topology of broker nodes, where users were associated with leaf brokers and users’ subscriptions and events were first directed to their associated brokers. During subscription processing, subscriptions were directed up the leaf-to-root path, leaving at each intermediate node some state. During event processing, events also followed the leaf-to- root path. This guaranteed that any event and any subscription would rendezvous at (least at) the root. Any incoming event would therefore be matched against all subscriptions that have passed through each broker, this guaranteed that no subscription matching an event would go undetected. Also, while events were travelling towards the root, subscription matching could happen at each broker and events would be sent down the tree if needed be.
+Propagating events will be a matter of forwarding the event through the specific topic overlay. It is important to notice that Poldercast assumes only peers subscribed to a topic can publish to that same topic. The way this propagation works is through the ring overlay that, despite being similar to Chord, it has some important difference. It does not use a finger table at each node to speed up propagation. Instead, with the help of Vicinity, each node keeps a random set of peers for the topics it is part of. With them, whenever a node receives a message from a specific topic, it will propagate the event through a set of these peers. This propagation will be based on a system wide fanout parameter. It will also forward the event to its successor or predecessor (depending where the event originated from), or will simply ignore if it is not the first time it has received it. These mechanisms, depending of the fanout parameter, guarantee average dissemination paths for each topic to be asymptotically logarithmic.
 
-(* more to add *)
+Through the multiple mechanisms described above, Poldercast attempts to provide a set of guarantees. To start with, only nodes subscribed to a topic will receive events published to that topic. In other words, no relay nodes are used. It also focuses on handling churn through the use of a mixture of gossip mechanisms, ensuring an highly resilient network, with a focus on high hit ratio (number of subscriptions covered). Finally, it seeks to reduce message duplication factor (proportional to the fanout parameter) without compromising the network resilience.
 
-(Example sketch of the routing system)
-
-### Siena
-
-Siena is similar to Jedi, but it forms a graph broker topology.
-
-(* probably only keeping either Siena or Jedi *)
-(* more to add *)
-
-### Meghdoot
-
-(* more to add *)
-
-### Poldercast
-
-(* more to add *)
-
-### Systems overview
+### 3.2.6 Systems overview
 
 | Systems / Properties | Subscription Model | Architecture | Topology | Overlay structure | Subscription Management | Event Dissemination | Locality Awareness | Relay Free Routing | Delivery Guarantees | Fault Tolerance | Average Network Degree | Message Duplication Factor | Message Usefulness Ratio |
 |----------------------|:------------------:|:------------:|:--------:|:-----------------:|:-----------------------:|:-------------------:|:------------------:|:------------------:|:-------------------:|:---------------:|:----------------------:|:--------------------------:|:------------------------:|
@@ -248,6 +257,8 @@ In the application realm, there have been quite a few in the past years that see
 ![ipfs diagram](./diagrams/ipfs-stack-diagram.png)
 
 ## 3.4 Analysis and Discussion
+
+(TODO more to add)
 
 # 4 Proposed solution
 
