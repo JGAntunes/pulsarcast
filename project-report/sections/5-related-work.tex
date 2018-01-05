@@ -253,7 +253,7 @@ failures.
 
 One relevant example is Cyclon \cite{Voulgaris2005a}, a membership
 protocol that uses a gossip based approach to help maintain a network
-which resembles a random graph (TODO reference to random graph book) in
+which resembles a random graph in
 terms of degree distribution, clustering coefficient and path length. In
 order to do this, the approach followed by Cyclon is, at each node,
 besides keeping a fixed size of neighbours (other nodes in the network),
@@ -310,16 +310,16 @@ produce the content key that was used to produce the node ID.
   \label{fig:chord}
 \end{figure}
 
-It is common for Distributed Hash Tables to have a cost of O(log(N))
-(TODO need to use math notation here) in terms of number of nodes
+It is common for Distributed Hash Tables to have a cost of O(log{}N)
+in terms of number of nodes
 contacted, on average, to search for a given key (where N is the number
 of nodes in the network). Chord base structure per se only gives us
 O(N), as such, Chord uses a mechanism to allow for a speedier search. At
 each node, an additional routing table is kept with m entries, where m
 is the number of bits in the key space. Each ith entry in this table
 will be this node's successor (next node in the ring in a clockwise
-direction) with an ID, at least, bigger than 2\^{}i-1 (modulo 2\^{}m)
-(TODO need to use math notation here) in the key space. For example, for
+direction) with an ID, at least, bigger than $2^{i-1}$ (modulo $2^{m}$)
+in the key space. For example, for
 a node with ID 8, the 4th entry will be the first node in the ring with
 an ID larger than 16. This table, also referred to as finger table, will
 allow for a logarithmic search as demonstrated in Chord's specification.
@@ -334,16 +334,16 @@ is the resulting bitwise XOR operation interpreted as an integer. The
 XOR metric gives us an interesting set of properties. It is
 unidirectional (just like Chord clockwise direction) ensuring that
 lookups for the same key converge along the same path but, unlike Chord,
-it is symmetric, as such, the distance between x and y is the same as
-the distance between y and x. This symmetry allows Kademlia queries to
+it is symmetric, as such, the distance between $x$ and $y$ is the same as
+the distance between $y$ and $x$. This symmetry allows Kademlia queries to
 give valuable insights along every node they go through, helping out in
 populating each node's routing table.
 
 Kademlia nodes keep contact information about each other in a list, size
 m where m is the number of bits used for the keys in the system, and
 where each entry is a list itself of maximum size k (a system wide
-parameter) containing all the known nodes of distance between 2\^{}i and
-2\^{}i+1 (TODO need to use math notation here) of itself. These lists
+parameter) containing all the known nodes of distance between $2^{i}$ and
+$2^{i+1}$ of itself. These lists
 are appropriately called k-buckets and are kept sorted by time last seen
 (least recently seen node at the head). Whenever a node receives a
 message, it updates the appropriate k-bucket for the sender's node ID,
@@ -544,11 +544,11 @@ IBM, Gryphon uses an interesting approach to match events with
 subscriptions \cite{Aguilera1999}. Gryphon relied on a distributed broker based
 network to build a hierarchic tree structure representing the
 subscription schema. Considering a schema with multiple attributes -
-A1,\ldots{},An - (TODO use math here) each level on the subscription tree would represent a
+$A1,\ldots{},An$ - each level on the subscription tree would represent a
 specific attribute. So, for example, if we were to have an event with a
-value V1 for the attribute A1, at the root node (which represents the
-attribute A1) the link followed by the event would be the one that would
-represent the value V1. The event would then be propagated through the
+value $V1$ for the attribute $A1$, at the root node (which represents the
+attribute $A1$) the link followed by the event would be the one that would
+represent the value $V1$. The event would then be propagated through the
 multiple branches of the tree until it arrived at the broker node that
 represented all the specific values for that event. From there it would
 then be propagated to all the subscribers registered with that broker
@@ -557,7 +557,7 @@ node. Figure \ref{fig:gryphon} illustrates this approach.
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/gryphon.png}
-  \caption{extracted from \cite{Kermarrec2013}. When the event e = <1, 2, 3, 1, 2> is published,
+  \caption{extracted from \cite{Kermarrec2013}. When the event $e = <1, 2, 3, 1, 2>$ is published,
   all dark circles (representing brokers) are visited.
   Each level of the broker tree represents an attribute.}
   \label{fig:gryphon}
@@ -569,7 +569,7 @@ represents it. If by some reason, the tree does not have an edge for a
 specific value of an attribute, a new edge will be created. During both
 of these approaches (subscription and event propagation), a subscription
 or event that does not name an attribute at a given level will follow
-the edge with label * (do not care).
+the edge with label $*$ (do not care).
 
 Gryphon has been successfully deployed over the Internet for real-time
 sports score distribution at the Grand Slam Tennis events, Ryder Cup,
@@ -673,11 +673,11 @@ attributes. Each attribute has a \emph{name}, \emph{type} and
 the range of domain values taken by the given attribute. All the peers
 in the system will use this same model. A subscription will then be a
 set of predicates over the previously defined attributes. In order to
-map this to the CAN DHT, Meghdoot defines the \emph{n} attributes schema
-as a \emph{2n} dimensional space in the DHT. Subscriptions will be a
+map this to the CAN DHT, Meghdoot defines the $n$ attributes schema
+as a $2n$ dimensional space in the DHT. Subscriptions will be a
 point in this multidimensional space, where the range query it defines
 will be represented as two separate dimensions per attribute in the DHT
-(hence the \emph{2n} space). Each subscription is routed through the CAN
+(hence the $2n$ space). Each subscription is routed through the CAN
 DHT until it reaches the peer responsible for managing the zone it is
 part of.
 
@@ -685,12 +685,12 @@ Event dissemination in Meghdoot will be a matter of routing each event
 through the CAN DHT. The events too will be defined by points in the
 multidimensional space. The point will be represented by the value of
 that same attribute in each of dimensions used to map it. For example,
-for a 2 dimensional space (TODO use math here) \emph{(x,y)} (only one attribute), an event
-with a value \emph{z} would be mapped to a point \emph{x=y=z}. Once the
+for a 2 dimensional space $(x,y)$ (only one attribute), an event
+with a value $z$ would be mapped to a point $x=y=z$. Once the
 event arrives at the node responsible for managing that specific zone in
 the DHT, it will be up to it to route the event to all of its neighbours
 falling in the region affected by the event. An interesting property of
-the \emph{2n} dimensional space is that half of it is left unexplored by
+the $2n$ dimensional space is that half of it is left unexplored by
 the default subscription algorithm. This allows that space to persist
 replicas of the subscriptions on the other half, making Meghdoot a
 system with fault tolerance by default.
