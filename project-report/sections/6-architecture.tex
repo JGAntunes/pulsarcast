@@ -48,41 +48,41 @@ format which IPLD uses.
   name: <topic-name>,
   metadata: <json-object>, // creation date, protocol version, etc.
   #: {
-    <sub-topic-name>: <merkle-link to topic descriptor>, // merkle links to all the sub-topics
+    <sub-topic-name>: <merkle-link to topic descriptor>,
     ...
   },
-  parent: <merkle-link to topic descriptor> // merkle link to the previous version of this topic descriptor
+  parent: <merkle-link to topic descriptor>
 }
 \end{verbatim}
 
 These structures are addressed by the hash of its content, which in IPFS
-are referred to as Content Identifiers~/footnote{https://github.com/ipld/cid} or CID. In
+are referred to as Content Identifiers~\footnote{https://github.com/ipld/cid} or CID. In
 fact, given the definition of these objects, all the content of the
 structure itself is addressable based on its CID. For example, if we had
 a topic descriptor with a CID
-\texttt{Qm000000002CPGAzmfdYPghgrFtYFB6pf1BqMvqfiPDam8u} we could
+\emph{<foobar-hash>u} we could
 address it using a UNIX path approach such as
-\texttt{/Qm000000002CPGAzmfdYPghgrFtYFB6pf1BqMvqfiPDam8}. However we
+\emph{/<foobar-hash>}. However we
 could access its properties directly such as
-\texttt{/Qm000000002CPGAzmfdYPghgrFtYFB6pf1BqMvqfiPDam8/\#} to get the
+\emph{/<foobar-hash>/\#} to get the
 sub-topics list, or
-\texttt{/Qm000000002CPGAzmfdYPghgrFtYFB6pf1BqMvqfiPDam8/parent} to get
+\emph{/<foobar-hash>/parent} to get
 the previous version of this topic. These paths are referred to under
 IPFS as \emph{merkle-paths}.
 
 Given the immutable nature of the IPLD structure, the parent link allows
 us to create new updated versions of the topic descriptor (with a new
 sub-topic for example) while maintaining a history of previous topic
-descriptors for this topic. The key \texttt{\#} on the other hand
+descriptors for this topic. The key \emph{\#} on the other hand
 contains a JSON object with merkle-links for all of sub-topics indexed
 by name.
 
 The topic name is a string following a UNIX like path pattern. For
-example \texttt{/sports}. If we are speaking about sub-topics though,
+example \emph{/sports}. If we are speaking about sub-topics though,
 there is an extra requirement, given that a sub-topic name needs to be
 consistent with its parent hierarchy. This means that, for a topic
-\texttt{/sports}, it cannot have a sub-topic \texttt{/fruits}, or
-\texttt{/fruits/apples}. \texttt{/sports/football} however is a valid
+\emph{/sports}, it cannot have a sub-topic \emph{/fruits}, or
+\emph{/fruits/apples}. \emph{/sports/football} however is a valid
 example.
 
 The \textbf{event descriptor} defines the structure of our events. Each
@@ -100,8 +100,8 @@ actual information of the event. The following is an example of it.
     link: <merkle-link> // Link to the topic of this message
   },
   publisher: <publisher node ID>
-  parent: <merkle-link to previous event>, // Link to previous event in the graph
-  metadata: <json-object>, // Things like creation date and other relevant info
+  parent: <merkle-link to previous event>,
+  metadata: <json-object>, // Timestamp and other relevant info
   payload: <json-object>, // The actual message content
 }
 \end{verbatim}
@@ -117,7 +117,7 @@ We still need however one more structure to help us build our system.
 Given the immutability of the objects above, we need a way to point to
 the latest version of a given topic descriptor so that other peers can
 easily find it. Fortunately, this scenario is already covered by the
-IPFS ecosystem through IPNS~/footnote{https://github.com/ipfs/specs/tree/master/iprs}, which aims at
+IPFS ecosystem through IPNS~\footnote{https://github.com/ipfs/specs/tree/master/iprs}, which aims at
 providing mutability over all these immutable structures. An IPNS record
 has a special CID, generated through the hash of a public key from a
 cryptographic key pair. These records can be used to point to a specific
@@ -130,6 +130,13 @@ seamlessly, keeping the same CID as an entry point for the topic;
 authenticity of the given topic, given that peers can check the IPNS
 record signature and decide if they trust the peer owning that record or
 not.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/solution-arch.png}
+  \caption{caption}
+  \label{fig:solution-arch}
+\end{figure}
 
 \subsection{Overlay Structure}\label{overlay-structure-solution}
 
@@ -147,9 +154,9 @@ which can then be leveraged through lip2p-swarm~\footnote{https://github.com/lib
 a connection abstraction that can deal with multiple
 connections under different protocols. On top of this we then have the
 peer communication, which can be split into two big mechanisms. On one
-end we have the discovery mechanisms~/footnote{https://github.com/libp2p/interface-peer-discovery},
+end we have the discovery mechanisms~\footnote{https://github.com/libp2p/interface-peer-discovery},
 which focus on ways of finding and connecting to new peers.
-On the other end we have peer routing~/footnote{https://github.com/libp2p/interface-peer-routing},
+On the other end we have peer routing~\footnote{https://github.com/libp2p/interface-peer-routing},
 which focus on transferring data between already connected
 peers. Our work will mostly reside in three different modules: the
 pub-sub module implementation; adding extra functionality to the
@@ -247,7 +254,7 @@ update to the topic descriptor is made, the node responsible for the
 topic will issue a special event and disseminate it through the
 multicast tree. Since updates to the sub-topic list will trigger topic
 descriptor updates, subscribers only have to monitor for changes on the
-special key \texttt{\#} of the topic descriptor.
+special key \emph{\#} of the topic descriptor.
 
 \subsection{Event Dissemination}\label{event-dissemination}
 

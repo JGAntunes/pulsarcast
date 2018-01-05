@@ -57,13 +57,15 @@ extend the subscription structure already in place. There are numerous
 solutions that cover the topic based subscription scenario. Specifically
 in the distributed/decentralised area we have solutions like Scribe \cite{Castro2002},
 Bayeux \cite{Zhuang2001}, Tera \cite{Baldoni2007} and Poldercast \cite{Setty2012}.
+\bigskip
 
-The \textbf{content based subscription model} brought a different
+\textbf{The content based subscription model} brought a different
 approach that sought to use the content of the event message itself as a
 way for subscribers to specify the messages they were interested in \cite{Banavar1999}.
 Essentially, subscribers could define fields, or conditions on those same fields that would make an event
 match a subscription or not. Consider the following example of a simple
 message and subscription, represented using JSON~\footnote{https://www.json.org/}.
+\bigskip
 
 \textbf{Message}
 
@@ -77,7 +79,7 @@ message and subscription, represented using JSON~\footnote{https://www.json.org/
 }
 \end{verbatim}
 
-Subscription
+\textbf{Subscription}
 
 \begin{verbatim}
 {
@@ -98,6 +100,7 @@ the definition of schemas as a way to create subscriptions. Some
 examples of solutions that follow a content based subscription model are
 Gryphon \cite{Strom1998}, Jedi \cite{Cugola2001}, Siena \cite{Carzaniga2003},
 Meghdoot \cite{Gupta2004}, Mercury \cite{Bharambe2002} and Sub-2-sub \cite{Voulgaris2005}.
+\bigskip
 
 Also worth referencing is the \textbf{type based subscription model}.
 \cite{Eugster2000}. The type based model seeks to use the type
@@ -173,6 +176,7 @@ networks, where peers form a network with no clear structure or
 hierarchy (commonly referred to as a network mesh) with each peer
 connected to a subset of other nodes independent of their ID,
 localisation, network IP address, etc.
+\bigskip
 
 \textbf{Unstructured overlays}: These rely on membership protocols that
 try to preserve a couple of key properties, such as the network diameter
@@ -216,6 +220,7 @@ neighbours is a key aspect and should assume a random or pseudo-random
 fashion. If disturbed by a small set of nodes that could either be
 malfunctioning or behaving selfishly, the basic properties of the
 network like its resilience could be severely affected.
+\bigskip
 
 \textbf{Structured overlays}: On the other end of the spectrum of
 overlay networks we have the \textbf{structured overlay}, where peers
@@ -329,6 +334,7 @@ selected it can also be ensured that the load is balanced properly
 across the network. However, these networks lack the tolerance for heavy
 network partitions and network churn that the usual unstructured network
 can bare with.
+\bigskip
 
 \textbf{Hybrid overlays}: As with everything discussed so far, not every
 solution lies in each end of the spectrum, and overlay structure is no
@@ -748,15 +754,15 @@ connections. On other hand, alternatives to the TCP transport, such as
 without the poor latency and congestion control issues of TCP. This
 provided new suitable alternatives to communication between peers on top
 of UDP, a transport that has been vital in P2P applications that need an
-affordable way to perform NAT~/footnote{https://tools.ietf.org/html/rfc2663} traversal.
+affordable way to perform NAT~\footnote{https://tools.ietf.org/html/rfc2663} traversal.
 
 In the application realm, there have been quite a few in the past years
 that seek to leverage all these new technologies and breakthroughs. One
 of the examples most worth mentioning is the \textbf{InterPlanetary File
-System} (IPFS)~/footnote{https://ipfs.io}, a P2P hypermedia protocol designed
+System} (IPFS)~\footnote{https://ipfs.io}, a P2P hypermedia protocol designed
 to create a persistent, content-addressable network on top of the
 distributed web. At the core of IPFS is what they refer to as the Merkle
-DAG~/footnote{https://github.com/ipld/specs/tree/master/ipld}. The Merkle DAG is a
+DAG~\footnote{https://github.com/ipld/specs/tree/master/ipld}. The Merkle DAG is a
 graph structure used to store and represent data, where each node can be
 linked to based on the hash of its content. Each node can have links to
 other nodes, creating a persistent, chain like, structure that is
@@ -776,7 +782,7 @@ of different heterogeneous clients, that have different needs and
 resources. As such, not everyone can rely on the same set of transports,
 storage management and discovery mechanisms. These small modules that
 constitute IPFS have recently been brought together under the same
-umbrella, as \textbf{libp2p}~/footnote{https://libp2p.io}, a set of
+umbrella, as \textbf{libp2p}~\footnote{https://libp2p.io}, a set of
 packages that seek to solve common challenges in P2P applications.
 Interestingly enough, a recent addition to libp2p, and consequently
 IPFS, was a pub-sub module, with a naive implementation using a simple
