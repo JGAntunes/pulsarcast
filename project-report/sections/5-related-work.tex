@@ -6,12 +6,22 @@
 
 \section{Related Work}
 
-(TODO add intro text)
+In this section we will cover the research work and industry references
+that can be considered relevant to our initial objective. The following section \ref{distributed-publish-subscribe-paradigm}
+will lay the ground to define how pub-sub systems are structured. In section \ref{relevant-pub-sub-systems}
+we will cover a set of systems defined as relevant. Section \ref{web-technologies} will
+address some of the web technologies of interest in this area and finally we will
+analyse all of the work discussed so far in \ref{analysis-and-discussion}.
 
 \subsection{Distributed Publish-Subscribe
 Paradigm}\label{distributed-publish-subscribe-paradigm}
 
-(TODO add intro text)
+In this section we will cover the basis of the pub-sub paradigm, defining a
+taxonomy we will later use to classify relevant systems. We will start by covering
+the \emph{Subscription Model} \ref{subscription-model}, followed by the \emph{Network Architecture}
+\ref{network-architecture} and \emph{Overlay Structure} \ref{overlay-structure}. Finally
+we address the \emph{Subscription Management and Event Dissemination}
+\ref{subscription-management-and-event-dissemination}.
 
 \subsubsection{Subscription Model}\label{subscription-model}
 
@@ -142,6 +152,60 @@ have for a chat or social media application, which would rely heavily in
 the notion of topics and groups.
 
 \subsubsection{Network Architecture}\label{network-architecture}
+
+Independently of the subscription model used, the system approach to the
+network architecture is crucial as it will, not only set the way clients
+interact with it, but will also determine a lot of the properties that
+the solution will benefit from (such as scalability, reliability, etc.). Networks
+can generally be categorised as centralised or decentralised.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[max height=4cm,max width=0.95\textwidth]{img/network-archs.png}
+  \caption{caption}
+  \label{fig:network-archs}
+\end{figure}
+
+Note that the goal of a pub-sub system is to enable the exchange of
+events in a asynchronous manner, with the decoupling of producers from
+consumers as previously discussed. This can be easily achieved using an
+entity which is responsible for receiving the messages from the
+producers, storing them and distributing them across all the consumers. This is
+what we refer to as a \textbf{centralised architecture}, motivated by the need of
+this central entity. This is the approach adopted by a lot of the
+message queue systems like Apache Active MQ, RabbitMQ and Redis. The
+usual focus for applications relying on this kind of systems is on
+reliability and data consistency but with a low data throughput. Typically expected
+to operate in a more stable environment, such as datacenters. Figure \ref{fig:centralised-topology}
+is an example to illustrate how would a centralised pub-sub system work.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[max height=4cm,max width=0.95\textwidth]{img/centralised-topology.png}
+  \caption{caption}
+  \label{fig:centralised-topology}
+\end{figure}
+
+Being the broad term that it is, centralised encompasses a lot of different solutions.
+One can have centralised solutions that employ a distribution of load through
+different nodes in order to improve the overall scalability of the system. In the pub-sub field, these networks
+of servers are commonly referred to as brokers. There are multiple pub-sub systems
+that follow this approach. More precisely Gryphon \cite{Strom1998}, Siena \cite{Carzaniga2003}
+and Jedi \cite{Cugola2001}. But, even between them there are some clear differences
+on how these broker networks organise. In both Gryphon and Jedi these nodes organise in
+hierarchical fashion, or define what we call a \textbf{broker hierarchy}. As for Siena,
+the nodes resort to not following a specific structure, making it effectively a \textbf{broker mesh}.
+
+The asynchronous nature of the pub-sub paradigm also allows for a
+different approach on message forwarding, with both producers and
+consumers being responsible for storing and forwarding messages, without
+the need of an intermediary entity. This approach is referred to as a
+\textbf{decentralised architecture} as there is no central entity that could easily
+become a bottleneck for the whole system. Additionally, when the network is
+\textbf{fully decentralised} it is commonly referred to as peer to peer (P2P) architecture,
+for it relies solely on the communication between peers in the same network.
+An example of a pub-sub system following this approach is Scribe \cite{Castro2002}.
+These kind of systems have a great focus on scalability and, consequently, on efficient message delivery.
 
 \subsubsection{Overlay structure}\label{overlay-structure}
 
@@ -681,6 +745,33 @@ the fanout parameter) without compromising the network resilience.
 
 \subsubsection{Systems Overview}\label{systems-overview}
 
+We will now compare some of the systems we have mentioned so far. The
+table \ref{table:relevant-systems} will serve as a useful comparison mechanism for this.
+A couple of notes on the terminology used. We address \emph{delivery guarantees} as the
+ability to deliver a message under normal working conditions and refer to \emph{fault tolerance}
+as the ability to keep such guarantees under churn. This of course depends on the
+persistence of subscriptions and mechanisms to replicate these. The rest of the criteria have been
+addressed throughout the previous sections.
+
+\begin{sidewaystable}
+  \center
+    \begin{tabular}{|p{2cm}|P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}|}\hline
+    Systems / Properties & Subscription Model & Architecture & Overlay Structure & Subscription Management & Event dissemination & Relay Free Routing & Delivery Guarantees & Fault Tolerance \\\hline
+    Gryphon & content based & centralised broker hierarchy & N/A & route to broker node responsible for subscription & tree hierarchy & N/A & yes & best effort \\
+    Siena & content based & centralised broker mesh & N/A & route through the whole system, keep state at each node & flood with cached state at each node & N/A & yes & best effort \\
+    Jedi & content based & centralised broker hierarchy & N/A & route through the whole system, keep state at each node & tree hierarchy & N/A & yes & best effort \\
+    Bayeux & topic based & decentralised & Tapestry DHT & route to rendezvous node & multicast tree & no & yes & best effort, no subscription persistence \\
+    Scribe & topic based & decentralised & Pastry DHT & route to rendezvous node & multicast tree & no & yes & best effort, no subscription persistence \\
+    Medhdoot & content based & decentralised & CAN DHT & points in CAN DHT & CAN route (line in multidimensional space) & no & yes & replicated subscritions \\
+    Hermes & type based & decentralised & Pastry DHT & rendezvous node & multicast tree & no & yes & best effort \\
+    Tera & topic based & decentralised & gossip based overlay &  & random walk outside cluster, flood after & no & no & best effort \\
+    Mercury & content based & decentralised & ring based DHTs & overlay per attribute in schema & route through ring overlays & no & yes & best effort \\
+    Sub-2-Sub & content based & decentralised & ring based DHT/ gossip based overlay & ring overlay with subscribers & gossip outside cluster, route through ring after & no & no & best effort \\
+    Poldercast & topic based & decentralised & ring based DHT/ Vicinity / Cyclon & ring overlay with subscribers & route through ring overlay & yes & yes (every publisher is a subscriber) & high resillience to churn, no subscription persistence \\\hline
+    \end{tabular}
+  \caption{Some caption to the table.}
+  \label{table:relevant-systems}
+\end{sidewaystable}
 
 \subsection{Web Technologies}\label{web-technologies}
 
