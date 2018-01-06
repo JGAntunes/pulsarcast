@@ -448,10 +448,10 @@ distributed scenario is that their subscription management and event
 dissemination can be easily implemented with an application level
 multicast system if we cluster subscribers of some topic/group in a
 single structure (e.g.~a multicast tree). For example, consider the
-topic \texttt{/foobar} issued by a particular node in a pub-sub system.
+topic \emph{/foobar} issued by a particular node in a pub-sub system.
 If , when new subscriptions are issued to this node, a tree like
 structure is built that allows events related to this topic to flow
-accordingly, disseminating a new event in \texttt{/foobar} is just a
+accordingly, disseminating a new event in \emph{/foobar} is just a
 matter of sending the event to the root of the tree. From there,
 dissemination can flow blindly through the multiple links. Subscriptions
 are then represented as simple dissemination trees for each topic,
@@ -548,7 +548,7 @@ specific attribute. So, for example, if we were to have an event with a
 value $V1$ for the attribute $A1$, at the root node (which represents the
 attribute $A1$) the link followed by the event would be the one that would
 represent the value $V1$. The event would then be propagated through the
-multiple branches of the tree until it arrived at the broker node that
+multiple branches of the tree until it arrives at the broker node that
 represented all the specific values for that event. From there it would
 then be propagated to all the subscribers registered with that broker
 node. Figure \ref{fig:gryphon} illustrates this approach.
@@ -556,9 +556,9 @@ node. Figure \ref{fig:gryphon} illustrates this approach.
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/gryphon.png}
-  \caption{extracted from \cite{Kermarrec2013}. When the event $e = <1, 2, 3, 1, 2>$ is published,
-  all dark circles (representing brokers) are visited.
-  Each level of the broker tree represents an attribute.}
+  \caption{extracted from \cite{Kermarrec2013}. Each level of the broker tree represents an attribute.
+  When the event $e = <1, 2, 3, 1, 2>$ is published,
+  all dark circles (representing brokers) are visited.}
   \label{fig:gryphon}
 \end{figure}
 
@@ -573,8 +573,6 @@ the edge with label $*$ (do not care).
 Gryphon has been successfully deployed over the Internet for real-time
 sports score distribution at the Grand Slam Tennis events, Ryder Cup,
 and for monitoring and statistics reporting at the Sydney Olympics~\footnote{https://www.research.ibm.com/distributedmessaging/gryphon.html}.
-In 2001, during the Wimbledon tournament, it managed to withstand almost
-100,000 concurrently connected clients.
 
 \subsubsection{Siena}\label{siena}
 
@@ -668,7 +666,7 @@ expressive content based system.
 In Meghdoot, subscriptions are defined over a schema of \emph{n}
 attributes. Each attribute has a \emph{name}, \emph{type} and
 \emph{domain}, and can be described by a tuple
-\texttt{\{Name:\ Type,\ Min,\ Max\}}. \emph{Min} and \emph{Max} describe
+\emph{\{Name:\ Type,\ Min,\ Max\}}. \emph{Min} and \emph{Max} describe
 the range of domain values taken by the given attribute. All the peers
 in the system will use this same model. A subscription will then be a
 set of predicates over the previously defined attributes. In order to
@@ -737,15 +735,14 @@ Through the multiple mechanisms described above, Poldercast attempts to
 provide a set of guarantees. To start with, only nodes subscribed to a
 topic will receive events published to that topic. In other words, no
 relay nodes are used. It also focuses on handling churn through the use
-of a mixture of gossip mechanisms, ensuring an highly resilient network,
-with a focus on high hit ratio (number of subscriptions covered).
-Finally, it seeks to reduce message duplication factor (proportional to
-the fanout parameter) without compromising the network resilience.
+of a mixture of gossip mechanisms, ensuring a highly resilient network.
+Finally, it seeks to reduce message duplication factor (i.e. nodes receiving
+the same message more than once).
 
 \subsubsection{Systems Analysis}\label{systems-overview}
 
-We will now compare some of the systems we have mentioned so far. The
-table \ref{table:relevant-systems} will serve as a useful comparison mechanism for this.
+We will now compare some of the systems we have mentioned so far. Table \ref{table:relevant-systems}
+will serve as a useful comparison mechanism for this.
 A couple of notes on the terminology used. We address \emph{delivery guarantees} as the
 ability to deliver a message under normal working conditions and refer to \emph{fault tolerance}
 as the ability to keep such guarantees under churn. This of course depends on the

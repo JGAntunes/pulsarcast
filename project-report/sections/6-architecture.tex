@@ -60,13 +60,13 @@ are referred to as Content Identifiers~\footnote{https://github.com/ipld/cid} or
 fact, given the definition of these objects, all the content of the
 structure itself is addressable based on its CID. For example, if we had
 a topic descriptor with a CID
-\emph{<foobar-hash>u} we could
+\emph{foobar-hash} we could
 address it using a UNIX path approach such as
-\emph{/<foobar-hash>}. However we
+\emph{/foobar-hash}. However we
 could access its properties directly such as
-\emph{/<foobar-hash>/\#} to get the
+\emph{/foobar-hash/\#} to get the
 sub-topics list, or
-\emph{/<foobar-hash>/parent} to get
+\emph{/foobar-hash/parent} to get
 the previous version of this topic. These paths are referred to under
 IPFS as \emph{merkle-paths}.
 
@@ -227,8 +227,8 @@ peers that resulted from this step are already part of the multicast
 tree. In an affirmative case, the initiator node joins the tree as a
 child of this specific node, if not, it chooses the closest one and
 issues a special command for this peer to join the multicast tree. The
-node upon receiving a command to join the multicast tree registers the
-initiator node as its child on the multicast tree and again repeat the
+node, upon receiving a command to join the multicast tree, registers the
+initiator node as its child on the multicast tree and repeats the
 same process until eventually a node belonging to the tree is found.
 
 Peers that belong to a multicast tree are responsible for making sure
@@ -308,7 +308,7 @@ scope of this work.
 
 On the \textbf{delivery guarantee} front we developed a simple mechanism
 that ensures that every node subscribed to a given topic will eventually
-get the same event stream as every other node in the network. This is
+get the same event stream. This is
 because of the way the event stream is linked. Given that through the
 \emph{parent} key of an event descriptor, a node can check if it is
 missing any message from the stream. If it is, it will query the
