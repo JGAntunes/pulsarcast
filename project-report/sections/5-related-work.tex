@@ -541,7 +541,7 @@ Gryphon \cite{Strom1998} is a content based pub-sub system
 built on top of a centralised broker hierarchy topology. Developed at
 IBM, Gryphon uses an interesting approach to match events with
 subscriptions \cite{Aguilera1999}. Gryphon relied on a distributed broker based
-network to build a hierarchic tree structure representing the
+network to build a tree structure representing the
 subscription schema. Considering a schema with multiple attributes -
 $A1,\ldots{},An$ - each level on the subscription tree would represent a
 specific attribute. So, for example, if we were to have an event with a
@@ -593,7 +593,7 @@ and constraints on its values. When issuing a new subscription, a client
 sends its subscription to its broker node, which then forwards it
 throughout the network. At each node, the subscription leaves some state
 behind, identifying it and the neighbour which previously forwarded the
-message. This is crucial, for this will be the dissemination paths that
+message. This is crucial, for these will be the dissemination paths that
 events will follow when travelling through the network. Siena also
 defines an interesting concept of \emph{subscription coverage}. A
 subscription \emph{S} is covered by a subscription \emph{M} if, whenever
@@ -639,12 +639,12 @@ routes from each group member to the \emph{rendezvous}. This dynamic
 process happens whenever a new node decides to join a group. In order to
 do that, it asks Pastry to route a \emph{JOIN} message with the
 \emph{groupId} as the key. At each node along the path, the Scribe
-forward method is invoked to check it this node is already part of this
+forward method is invoked to check this node is already part of this
 group (also called a \emph{forwarder}). If it is, it accepts the
-\emph{JOIN} request and sets the node as its child, else, this node will
+\emph{JOIN} request and sets the node as its child, else this node will
 become a \emph{forwarder} for the group, sets the requesting node as its
 child and it sends a \emph{JOIN} request to this group. Note that any
-node can be a \emph{forwarder} for any group, it does not be an active
+node can be a \emph{forwarder} for any group, it does not need to be an active
 part of it (i.e.~subscriber or publisher).
 
 Disseminating an event in a group is a matter of disseminating it
@@ -688,7 +688,7 @@ for a 2 dimensional space $(x,y)$ (only one attribute), an event
 with a value $z$ would be mapped to a point $x=y=z$. Once the
 event arrives at the node responsible for managing that specific zone in
 the DHT, it will be up to it to route the event to all of its neighbours
-falling in the region affected by the event. An interesting property of
+that are part of the region affected by the it. An interesting property of
 the $2n$ dimensional space is that half of it is left unexplored by
 the default subscription algorithm. This allows that space to persist
 replicas of the subscriptions on the other half, making Meghdoot a
@@ -721,7 +721,7 @@ Propagating events will be a matter of forwarding the event through the
 specific topic overlay. It is important to notice that Poldercast
 assumes only peers subscribed to a topic can publish to that same topic.
 The way this propagation works is through the ring overlay that, despite
-being similar to Chord, it has some important difference. It does not
+being similar to Chord, it has some important differences. It does not
 use a finger table at each node to speed up propagation. Instead, with
 the help of Vicinity, each node keeps a random set of peers for the
 topics it is part of. With them, whenever a node receives a message from
@@ -742,7 +742,7 @@ with a focus on high hit ratio (number of subscriptions covered).
 Finally, it seeks to reduce message duplication factor (proportional to
 the fanout parameter) without compromising the network resilience.
 
-\subsubsection{Systems Overview}\label{systems-overview}
+\subsubsection{Systems Analysis}\label{systems-overview}
 
 We will now compare some of the systems we have mentioned so far. The
 table \ref{table:relevant-systems} will serve as a useful comparison mechanism for this.
@@ -771,7 +771,6 @@ addressed throughout the previous sections.
   \caption{Comparison table for the relevant system}
   \label{table:relevant-systems}
 \end{sidewaystable}
-caption
 \subsection{Web Technologies}\label{web-technologies}
 
 When building any kind of network focused system nowadays, there is no

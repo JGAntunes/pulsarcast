@@ -143,7 +143,7 @@ not.
 Since our work will be a libp2p compatible module, we will be able to
 leverage the multiple modules that already exist in libp2p ecosystem.
 This includes network transports, discovery and routing mechanisms as
-well as other useful data types and utility methods. The figure \ref{fig:libp2p-stack}
+well as other useful data types and utility methods. Figure \ref{fig:libp2p-stack}
 illustrates where our work will take place and
 some of the other modules we will be able to use. In order to understand
 it though there are some key aspects around libp2p that we need to cover
@@ -239,8 +239,8 @@ partition causes these mechanisms to fail, nodes can always rejoin the
 network through the procedure detailed above.
 
 Since our system accounts for topic hierarchy, it is possible to create
-sub-topics. If a peer wants to add a sub-topic to a topic he created,
-all he needs to do is add a new sub-topic link to the parent topic
+sub-topics. If a peer wants to add a sub-topic to a topic it created,
+all it needs to do is add a new sub-topic link to the parent topic
 descriptor and afterwards issue a new IPNS record pointing to the new
 version of the parent topic descriptor. If the node does not own the
 parent topic it will need to request for the new sub-topic to be added
@@ -290,8 +290,8 @@ for a node to register as a \emph{rendezvous}.
 
 We then need to cover the IPNS record issue, for it can also become a
 bottleneck. An important thing to keep in mind though is that the IPNS
-records comes with a notion of ownership which, if you take a closer
-look, actually make sense here. Since the peer that created the topic is
+records come with a notion of ownership which, if you take a closer
+look, actually makes sense here. Since the peer that created the topic is
 actually responsible for updating the respective descriptor and serving
 as \emph{rendezvous} for the network. This ownership however does not
 translate at all in lock in though, the usage of these graph structures
@@ -313,8 +313,8 @@ because of the way the event stream is linked. Given that through the
 \emph{parent} key of an event descriptor, a node can check if it is
 missing any message from the stream. If it is, it will query the
 Kademlia DHT using the \emph{get} method for that specific key. This
-approach can ultimately been seen as a simple \emph{NAK} (a negative
-ACK) mechanism.
+approach can ultimately been seen as a simple negative
+ACK mechanism.
 
 Finally, on the \textbf{persistence} front, we see these graph
 structures as the key to create a P2P pub-sub system that finally
@@ -328,5 +328,5 @@ persisted across multiple nodes which will allow for peers to eventually
 build their event stream from any given point. Hence our last mechanism,
 when a peer subscribes to a new topic, it will almost immediately
 receive the set of leaf events from the graph stream. This simple
-approach will give him the ability to rebuild the stream of events as
+approach will give it the ability to rebuild the stream of events as
 far as it likes.
