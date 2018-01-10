@@ -9,7 +9,7 @@
 The publish-subscribe (pub-sub) interaction paradigm is an approach that
 has received an increasing amount of attention recently \cite{Kermarrec2013} \cite{Eugster2003}.
 This is mainly due to its special properties, that allow for full decoupling of all the communicating
-parties. First we should define what the publish-subscribe pattern is.
+parties. First, we should define what the publish-subscribe pattern is.
 In this interaction paradigm, subscribers (or consumers) sign up for
 events, or classes of events, from publishers (or producers) that are
 subsequently asynchronously delivered. Taking a closer look at this
@@ -17,7 +17,7 @@ definition one can see that this comes hand in hand with the way
 information is consumed nowadays, with the exponential growth of social
 networks like Twitter and the usage of feeds such as RSS.
 
-The previously discussed decoupling can be broken in three different
+The previously discussed decoupling can be broken into three different
 parts. The decoupling in time, space and synchronisation. The time
 decoupling comes from the fact that publishers and subscribers do not
 need to be actively interacting with each other at the same time; this
@@ -32,10 +32,10 @@ of the asynchronous nature of the pub-sub pattern, as publishers do not
 need to be blocked while producing events and subscribers can be
 asynchronously notified. The decoupling that this kind of system offers
 makes it the ideal candidate for very large networks that need a way to
-communicate in a efficient way.
+communicate in an efficient way.
 
 Due to the properties described above, a lot of applications rely on the
-publish-subscribe paradigm and a lot of work as been done by companies
+publish-subscribe paradigm and a lot of work has been done by companies
 like Twitter~\footnote{https://www.infoq.com/presentations/Twitter-Timeline-Scalability}
 and LinkedIn into making these systems highly scalable, with the
 creation of tools like Kafka~\footnote{http://kafka.apache.org/documentation/\#design}, which aim at
@@ -44,7 +44,7 @@ the multiple message queue systems like Apache Active MQ~\footnote{http://active
 RabbitMQ~\footnote{https://www.rabbitmq.com/}, Redis~\footnote{https://redis.io/topics/pubsub}, etc.
 These solutions are, of course, centralised and as such suffer from all the common issues that
 affect centralised solutions: it is quite hard to maintain and scale
-these systems to a large number of clients. Peer-to-Peer networks on the
+these systems to a large number of clients. Peer-to-Peer networks, on the
 other hand, have proven numerous times, that this is where they shine,
 with examples such as Gnutella, Skype and most recently IPFS~\footnote{https://ipfs.io/}.
 All of these systems are a living proof of the high

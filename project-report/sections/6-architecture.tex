@@ -17,11 +17,11 @@ baseline for improvement, one from which we can extract metrics and
 relevant data.
 
 We will start by covering our subscription model and the multiple
-structures that describe events and subscriptions. Afterwards we will
+structures that describe events and subscriptions. Afterwards, we will
 take a closer look at the overlay structure used. We will then cover how
 the system works in terms of subscription management, focusing on how
 new subscriptions are handled, how new topics are issued and how the
-topic hierarchy works. Finally we will cover event dissemination
+topic hierarchy works. Finally, we will cover event dissemination
 followed by quality of service, focusing on the mechanisms we have used
 to bring persistence, fault tolerance and delivery guarantees to the
 network.
@@ -29,7 +29,7 @@ network.
 \subsection{Subscription Model and Data
 Structures}\label{subscription-model-and-data-structures}
 
-Our subscription model follows a topic based approach. It has however
+Our subscription model follows a topic based approach. It has, however,
 some nice properties that make it far more expressive than what would be
 expected of a regular topic based system. To do this, we take advantage
 of the core structure of IPFS, the Merkle DAG, through its previously
@@ -73,8 +73,8 @@ IPFS as \emph{merkle-paths}.
 Given the immutable nature of the IPLD structure, the parent link allows
 us to create new updated versions of the topic descriptor (with a new
 sub-topic for example) while maintaining a history of previous topic
-descriptors for this topic. The key \emph{\#} on the other hand
-contains a JSON object with merkle-links for all of sub-topics indexed
+descriptors for this topic. The key \emph{\#}, on the other hand,
+contains a JSON object with merkle-links for all of the sub-topics indexed
 by name.
 
 The topic name is a string following a UNIX like path pattern. For
@@ -82,15 +82,15 @@ example \emph{/sports}. If we are speaking about sub-topics though,
 there is an extra requirement, given that a sub-topic name needs to be
 consistent with its parent hierarchy. This means that, for a topic
 \emph{/sports}, it cannot have a sub-topic \emph{/fruits}, or
-\emph{/fruits/apples}. \emph{/sports/football} however is a valid
+\emph{/fruits/apples}. \emph{/sports/football}, however, is a valid
 example.
 
 The \textbf{event descriptor} defines the structure of our events. Each
 object has links to its \emph{topic} and its \emph{parent} which
 represents the previous event in this stream. A \emph{metadata} object
-is used to store creation timestamps an other relevant information. The
+is used to store creation timestamps and other relevant information. The
 \emph{publisher} key will be a reference to the ID of the publisher
-node. Finally we have the \emph{payload} object, which will contain the
+node. Finally, we have the \emph{payload} object, which will contain the
 actual information of the event. The following is an example of it.
 
 \begin{verbatim}
@@ -109,7 +109,7 @@ actual information of the event. The following is an example of it.
 It is worth noticing the importance of both \emph{parent} links in each
 structure. These allow both graph structures to build a complex history.
 On one side we have the topic descriptors with a versioning system and
-on the other we have a stream of events represented as a chain of
+on the other, we have a stream of events represented as a chain of
 immutable objects. These concepts are very important for the overall
 system.
 
@@ -124,7 +124,7 @@ cryptographic key pair. These records can be used to point to a specific
 CID and are generated using asymmetric cryptography to sign the record.
 The records are ephemeral though, so it requires the owner of the
 asymmetric keys to republish the record every 24 hours. We have two
-important guarantees with this structure: mutability, which allow
+important guarantees with this structure: mutability, which allows
 creators of topics to point to a new version of a topic descriptor
 seamlessly, keeping the same CID as an entry point for the topic;
 authenticity of the given topic, given that peers can check the IPNS
@@ -152,11 +152,11 @@ transports. In order to do that, it has different transport implementations
 under a common interface~\footnote{https://github.com/libp2p/interface-transport},
 which can then be leveraged through lip2p-swarm~\footnote{https://github.com/libp2p/js-libp2p-swarm},
 a connection abstraction that can deal with multiple
-connections under different protocols. On top of this we then have the
+connections under different protocols. On top of this, we then have the
 peer communication, which can be split into two big mechanisms. On one
 end we have the discovery mechanisms~\footnote{https://github.com/libp2p/interface-peer-discovery},
-which focus on ways of finding and connecting to new peers.
-On the other end we have peer routing~\footnote{https://github.com/libp2p/interface-peer-routing},
+which focus on ways of finding and connecting with new peers.
+On the other end, we have peer routing~\footnote{https://github.com/libp2p/interface-peer-routing},
 which focus on transferring data between already connected
 peers. Our work will mostly reside in three different modules: the
 pub-sub module implementation; adding extra functionality to the
@@ -187,7 +187,7 @@ by it.
     \textbf{findPeerLocal}: find the peer with the given peer ID in the
     list of peers to which we are already connected to.
   \item
-    \textbf{getClosestPeers}: find the \emph{k}(system wide parameter)
+    \textbf{getClosestPeers}: find the \emph{k} (system wide parameter)
     closest peers to a given key.
   \item
     \textbf{provide}: let the network know that this peer can also
@@ -208,10 +208,10 @@ will arrive at the same set of nodes consistently.
 
 We also make use of a gossip based communication mechanism to build a
 simple unstructured overlay. We will cover its use case later but in
-functionality terms it is quite simple. At each node a fixed size list
+functionality terms, it is quite simple. At each node a fixed size list
 of peers should be kept, with its size being a system wide parameter.
 Periodically, the nodes should exchange its lists and update info
-accordingly. Finally the module should support a simple network flood,
+accordingly. Finally, the module should support a simple network flood,
 disseminating info across all the nodes.
 
 \subsection{Subscription Management}\label{subscription-management}
@@ -241,7 +241,7 @@ network through the procedure detailed above.
 Since our system accounts for topic hierarchy, it is possible to create
 sub-topics. If a peer wants to add a sub-topic to a topic it created,
 all it needs to do is add a new sub-topic link to the parent topic
-descriptor and afterwards issue a new IPNS record pointing to the new
+descriptor and afterward issue a new IPNS record pointing to the new
 version of the parent topic descriptor. If the node does not own the
 parent topic it will need to request for the new sub-topic to be added
 to the node responsible for the parent topic. If the request is accepted
@@ -249,7 +249,7 @@ the procedure will be the same as the one described previously.
 
 It is important to notice that, in our topic hierarchy, subscribers of a
 parent topic will not automatically be subscribed to the sub-topics of
-it. It is easy however to subscribe to these, since whenever a new
+it. It is easy however to subscribe to these since whenever a new
 update to the topic descriptor is made, the node responsible for the
 topic will issue a special event and disseminate it through the
 multicast tree. Since updates to the sub-topic list will trigger topic
@@ -275,7 +275,7 @@ quality of service guarantees we set as goals for this system. We will
 cover the fault tolerance mechanisms, the delivery guarantees and data
 persistence.
 
-Looking at \textbf{fault tolerance} we should start by the
+Looking at \textbf{fault tolerance} we should start with the
 \emph{rendezvous} nodes. We need to make sure these do not become a
 bottleneck for the system. Hence the usage of the \emph{k} closest nodes
 of the given topic CID, this way, through the existing DHT, we get a
@@ -293,8 +293,8 @@ bottleneck. An important thing to keep in mind though is that the IPNS
 records come with a notion of ownership which, if you take a closer
 look, actually makes sense here. Since the peer that created the topic is
 actually responsible for updating the respective descriptor and serving
-as \emph{rendezvous} for the network. This ownership however does not
-translate at all in lock in though, the usage of these graph structures
+as \emph{rendezvous} for the network. This ownership, however, does not
+translate at all in lock in, since the usage of these graph structures
 allows anyone who wants to, to create a new topic based on any previous
 topic that you do not even need to own. Better yet, you get all the
 topic history and previous event streams connected to this new graph,
@@ -302,18 +302,18 @@ for free. With that said, if a set of peers really wants to create a
 mechanism where the failure of the node that created the topic does not
 imply that the current IPNS record will eventually disappear, they will
 need to share the key pair responsible for the record among them, so
-that they can keep renovating it in case of failure. This of course will
-imply some kind of consensus between the peers, which is outside of the
+that they can keep renovating it in case of failure. This, of course, will
+imply some kind of consensus among peers, which is outside of the
 scope of this work.
 
-On the \textbf{delivery guarantee} front we developed a simple mechanism
+On the \textbf{delivery guarantee} front, we developed a simple mechanism
 that ensures that every node subscribed to a given topic will eventually
 get the same event stream. This is
 because of the way the event stream is linked. Given that through the
 \emph{parent} key of an event descriptor, a node can check if it is
 missing any message from the stream. If it is, it will query the
 Kademlia DHT using the \emph{get} method for that specific key. This
-approach can ultimately been seen as a simple negative
+approach can ultimately be seen as a simple negative
 ACK mechanism.
 
 Finally, on the \textbf{persistence} front, we see these graph
