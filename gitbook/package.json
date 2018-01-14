@@ -1,0 +1,28 @@
+{
+  "name": "pub-sub-research",
+  "version": "1.0.0",
+  "description": "Pub sub research",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JGAntunes/msc-thesis.git"
+  },
+  "keywords": [
+    "pub",
+    "sub",
+    "research",
+    "p2p"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JGAntunes/msc-thesis/issues"
+  },
+  "homepage": "https://github.com/JGAntunes/msc-thesis#readme",
+  "devDependencies": {
+    "gitbook-cli": "^2.3.2"
+  }
+}
