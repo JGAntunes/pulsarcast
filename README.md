@@ -21,7 +21,7 @@ The solution we propose is a pub-sub module to IPFS with a strong focus on relia
 ## Documents
 
 - [Thesis Project Document](./project-report/report.pdf)
-- [Meeting Notes](./meeting-notes)
+- [Meeting Notes](./notes)
 - [Timeline](./TIMELINE.md)
 - [Covered Literature](./covered-literature.md)
 
