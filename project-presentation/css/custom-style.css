@@ -1,0 +1,13 @@
+body:after {
+  content: url(../assets/ist-logo.png);
+  position: fixed;
+  top: 1em;
+  left: 2em;
+}
+
+body:before {
+  content: url(../assets/inesc-id.png);
+  position: fixed;
+  top: 1em;
+  right: 2em;
+}
