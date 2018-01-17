@@ -29,7 +29,7 @@
         <section data-markdown>
           <textarea data-template>
             # PulsarCast
-            ### Scaling PubSub over the Distributed Web
+            ### Scaling Pub-Sub over the Distributed Web
             <br>
             João Gonçalo da Silva Antunes
               
@@ -50,34 +50,107 @@
         </section>
         <section data-markdown>
           <textarea data-template>
+            <!-- .slide: class="list-image" -->
             ## Solutions 
             <br>
             * Cetralised:
-              * Redis, Kafka, Gryphon
+              * E.g. Redis, Kafka, Gryphon
             * Decentralised:
-              * Scribe, Meghdoot, Poldercast
+              * E.g. Scribe, Meghdoot, Poldercast
+
+            ![centralised-vs-decentralised](/assets/network-archs.png)
           </textarea>
           <aside>
         </section>
         <section data-markdown>
           <textarea data-template>
+            <!-- .slide: class="list-image" -->
             ## Solutions - Centralised 
             <br>
             * Focus:
               * Reliability and Consistency
             * Lacks:
-              * Scalability and Low Data Throughput
+              * Scalability and Data Throughput
+
+            ![centralised](/assets/centralised-arch.png)
           </textarea>
           <aside>
         </section>
         <section data-markdown>
           <textarea data-template>
+            <!-- .slide: class="list-image" -->
             ## Solutions - Decentralised 
             <br>
-            * Focus:
-              * Scalability and Data Throughput 
-            * Lacks:
+            * Focus: 
+              * Scalability and Data Throughput
+            * Lacks: 
               * Reliability, Consistency and Persistence 
+
+            ![decentralised](/assets/decentralised-arch.png)
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Objectives 
+            <br>
+            * Decentralised pub-sub system:
+              * Highly scalable
+              * Reliable
+              * Assures persistence
+            * Develop a solution that meets these requirements
+            * Evaluate its performance on multiple environments
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Design Dimensions 
+            <br>
+            * Subscription model
+            * Overlay structure
+            * Subscription management
+            * Event dissemination
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Subscription model
+            #### Topic based subscriptions 
+            <br>
+            * Avoids complex filtering mechanisms at each node 
+            * Easier to structure and maintain
+            * Limits the expressiveness of the system
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Subscription model
+            #### Content based subscriptions 
+            <br>
+            * Vastly improves expressiveness of the system
+            * More difficult to structure and maintain
+            * Can force complex filtering mechanisms at each node
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Subscription model
+            #### Content based subscriptions 
+            <br>
+            * Vastly improves expressiveness of the system
+            * More difficult to structure and maintain
+            * Can force complex filtering mechanisms at each node
+          </textarea>
+          <aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## References 
+            <br>
           </textarea>
           <aside>
         </section>

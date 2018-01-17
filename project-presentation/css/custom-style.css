@@ -11,3 +11,23 @@ body:before {
   top: 1em;
   right: 2em;
 }
+
+.list-image > ul {
+  max-width: 60%;
+  float: left;
+}
+
+.list-image > img {
+  margin-left: 0;
+}
+
+.reveal section img {
+  max-width: 300px;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.reveal ul ul {
+  list-style-type: circle;
+}
