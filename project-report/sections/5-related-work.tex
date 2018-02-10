@@ -6,32 +6,33 @@
 
 \section{Related Work}
 
-In this section, we will cover the research work and industry references
-that can be considered relevant to our initial objective. The following section \ref{distributed-publish-subscribe-paradigm}
-will lay the ground to define how pub-sub systems are structured. In section \ref{relevant-pub-sub-systems}
-we will cover a set of systems defined as relevant. Finally, section \ref{web-technologies} will
-address some of the web technologies of interest in this area.
+In this section, we will cover the research work and industry references that
+can be considered relevant to our initial objective. The following section
+\ref{distributed-publish-subscribe-paradigm} will lay the ground to define how
+pub-sub systems are structured. In section \ref{relevant-pub-sub-systems} we
+will cover a set of systems defined as relevant. Finally, section
+\ref{web-technologies} will address some of the web technologies of interest in
+this area.
 
 \subsection{Distributed Publish-Subscribe
 Paradigm}\label{distributed-publish-subscribe-paradigm}
 
 In this section we will cover the basis of the pub-sub paradigm, defining a
-taxonomy we will later use to classify relevant systems. We will start by covering
-the \emph{Subscription Model} \ref{subscription-model}, followed by the \emph{Network Architecture}
-\ref{network-architecture} and \emph{Overlay Structure} \ref{overlay-structure}. Finally,
-we address the \emph{Subscription Management and Event Dissemination}
-\ref{subscription-management-and-event-dissemination}.
+taxonomy we will later use to classify relevant systems. We will start by
+covering the \emph{Subscription Model}, followed by the \emph{Network
+Architecture} and \emph{Overlay Structure}. Finally, we
+address the \emph{Subscription Management and Event Dissemination}.
 
 \subsubsection{Subscription Model}\label{subscription-model}
 
-When considering pub-sub systems, there is a set of different options
-that will lay ground for the behaviour of the whole system. We call
-these options, design dimensions. Specifically, in our case, one of the
-biggest decisions when designing a pub-sub system is what kind of
-subscription model to use.The subscription model determines how
-subscribers will define which events they are interested in. There are
-three major approaches covered by relevant literature \cite{Kermarrec2013} \cite{Eugster2003}
-and that implementations usually follow:
+When considering pub-sub systems, there is a set of different options that will
+lay ground for the behaviour of the whole system. We call these options, design
+dimensions. Specifically, in our case, one of the biggest decisions when
+designing a pub-sub system is what kind of subscription model to use.The
+subscription model determines how subscribers will define which events they are
+interested in. There are three major approaches covered by relevant literature
+\cite{Kermarrec2013} \cite{Eugster2003} and that implementations usually
+follow:
 
 \begin{itemize}
   \item
@@ -101,7 +102,7 @@ message and subscription, represented using JSON~\footnote{https://www.json.org/
 
 The example above translates into a subscription to a stock exchange
 pub-sub system, where the client would receive all the event messages
-for buy orders of more than 50 stock actions for a maximum price of
+for \emph{buy orders} of more than 50 stock actions for a maximum price of
 10\euro. The notion of subscription is much more complex in this
 model but allows for a much more powerful, expressive and accurate
 message filtering. Usually, in order to implement this, systems rely on
@@ -161,7 +162,7 @@ can generally be categorised as centralised or decentralised.
 \begin{figure}[hb!]
   \centering
   \includegraphics[max height=4cm,max width=0.95\textwidth]{img/network-archs.png}
-  \caption{Example of a Centralised and a Decentralised network}
+  \caption{Example of a Centralised and a Decentralised network, extracted from \cite{Baran1964}}
   \label{fig:network-archs}
 \end{figure}
 
@@ -499,35 +500,32 @@ use to route events accordingly. Meghdoot is an example of a content based
 pub-sub system that follows an approach close to this one,
 using a CAN DHT with $2n$ dimensions, where $n$ is the
 number of attributes in the schema. We will cover Meghdoot further down,
-but it is worth mentioning that are other alternatives to using a
+but it is worth mentioning that there are other alternatives to using a
 multidimensional space DHT to replicate this behaviour. Mercury
 for example relies on the usage of several ring-based
 DHTs to recreate this multidimensional space and support range queries,
 using one DHT per attribute.
 
-A different approach to managing subscriptions and disseminating events
-in topic based systems is by having an overlay for each different topic.
-The idea is that by clustering nodes one can afford an easier event
-dissemination as well as an easy way of matching events with
-subscribers, since it is just a matter of propagating a given event
-inside its overlay. In order to keep everything connected, a general
-overlay can be used, that will allow all the nodes to have visibility on
-the whole set of topics. In this scenario, subscriptions are simply
-represented as being part of a specific network of peers, that could
-take any form or shape, or even be unstructured. For an unstructured
-network, the propagation of events could be a simple flooding algorithm,
-as it happens in Tera. Tera, a topic based
-pub-sub system, follows an approach close to this one. It keeps two
-distinct gossip based overlays, one responsible for keeping state on
-entrypoints for each topic (peers which are subscribed to a given topic
-and that can act as dissemination points for it) and another used to
-keep the subscribers of each topic. This clustering approach, where
-subscribers of a given topic are kept in a topic specific overlay, helps
-out in the dissemination step after an event has been published and
-reached the cluster. Another example following this approach is
-Poldercast, which uses a set of three
-different overlays to keep the pub-sub network running. We will cover
-Poldercast more thoroughly later on.
+A different approach to managing subscriptions and disseminating events in
+topic based systems is by having an overlay for each different topic.  The idea
+is that by clustering nodes one can afford an easier event dissemination as
+well as an easy way of matching events with subscribers, since it is just a
+matter of propagating a given event inside its overlay. In order to keep
+everything connected, a general overlay can be used, that will allow all the
+nodes to have visibility on the whole set of topics. In this scenario,
+subscriptions are simply represented as being part of a specific network of
+peers, that could take any form or shape, or even be unstructured. For an
+unstructured network, the propagation of events could be a simple flooding
+algorithm, as it happens in Tera. Tera, a topic based pub-sub system, follows
+an approach close to this one. It keeps two distinct gossip based overlays, one
+responsible for keeping state on entrypoints for each topic (peers which are
+subscribed to a given topic and that can act as dissemination points for it)
+and another used to keep the subscribers of each topic. This clustering
+approach, where subscribers of a given topic are kept in a topic specific
+overlay, helps out in the dissemination step after an event has been published
+and reached the cluster. Another example following this approach is Poldercast,
+which uses a set of three different overlays to keep the pub-sub network
+running. We will cover Poldercast more thoroughly later on.
 
 \subsection{Relevant Pub-Sub
 Systems}\label{relevant-pub-sub-systems}
@@ -741,43 +739,44 @@ the same message more than once).
 
 \subsubsection{Systems Analysis}\label{systems-overview}
 
-We will now compare some of the systems we have mentioned so far. Table \ref{table:relevant-systems}
-will serve as a useful comparison mechanism for this.
-A couple of notes on the terminology used. We address \emph{delivery guarantees} as the
-ability to deliver a message under normal working conditions and refer to \emph{fault tolerance}
-as the ability to keep such guarantees under churn. This, of course, depends on the
-persistence of subscriptions and mechanisms to replicate these. The rest of the criteria have been
-addressed throughout the previous sections.
+Let's now analyse all the relevant pub-sub systems we used as a basis for our
+work. Table \ref{table:relevant-systems} will serve as a useful comparison
+mechanism for this.  A couple of notes on the terminology used. We refer to
+\emph{delivery guarantees} as the ability to deliver a message under normal
+working conditions and \emph{fault tolerance} as the ability to keep such
+guarantees under churn. This, of course, depends on the persistence of
+subscriptions and mechanisms to replicate these. The rest of the criteria were
+addressed in the previous sections.
 
 \begin{sidewaystable}
   \center
-    \begin{tabular}{|p{2cm}|P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}P{2cm}|}\hline
+    \begin{tabular}{|P{3cm}|P{2cm}P{2cm}P{2cm}P{2.5cm}P{2cm}P{2cm}P{2cm}P{2cm}|}\hline
     Systems / Properties & Subscription Model & Architecture & Overlay Structure & Subscription Management & Event dissemination & Relay Free Routing & Delivery Guarantees & Fault Tolerance \\\hline
-    Gryphon & content based & centralised broker hierarchy & N/A & route to broker node responsible for subscription & tree hierarchy & N/A & yes & best effort \\
-    Siena & content based & centralised broker mesh & N/A & route through the whole system, keep state at each node & flood with cached state at each node & N/A & yes & best effort \\
-    Jedi & content based & centralised broker hierarchy & N/A & route through the whole system, keep state at each node & tree hierarchy & N/A & yes & best effort \\
-    Bayeux & topic based & decentralised & Tapestry DHT & route to rendezvous node & multicast tree & no & yes & best effort, no subscription persistence \\
-    Scribe & topic based & decentralised & Pastry DHT & route to rendezvous node & multicast tree & no & yes & best effort, no subscription persistence \\
-    Medhdoot & content based & decentralised & CAN DHT & points in CAN DHT & CAN route (line in multidimensional space) & no & yes & replicated subscriptions \\
-    Hermes & type based & decentralised & Pastry DHT & rendezvous node & multicast tree & no & yes & best effort \\
-    Tera & topic based & decentralised & gossip based overlay &  & random walk outside cluster, flood after & no & no & best effort \\
-    Mercury & content based & decentralised & ring based DHTs & overlay per attribute in schema & route through ring overlays & no & yes & best effort \\
-    Sub-2-Sub & content based & decentralised & ring based DHT/ gossip based overlay & ring overlay with subscribers & gossip outside cluster, route through ring after & no & no & best effort \\
-    Poldercast & topic based & decentralised & ring based DHT/ Vicinity / Cyclon & ring overlay with subscribers & route through ring overlay & yes & yes (every publisher is a subscriber) & high resilience to churn, no subscription persistence \\\hline
+    Gryphon & Content based & Centralised broker hierarchy & N/A & Each broker responsible for a subscription scheme & Tree hierarchy & N/A & Yes & Best effort \\\hline
+    Siena & Content based & Centralised broker mesh & N/A & Keep state at each node & Flood with cached state & N/A & Yes & Best effort \\\hline
+    Jedi & Content based & Centralised broker hierarchy & N/A & Keep state at each node & Tree hierarchy & N/A & Yes & Best effort \\\hline
+    Bayeux & Topic based & Decentralised & Tapestry DHT & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
+    Scribe & Topic based & Decentralised & Pastry DHT & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
+    Medhdoot & Content based & Decentralised & CAN DHT & Points in CAN DHT & CAN routing  & No & Yes & replicated subscriptions \\\hline
+    Hermes & Type based & Decentralised & Pastry DHT & Rendezvous node & Multicast tree & No & Yes & Best effort \\\hline
+    Tera & Topic based & Decentralised & Gossip based overlay & Unstructured overlay per topic & Random walks and flooding & No & no & Best effort \\\hline
+    Mercury & Content based & Decentralised & Ring based DHTs & Overlay per attribute in schema & Route through ring overlays & No & Yes & Best effort \\\hline
+    Sub-2-Sub & Content based & Decentralised & Ring based DHT and gossip based overlay & Clustering of similar subscriptions & Gossip and ring overlay routing & No & No & Best effort \\\hline
+    Poldercast & Topic based & Decentralised & Ring based DHT/ Vicinity / Cyclon & Ring overlay per topic & Ring overlay routing & Yes & Yes (every publisher is a subscriber) & High resilience to churn, no subscription persistence \\\hline
     \end{tabular}
   \caption{Comparison table for the relevant system}
   \label{table:relevant-systems}
 \end{sidewaystable}
 \subsection{Web Technologies}\label{web-technologies}
 
-When building any kind of network focused system nowadays, there is no
-question that one should take advantage of the full potential that the
-web has to offer. Browsers are a lot more complex and allow for a vast
-world of possibilities in terms of applications that can be built on top
-of it. P2P applications are no exception here. In the next sections, we
-will cover a set of technologies that allow for a modern distributed
-application to run, not only on the desktops and servers we are used,
-but also in browsers running in multiple platforms.
+When building any kind of network focused system nowadays, there is no question
+that one should take advantage of the full potential that the web has to offer.
+Browsers evolved a lot over the past years and allow for a vast world of
+possibilities in terms of applications that can be built on top of it. P2P
+applications are no exception here. In the next sections, we will cover a set
+of technologies that allow for a modern distributed application to run, not
+only on the desktops and servers we are used, but also in browsers running in
+multiple platforms.
 
 It is indisputable that one cannot think of modern web development
 without speaking of \textbf{Javascript}~\footnote{https://www.ecma-international.org/publications/standards/Ecma-262.htm}.
