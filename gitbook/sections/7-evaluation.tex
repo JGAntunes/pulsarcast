@@ -1,0 +1,29 @@
+%!TEX root = ../report.tex
+
+%
+% Evaluation
+%
+
+\section{Evaluation}
+
+We now define the metrics that are going to help us evaluate the overall system. These are focused on, not only
+testing the overall architecture but also on testing the fulfilment (or not) of the objectives we set in the beginning of this
+work.
+
+We want to keep track of four important metrics at each node during all of our tests. CPU load, memory usage, bandwidth usage and disk usage. This will help us attest the efficiency of the system. As comparison we are going to use two systems. A baseline one where publishers send messages directly to all of its subscribers. And naturally, the current pub-sub system in IPFS.
+
+The metrics we are going to track are:
+
+\begin{itemize}
+  \item Ratio of messages sent by each node, correlated with the CPU, memory and bandwidth usages.
+  \item Ratio of throughput speedup vs disk storage used at each node.
+  \item Ratio between latency (total propagation time of an event) reduction vs disk storage used at each node.
+  \item Ratio of subscriptions covered under heavy network churn (network partitions and arrival of new peers).
+  \item Ratio of subscriptions covered after a severe network partition and its recovery.
+  \item State of event streams at each node under heavy network churn (only applicable to our system). Monitor discrepancies in state across nodes and how long does it take to converge.
+  \item State of event streams at each node after a network partition and its recovery (only applicable to our system). Monitor discrepancies and how long does it take to converge.
+\end{itemize}
+
+From all of these metrics, we want to extract average, median and percentiles (75, 90, 95 and 99). As input data, we are going to use synthetic datasets of both events and subscriptions, of different sizes and with different kinds of distributions (uniform, non-uniform, Zipfian, etc.).
+
+In order to test these assumptions, we are going to run it on a simulator, either using PeerSim~\footnote{http://peersim.sourceforge.net/} or using IPTB~\footnote{https://github.com/whyrusleeping/iptb} to run a cluster of sandboxed IPFS nodes.
