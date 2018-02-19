@@ -4,7 +4,7 @@
 
 - João Antunes
 - [ ] Luís Veiga
-- [ ] David Dias
+- [x] David Dias
 
 ## Agenda
 

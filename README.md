@@ -21,7 +21,7 @@ The solution we propose is a pub-sub module to IPFS with a strong focus on relia
 ## Documents
 
 - [Thesis Project Document](./project-report/report.pdf) - initial report covering related work and proposed solution
-- [Thesis Project Presentation](./project-report/presentation.pdf)
+- [Thesis Project Presentation](https://www.slideshare.net/JooAntunes37/pulsarcast-scaling-pubsub-over-the-distributed-web)
 - [Meeting Notes](./notes)
 - [Timeline](./TIMELINE.md)
 - [Covered Literature](./covered-literature.md)
