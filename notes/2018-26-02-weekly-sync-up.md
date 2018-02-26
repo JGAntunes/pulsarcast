@@ -13,3 +13,12 @@
   - Forked Mafintosh mininet module and created [containernet](https://github.com/JGAntunes/containernet)
     - Connectivity between hosts working, will test more stuff with IPFS specifically during this week
 - Gathering [more feedback](https://github.com/ipfs/notes/issues/266#issuecomment-368416171)
+
+## Goals
+
+- Have IPFS nodes running in maxinet (multiple hosts) by the end of the week
+- Monitor what's happening (graphically)
+
+## Other decisions
+
+- Push PeerSim simulations further down the road.
