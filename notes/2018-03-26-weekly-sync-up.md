@@ -16,3 +16,6 @@
  - As I need to move on, I'll start working on my module this week and revisit the test-harness work along the road
 
 ## TODOS
+
+- Further debug containernet ipfs hosts
+- Start working on my pubsub module
