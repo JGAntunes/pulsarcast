@@ -10,7 +10,7 @@
 
 ## Implementation
 
-[JS-Pulsarcast](https://github.com/JGAntunes/js-pulsarcast) A JS implementation of pulsarcast, using [libp2p](https://github.com/libp2p/js-libp2p)
+[JS-Pulsarcast](https://github.com/JGAntunes/js-pulsarcast) - A javascript implementation of pulsarcast, using [libp2p](https://github.com/libp2p/js-libp2p)
 
 ## Project Description
 
