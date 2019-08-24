@@ -1,0 +1,90 @@
+%!TEX root = ./dissertation.tex
+
+% ---------------------------------------------------------
+%   MASTER THESIS DISSERTATION COVER
+% ---------------------------------------------------------
+\begin{titlepage}
+% ---------------------------------------------------------
+%  INSTITUTION LOGO
+% ---------------------------------------------------------
+\includegraphics[width=5cm]{images/ist_logo}~\\
+%
+\if\IsFinalVersion 1
+  \vspace*{\finalLogoSpacing}
+\else
+  \vspace*{\draftLogoSpacing}
+\fi
+
+\begin{center}
+% ---------------------------------------------------------
+%  MASTER THESIS DISSERTATION TITLE
+% ---------------------------------------------------------
+{\LARGE \textbf{\Title}}\\[1.0cm]
+% ---------------------------------------------------------
+%  MASTER THESIS DISSERTATION SUBTITLE
+% ---------------------------------------------------------
+{\Large \Subtitle}\\[1.0cm]
+% ---------------------------------------------------------
+%  AUTHOR NAME (FULL)
+% ---------------------------------------------------------
+{\Large \textbf{\StudentName}}\\[1.0cm]
+% ---------------------------------------------------------
+%  DISSERTATION DEGREE
+% -----------------------------------------------------------------
+{\large Thesis to obtain the Master of Science Degree in}\\[1.0cm]
+% -----------------------------------------------------------------
+%  COURSE NAME
+% -----------------------------------------------------------------
+{\LARGE \textbf{\DegreeName}}\\[1.0cm]
+
+% -----------------------------------------------------------------
+%  ADVISORS NAME
+% ---------------------------------------------------------
+\begin{minipage}[t]{.4\textwidth}
+  \center
+  \begin{flushright}
+    {\large Supervisors:~~}
+  \end{flushright}
+\end{minipage}%
+\begin{minipage}[t]{.6\textwidth}
+  \center
+  \begin{flushleft}
+    {\Supervisors}
+  \end{flushleft}
+\end{minipage}\\
+%
+\if\IsFinalVersion 1
+  \vspace*{\finalAdvisorsSpacing}
+\else
+  \vspace*{\draftAdvisorsSpacing}
+\fi
+% ---------------------------------------------------------
+%  JURI NAMES:
+%  - PRESIDENT
+%  - ADVISOR
+%  - VOGALS
+% ---------------------------------------------------------
+%
+\if\IsFinalVersion 1
+%
+\begin{minipage}[t]{1\textwidth}
+  \center
+  {\Large \textbf{Examination Committee}}\\[.25cm]
+  {\large Chairperson: \Chairperson}\\
+  {\large Supervisor: \Advisor}\\
+  {\large Member of the Committee: \CommitteeMembers}
+\end{minipage}\\[1.0cm]
+%
+\fi
+%
+
+\if\IsFinalVersion 1
+ \vspace*{\dateSpacing}
+\fi
+
+% ---------------------------------------------------------
+%  DATE (MONTH AND YEAR)
+% ---------------------------------------------------------
+{\Large \textbf{\Month\:\Year}}\\
+\end{center}
+\end{titlepage}

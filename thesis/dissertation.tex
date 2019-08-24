@@ -1,0 +1,112 @@
+% ------------------------------------------
+%  MASTER THESIS DISSERTATION
+% ------------------------------------------
+% Author:
+%
+% Advisors:
+%
+% ------------------------------------------
+\documentclass[10pt,twoside,openright,a4paper]{report}
+\usepackage[utf8]{inputenc}
+
+% Set document margins to 1in in all sides
+\usepackage[margin=2.5cm]{geometry}
+% Line spacing package
+\usepackage{graphicx, helvet, hyperref, setspace}
+\usepackage[english]{babel}
+\usepackage[nomain, acronym, toc]{glossaries}
+\input{extra_stuff.tex}
+
+% Built the glossary when the main file is built.
+\makeglossaries
+% Set main font to Arial
+\renewcommand{\familydefault}{\sfdefault}
+% Define keywords macro
+\providecommand{\keywords}[1]{\textbf{Keywords:} #1}
+% Define "palavras-chave" macro
+\providecommand{\palavrasChave}[1]{\textbf{Palavras-Chave:} #1}
+% Define the NewPage macro
+\newcommand*\NewPage{\newpage\null\thispagestyle{empty}\cleardoublepage}
+% Abstract-en page numbering
+\newcommand {\abstractEnglishPageNumber} {\thispagestyle{plain}\setcounter{page}{\abstractEnglishPage}}
+% Section numbering depth
+\setcounter{secnumdepth}{3}
+% Table of contents depth
+\setcounter{tocdepth}{3}
+% Set line spacing to 1.5cm
+\onehalfspacing
+% Page numbering
+\pagestyle{plain}
+
+% Glossary-File
+\input{glossary/glossary.tex}
+% Acronym-File
+\input{acronyms/acronyms.tex}
+
+% ------------------------------------------
+% MASTER THESIS DISSERTATION
+% ------------------------------------------
+
+\begin{document}
+\pagenumbering{gobble}% Remove page numbers (and reset to 1)
+\clearpage
+\thispagestyle{empty}
+\input{variables.tex}
+
+\include{cover}
+\NewPage
+
+\pagenumbering{roman}
+
+\if\includeAcknowledgments 1
+\input{acknowledgments/acknowledgments.tex}
+\NewPage
+\fi
+
+\include{abstract/abstract-en}
+\NewPage
+\include{abstract/abstract-pt}
+\NewPage
+
+% Table of contents
+\tableofcontents
+% A new page is necessary only if table of contents has an odd number of pages
+\NewPage
+
+% List of tables
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+% A new page is necessary only if list of tables has an odd number of pages
+\NewPage
+
+% List of figures
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+% A new page is necessary only if list of figures has an odd number of pages
+\NewPage
+
+% List of acronyms
+\printglossary[type=\acronymtype]
+
+\pagenumbering{arabic}% Arabic page numbers (and reset to 1)
+
+\input{chapters/main.tex}
+
+\bibliographystyle{ieeetr}
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{bibliography/dissertation}
+
+% Appendix
+\appendix
+\input{appendix/main.tex}
+
+% Glossary and Acronym List
+\if\includeGlossary 1
+\printglossary
+\fi
+
+% Back Cover
+\pagenumbering{gobble}
+\NewPage
+
+\end{document}
