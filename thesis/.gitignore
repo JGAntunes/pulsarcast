@@ -1,5 +1,6 @@
 cn
 *.acr
+*.acn
 *.alg
 *.aux
 *.bbl
