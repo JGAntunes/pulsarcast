@@ -17,6 +17,14 @@
 \usepackage[nomain, acronym, toc]{glossaries}
 \input{extra_stuff.tex}
 
+% Adjust images
+\usepackage[export]{adjustbox}
+% Rotate stuff
+\usepackage{rotating}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
 % Built the glossary when the main file is built.
 \makeglossaries
 % Set main font to Arial
@@ -39,9 +47,9 @@
 \pagestyle{plain}
 
 % Glossary-File
-\input{glossary/glossary.tex}
+% \input{glossary/glossary.tex}
 % Acronym-File
-\input{acronyms/acronyms.tex}
+% \input{acronyms/acronyms.tex}
 
 % ------------------------------------------
 % MASTER THESIS DISSERTATION
