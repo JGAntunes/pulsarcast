@@ -843,36 +843,68 @@ that seek to leverage all these new technologies and breakthroughs. One
 of the examples most worth mentioning is the \textbf{InterPlanetary File
 System} (IPFS)~\footnote{https://ipfs.io}, a P2P hypermedia protocol designed
 to create a persistent, content-addressable network on top of the
-distributed web. At the core of IPFS is what they refer to as the Merkle
-DAG~\footnote{https://github.com/ipld/specs/tree/master/ipld}. The Merkle DAG is a
-graph structure used to store and represent data, where each node can be
-linked to based on the hash of its content. Each node can have links to
+distributed web.
+
+At the core of IPFS is what they refer to as the \textbf{Merkle
+DAG}~\footnote{https://github.com/ipld/specs/blob/95df205ca5fdb961ec2c2265a169989fef595db1/FOUNDATIONS.md}.
+The Merkle DAG is a graph structure used to store and represent data, where
+each node can be linked to based on the hash of its content. Figure
+\ref{fig:merkle-node} provides an example of this. 
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[max height=5cm,max width=0.95\textwidth]{img/merkle-node.png}
+  \caption{JSON representation of a Merkle node with a Merkle link}
+  \label{fig:merkle-node}
+\end{figure}
+
+Each node can have links to
 other nodes, creating a persistent, chain like, structure that is
-immutable. IPFS has an interface around this structure referred to as
+immutable as documented in figure \ref{fig:merkle-dag}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[max height=5cm,max width=0.95\textwidth]{img/merkle-dag.png}
+  \caption{Graph visualisation of a Merkle DAG and its respective hash function dependencies}
+  \label{fig:merkle-dag}
+\end{figure}
+
+IPFS has an interface around this structure referred to as
 \textbf{InterPlanetary Linked Data} (IPLD)
 which focuses on bringing together all the hash-linked data structures
-(e.g.~git, blockchains, etc.) under a unified JSON-based model. In order
+(e.g.~git) under a unified JSON-based model. In order
 to interact with IPLD, IPFS exposes an API that allows us to insert and
 request random blobs of data, files, JSON objects and other complex
 structures. Having implementations in both Go and
 Javascript, IPFS leverages the modularity mantra in a fascinating way,
 focusing on creating common interfaces that allow for different pieces
 of the architecture to be changed and selected according to one's needs.
-All of this without impacting the overall application and its top level
-API. These came from the observation that the web we have today is a set
-of different heterogeneous clients, that have different needs and
-resources. As such, not everyone can rely on the same set of transports,
-storage management and discovery mechanisms. These small modules that
-constitute IPFS have recently been brought together under the same
-umbrella, as \textbf{libp2p}~\footnote{https://libp2p.io}, a set of
-packages that seek to solve common challenges in P2P applications.
-Interestingly enough, a recent addition to libp2p, and consequently
-IPFS, was a pub-sub module, with a naive implementation using a simple
-network flooding technique.
+All of this without impacting the overall application and its top level API.
+These came from the observation that the web we have today is a set of
+different heterogeneous clients, that have different needs and resources. As
+such, not everyone can rely on the same set of transports, storage management
+and discovery mechanisms. These small modules that constitute IPFS have
+recently been brought together under the same umbrella, as
+\textbf{libp2p}~\footnote{https://libp2p.io}, a set of packages that seek to
+solve common challenges in P2P applications. 
 
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/ipfs-stack.png}
   \caption{An illustration on the IPFS architecture}
   \label{fig:ipfs-stack}
+\end{figure}
+
+Interestingly enough, a recent addition to libp2p, and consequently IPFS, was a
+pub-sub module, with a naive implementation using a simple network flooding
+technique. Even though libp2p was created with the initial purpose of serving
+as the foundation of IPFS it is now possible to use libp2p as a standalone
+module for peer to peer apps, with the possibility to hand pick the
+functionalities we intend to use.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/libp2p-arch.png}
+  \caption{An illustration on the libp2p architecture}
+  \label{fig:ipfs-arch}
 \end{figure}
