@@ -3,3 +3,32 @@
 % Use this to include extra packages and define your own commands
 % This way, you can easily grab a most recent version
 % of dissertation.tex file from the original repo
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage[linesnumbered,vlined,algoruled]{algorithm2e}
+
+\definecolor{purple}{RGB}{158,16,95}
+\definecolor{lightgray}{rgb}{.6,.6,.6}
+
+\lstdefinelanguage{JSON}{
+  string=[s]{"}{"},
+  stringstyle=\color{purple},
+  comment=[l]{//},
+  commentstyle=\color{lightgray},
+}
+
+% \lstdefinelanguage{JavaScript}{
+%   keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+%   keywordstyle=\color{blue}\bfseries,
+%   ndkeywords={class, export, boolean, throw, implements, import, this},
+%   ndkeywordstyle=\color{darkgray}\bfseries,
+%   identifierstyle=\color{black},
+%   sensitive=false,
+%   comment=[l]{//},
+%   morecomment=[s]{/*}{*/},
+%   commentstyle=\color{purple}\ttfamily,
+%   stringstyle=\color{red}\ttfamily,
+%   morestring=[b]',
+%   morestring=[b]"
+% }
