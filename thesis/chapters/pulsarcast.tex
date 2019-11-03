@@ -3,21 +3,72 @@
 \chapter{Pulsarcast}
 \label{chapter:pulsarcast}
 
-- Introduzir as decisões de arquitectura
-  - Topic based subscriptions
-  - Suporte para sub tópicos
-  - Baseado num overlay estruturado (kadmelia DHT) para peer-discovery e
+In this chapter we will introduce and describe our solution. Pulsarcast is a
+peer to peer, pub-sub, topic based system focused on reliability, eventual
+delivery guarantees and data persistence. We seek this while not fully
+compromising the scalability given by the decentralised nature of our
+architecture. Looking through our related work it became clear that few fully
+decentralised solutions exist that try provide these kind of guarantees. Yet,
+if we carefully look at the most popular and widely adopted centralised pub-sub
+solutions it is clear that most of them heavily rely and depend upon these same
+guarantees. 
+
+We opted for the simpler topic based subscription model given that, in our view, a well structured and implemented topic based model is more than enough for a great percentage of our use cases. In the end, we compromise a bit of the expressiveness of the system in order to avoid bringing more complexity in, something we believe will pay off.
+
+This chapter is divided as follows, we will start by covering the use case of
+our system in section \ref{use-case}, where we will introduce some of our
+broader architectural decisions. Next, we will move to section
+\ref{data-structures} where we will deep dive into Pulsarcast's data structure
+model and how it is distributed across the network. Finally, we will look into
+one of the most important parts of our architecture in section
+\ref{subscription-management-event-dissemination} where, based on the covered
+related work and the taxonomy we defined, we present the algorithms and
+mechanisms used for managing the subscriptions and event dissemination.
+
+\begin{itemize}
+\item Introduzir as decisões de arquitectura
+\item Topic based subscriptions
+\item Baseado num overlay estruturado (kadmelia DHT) para peer-discovery e
   storage, por cima do qual depois criamos o nosso "overlay"
-  - Imutabilidade dos dados (tópicos e dados)
-  - Nós guardam informação das msgs que recebem
+\item Suporte para sub tópicos
+\item Imutabilidade dos dados (tópicos e dados)
+\item Nós guardam informação das msgs que recebem
+\end{itemize}
+
+\section{Use Case}\label{use-case}
+
+Pulsarcast is a fully decentralised solution, as it has been previously
+introduced. This means that each node plays a key part in fulfilling the system
+purpose, delivering events and ensuring its dissemination. From a broader
+perspective Pulsarcast relies on two overlays to fulfil its needs. Kadmelia
+DHT, used for a range of purposed from peer discovery, content discovery and to
+bootstrap our other overlay, the Pulsarcast overlay. The Pulsarcast overlay are
+actually a set of different overlays or, as we call it, dissemination trees.
+These trees are on a per topic basis and are the key factor in the way we
+disseminate information across our decentralised network.
+ 
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-overlays.png}
+  \caption{Representation of the Pulsarcast overlays}
+  \label{fig:pulsarcast-overlays}
+\end{figure}
+
+When a peer publishes an event TODO
 
 
-\section{Data Structures}
-- Introduzir conceito de event descriptor e topic descriptor
-- Abordar imutabilidade mais a fundo
-- JSON schema de ambos
-- Representação com figuras
-- Exemplos práticos?
+\section{Data Structures}\label{data-structures}
+
+TODO
+
+\begin{itemize}
+\item Introduzir conceito de event descriptor e topic descriptor
+\item Abordar imutabilidade mais a fundo
+\item JSON schemas de Topic Descriptor, Event Descriptor e RPC messages
+\item Meta topic
+\end{itemize}
+
+TODO
 
 \begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor},captionpos=b]
 {
@@ -48,6 +99,8 @@
 }
 \end{lstlisting}
 
+TODO
+
 \begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor},captionpos=b]
 {
   "name": <string>,
@@ -67,13 +120,7 @@
 }
 \end{lstlisting}
 
-\section{Subscription Management and Event Dissemination}
-- Árvores de disseminação
-  - Criação
-  - Uso da DHT
-  - Algoritmo em detalhe
-- Disseminação de eventos
-
+TODO
 
 \begin{figure}[hb!]
   \centering
@@ -82,12 +129,77 @@
   \label{fig:pulsarcast-dag}
 \end{figure}
 
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-local-vs-distributed-state.png}
+  \caption{Overview of how state is kept across the network}
+  \label{fig:pulsarcast-local-vs-distributed-state}
+\end{figure}
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-descriptor-creation.png}
+  \caption{Flow for creating a new Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-creation}
+\end{figure}
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-descriptor-query.png}
+  \caption{Flow for querying a Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-query}
+\end{figure}
+
+TODO
+
+\section{Subscription Management and Event Dissemination}\label{subscription-management-event-dissemination}
+
+TODO
+\begin{itemize}
+\item Árvores de disseminação
+\item Event linking (last seen vs custom)
+\item Request to publish
+\item Allowed publishers
+\item Uso da DHT
+\item Algoritmos em detalhe
+\item Disseminação de eventos
+\end{itemize}
+
+TODO
+
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/pulsarcast-subscription-flow.png}
-  \caption{Pulsarcast subscription flow}
+  \caption{Overview of the flow for creating a new subscription}
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-publish-order-guarantee.png}
+  \caption{Event dissemination mechanism for a topic with a order guarantee configuration}
+  \label{fig:pulsarcast-publish-order-guarantee}
+\end{figure}
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-publish-custom.png}
+  \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
+  \label{fig:pulsarcast-publish-custom}
+\end{figure}
+
+TODO
+
 
 \SetKwProg{Fn}{Function}{}{}
 
@@ -198,4 +310,3 @@ TODO
 \end{algorithm}
 
 
-\section{RPC Protocol}
