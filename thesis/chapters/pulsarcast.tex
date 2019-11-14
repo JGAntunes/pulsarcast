@@ -13,7 +13,11 @@ if we carefully look at the most popular and widely adopted centralised pub-sub
 solutions it is clear that most of them heavily rely and depend upon these same
 guarantees. 
 
-We opted for the simpler topic based subscription model given that, in our view, a well structured and implemented topic based model is more than enough for a great percentage of our use cases. In the end, we compromise a bit of the expressiveness of the system in order to avoid bringing more complexity in, something we believe will pay off.
+We opted for the simpler topic based subscription model given that, in our
+view, a well structured and implemented topic based model is more than enough
+for a great percentage of our use cases. In the end, we compromise a bit of the
+expressiveness of the system in order to avoid bringing more complexity in,
+something we believe will pay off.
 
 This chapter is divided as follows, we will start by covering the use case of
 our system in section \ref{use-case}, where we will introduce some of our
@@ -25,28 +29,18 @@ one of the most important parts of our architecture in section
 related work and the taxonomy we defined, we present the algorithms and
 mechanisms used for managing the subscriptions and event dissemination.
 
-\begin{itemize}
-\item Introduzir as decisões de arquitectura
-\item Topic based subscriptions
-\item Baseado num overlay estruturado (kadmelia DHT) para peer-discovery e
-  storage, por cima do qual depois criamos o nosso "overlay"
-\item Suporte para sub tópicos
-\item Imutabilidade dos dados (tópicos e dados)
-\item Nós guardam informação das msgs que recebem
-\end{itemize}
-
 \section{Use Case}\label{use-case}
 
 Pulsarcast is a fully decentralised solution, as it has been previously
 introduced. This means that each node plays a key part in fulfilling the system
 purpose, delivering events and ensuring its dissemination. From a broader
 perspective Pulsarcast relies on two overlays to fulfil its needs. Kadmelia
-DHT, used for a range of purposed from peer discovery, content discovery and to
-bootstrap our other overlay, the Pulsarcast overlay. The Pulsarcast overlay are
+DHT, used for a range of purposes from peer discovery, content discovery and to
+bootstrap our other overlay, the Pulsarcast overlay. The Pulsarcast overlay is
 actually a set of different overlays or, as we call it, dissemination trees.
 These trees are on a per topic basis and are the key factor in the way we
 disseminate information across our decentralised network.
- 
+
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/pulsarcast-overlays.png}
@@ -54,19 +48,103 @@ disseminate information across our decentralised network.
   \label{fig:pulsarcast-overlays}
 \end{figure}
 
-When a peer publishes an event TODO
+The subscription model followed by Pulsarcast is a topic based one, but still
+allowing for some expressiveness through the usage of sub-topics to enable more
+complex structures. When a peer publishes an event or creates a new topic a set
+of the overlays described is used accordingly. For Pulsarcast, both of these
+actions, happen to take a similar course. That's because the system views these
+pieces of information (or descriptors as we call it) as fairly similar, given
+their importance. Figures \ref{fig:pulsarcast-descriptor-creation} and
+\ref{fig:pulsarcast-descriptor-query} provide an overview of what flow for
+creating this information and for accessing it looks like.
 
+As Pulsarcast's goal is to give users, and any applications built on top of it,
+the reassurance that events reach their destination and that they are able to
+rebuild as much of the event or topic history as they see fit, we double down
+on our efforts to persist and propagate data. Every topic and event is stored
+in the Kadmelia DHT prior to being forwarded through the topic dissemination
+trees. This ensures the data is persisted by a set of nodes (that might even be
+extraneous to the topic at hand) and anyone is later able to fetch the data
+using only the DHT if they want to. Afterwards, we forward the data through the
+appropriate dissemination trees previously built (we'll cover tis process in
+section TODO). Currently, every node participating in the data transmission through
+the dissemination tree stores it indefinitely, although it is something due to
+be changed in a later revision of our protocol. On the other hand, when someone
+wants to fetch a piece of data (a topic or an event) it starts by performing a
+local search in the system, it might have been something that the node as ran
+through when forwarding events across their dissemination trees. If this fails
+though, a query to the DHT is in order.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-creation.png}
+  \caption{Flow for creating a new Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-creation}
+\end{figure}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-query.png}
+  \caption{Flow for querying a Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-query}
+\end{figure}
 
 \section{Data Structures}\label{data-structures}
 
-TODO
+Pulsarcast has a set of two very important data structures to which we refer to
+as event and topic descriptors. To help us represent this data we rely on a
+concept already introduced in our related work, the Merkle DAG.
 
-\begin{itemize}
-\item Introduzir conceito de event descriptor e topic descriptor
-\item Abordar imutabilidade mais a fundo
-\item JSON schemas de Topic Descriptor, Event Descriptor e RPC messages
-\item Meta topic
-\end{itemize}
+All of our data structures are immutable, content addressable and linked
+together to form a Direct Acyclic Graph. Events link both to their respective
+topic descriptor and a past event in that topic. Topics on the other hand, link
+to their sub-topics (if any) and a previous version of themselves. Figure
+\ref{fig:pulsarcast-dag} provides a broader picture of how it all fits
+together. Immutability and content-addressability give us verifiability and,
+consequently, the assurance that the state of our distributed system is the
+same no matter where we're accessing it from or who's viewing it. It also
+allows us to build a notion of history which, if you think about it, plays nice
+into a pub-sub scenario. Through these links and the mechanisms described in
+the previous section, users and applications are free to rebuild their topic
+and event history to any point they wish. Be that because they were not part of
+the network at the time or because they missed out due to some system or
+network failure, acting as a NACK (not acknowledged) for relevant events.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-dag.png}
+  \caption{Representation of the Pulsarcast DAG}
+  \label{fig:pulsarcast-dag}
+\end{figure}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/pulsarcast-local-vs-distributed-state.png}
+  \caption{Overview of how state is kept across the network}
+  \label{fig:pulsarcast-local-vs-distributed-state}
+\end{figure}
+
+Each of the descriptors contain a set of relevant metadata as well as the
+actual information that they refer to. The following JSON like representations
+\ref{topic-descriptor} and \ref{event-descriptor} provide an accurate
+description of the schema and format of our data structures. We will cover
+however some of the properties.
+
+Parent links in the event descriptor serve as a reference to previous events in
+the topic tree.  As for those same links in the topic descriptor, these act as
+a reference to a previous version of this same topic. Keep in mind that data in
+Pulsarcast is immutable, as such, one cannot update content that has already
+been published and disseminated. We can however create a new reference of it
+and link to what we consider to be a previous version. This is the exact use
+case for the parent links in the topic descriptor, to act as a link to previous
+versions of this same topic. Possible changes to the topic descriptor can
+encompass changes to the topic metadata for example, or additions of new
+sub-topics.
+
+In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
+Commonly, these and indexed by name, but it is not mandatory, it is actually up
+to the topic and consequently its owner to choose accordingly.  There is no
+limit to how many sub-topics a topic can have.
 
 TODO
 
@@ -98,7 +176,7 @@ TODO
   }
 }
 \end{lstlisting}
-
+ 
 TODO
 
 \begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor},captionpos=b]
@@ -122,39 +200,12 @@ TODO
 
 TODO
 
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-dag.png}
-  \caption{Representation of the Pulsarcast DAG}
-  \label{fig:pulsarcast-dag}
-\end{figure}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-local-vs-distributed-state.png}
-  \caption{Overview of how state is kept across the network}
-  \label{fig:pulsarcast-local-vs-distributed-state}
-\end{figure}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-descriptor-creation.png}
-  \caption{Flow for creating a new Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-creation}
-\end{figure}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-descriptor-query.png}
-  \caption{Flow for querying a Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-query}
-\end{figure}
+\begin{itemize}
+\item Introduzir conceito de event descriptor e topic descriptor
+\item Abordar imutabilidade mais a fundo
+\item JSON schemas de Topic Descriptor, Event Descriptor e RPC messages
+\item Meta topic
+\end{itemize}
 
 TODO
 
