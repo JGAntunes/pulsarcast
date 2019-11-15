@@ -13,7 +13,7 @@
 \usepackage[margin=2.5cm]{geometry}
 % Line spacing package
 \usepackage{graphicx, helvet, hyperref, setspace}
-\usepackage[english]{babel}
+\usepackage[portuguese, english]{babel}
 \usepackage[nomain, acronym, toc]{glossaries}
 \input{extra_stuff.tex}
 
@@ -39,6 +39,8 @@
 \newcommand*\NewPage{\newpage\null\thispagestyle{empty}\cleardoublepage}
 % Abstract-en page numbering
 \newcommand {\abstractEnglishPageNumber} {\thispagestyle{plain}\setcounter{page}{\abstractEnglishPage}}
+% Abstract-pt page numbering
+\newcommand {\abstractPortuguesePageNumber} {\thispagestyle{plain}\setcounter{page}{\abstractPortuguesePage}}
 % Section numbering depth
 \setcounter{secnumdepth}{3}
 % Table of contents depth

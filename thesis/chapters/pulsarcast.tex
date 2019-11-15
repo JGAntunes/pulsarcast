@@ -39,7 +39,7 @@ DHT, used for a range of purposes from peer discovery, content discovery and to
 bootstrap our other overlay, the Pulsarcast overlay. The Pulsarcast overlay is
 actually a set of different overlays or, as we call it, dissemination trees.
 These trees are on a per topic basis and are the key factor in the way we
-disseminate information across our decentralised network.
+disseminate information across our decentralised network. Figure \ref{fig:pulsarcast-overlays} illustrates the multiple overlays in action.
 
 \begin{figure}[hb!]
   \centering
@@ -58,6 +58,20 @@ their importance. Figures \ref{fig:pulsarcast-descriptor-creation} and
 \ref{fig:pulsarcast-descriptor-query} provide an overview of what flow for
 creating this information and for accessing it looks like.
 
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-creation.png}
+  \caption{Flow for creating a new Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-creation}
+\end{figure}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-query.png}
+  \caption{Flow for querying a Topic/Event descriptor}
+  \label{fig:pulsarcast-descriptor-query}
+\end{figure}
+
 As Pulsarcast's goal is to give users, and any applications built on top of it,
 the reassurance that events reach their destination and that they are able to
 rebuild as much of the event or topic history as they see fit, we double down
@@ -74,20 +88,6 @@ wants to fetch a piece of data (a topic or an event) it starts by performing a
 local search in the system, it might have been something that the node as ran
 through when forwarding events across their dissemination trees. If this fails
 though, a query to the DHT is in order.
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-creation.png}
-  \caption{Flow for creating a new Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-creation}
-\end{figure}
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.7\textwidth]{img/pulsarcast-descriptor-query.png}
-  \caption{Flow for querying a Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-query}
-\end{figure}
 
 \section{Data Structures}\label{data-structures}
 
@@ -131,23 +131,34 @@ description of the schema and format of our data structures. We will cover
 however some of the properties.
 
 Parent links in the event descriptor serve as a reference to previous events in
-the topic tree.  As for those same links in the topic descriptor, these act as
-a reference to a previous version of this same topic. Keep in mind that data in
-Pulsarcast is immutable, as such, one cannot update content that has already
-been published and disseminated. We can however create a new reference of it
-and link to what we consider to be a previous version. This is the exact use
-case for the parent links in the topic descriptor, to act as a link to previous
-versions of this same topic. Possible changes to the topic descriptor can
-encompass changes to the topic metadata for example, or additions of new
-sub-topics.
+the topic tree. A Pulsarcast node that has just received an event can, through
+its parent link, know a previous event of this same topic and act on it
+accordingly (fetch it or not). Depending on the type of topic we have at hand
+(something we will cover further in this document) this parent link can have
+different meanings and relevance.
+
+As for the parent links in the topic descriptor, these act as a reference to a
+previous version of this same topic. Keep in mind that data in Pulsarcast is
+immutable, as such, one cannot update content that has already been published
+and disseminated. We can however create a new reference of it and link to what
+we consider to be a previous version. This is the exact use case for the parent
+links in the topic descriptor, to act as a link to previous versions of this
+same topic. Possible changes to the topic descriptor can encompass changes to
+the topic metadata for example, or additions of new sub-topics.
 
 In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
-Commonly, these and indexed by name, but it is not mandatory, it is actually up
+Commonly, these are indexed by name, but it is not mandatory, it is actually up
 to the topic and consequently its owner to choose accordingly.  There is no
 limit to how many sub-topics a topic can have.
 
-TODO
+Both descriptors have an author field that is self descriptive, essentially
+meaning the peer responsible for creating and, in the case of the topic,
+maintaining this descriptor. The topic descriptor however has an extra field
+which is the publisher field. This is because the producer of the content
+(author) and the peer responsible for actually pushing this into the Pulsarcast
+dissemination trees (publisher) might not actually be the same peer.
 
+\noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor},captionpos=b]
 {
   "name": <string>,
@@ -176,9 +187,26 @@ TODO
   }
 }
 \end{lstlisting}
- 
-TODO
+\end{minipage}
 
+Metadata for the event descriptor is quite simple. It includes a creation
+timestamp in ISO8601 format and the version of the protocol at the time the
+event was published. Remember, these are content addressable immutable data
+structures, as such the info we provide in these metadata fields will be
+persistent and verifiable, something we take advantage of. On the other hand
+the topic descriptor is a bit more complex. Besides the timestamp and version,
+it includes further configuration options that tell us how event dissemination
+and event linking will be handled for all of the topic, something we will cover
+in the next section.
+
+A key objective for these data structures and, specifically, to the metadata
+design has been for it to be easily extensible. The protocol version aids us
+with this, easily conveying any kind of breaking changes. Examples of fields
+and properties that could be added in the future include things such as author
+and publisher signatures, so that peers could verify the authenticity of all
+the content.
+
+\noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor},captionpos=b]
 {
   "name": <string>,
@@ -197,8 +225,9 @@ TODO
   }
 }
 \end{lstlisting}
+\end{minipage}
 
-TODO
+
 
 \begin{itemize}
 \item Introduzir conceito de event descriptor e topic descriptor
@@ -226,7 +255,7 @@ TODO
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-subscription-flow.png}
+  \includegraphics[width=0.8\textwidth]{img/pulsarcast-subscription-flow.png}
   \caption{Overview of the flow for creating a new subscription}
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
@@ -235,7 +264,7 @@ TODO
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-publish-order-guarantee.png}
+  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-order-guarantee.png}
   \caption{Event dissemination mechanism for a topic with a order guarantee configuration}
   \label{fig:pulsarcast-publish-order-guarantee}
 \end{figure}
@@ -244,7 +273,7 @@ TODO
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-publish-custom.png}
+  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-custom.png}
   \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
   \label{fig:pulsarcast-publish-custom}
 \end{figure}
