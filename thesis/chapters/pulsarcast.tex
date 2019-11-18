@@ -117,13 +117,6 @@ network failure, acting as a NACK (not acknowledged) for relevant events.
   \label{fig:pulsarcast-dag}
 \end{figure}
 
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{img/pulsarcast-local-vs-distributed-state.png}
-  \caption{Overview of how state is kept across the network}
-  \label{fig:pulsarcast-local-vs-distributed-state}
-\end{figure}
-
 Each of the descriptors contain a set of relevant metadata as well as the
 actual information that they refer to. The following JSON like representations
 \ref{topic-descriptor} and \ref{event-descriptor} provide an accurate
@@ -149,7 +142,7 @@ the topic metadata for example, or additions of new sub-topics.
 In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
 Commonly, these are indexed by name, but it is not mandatory, it is actually up
 to the topic and consequently its owner to choose accordingly.  There is no
-limit to how many sub-topics a topic can have.
+limit to how many sub-topics a topic can have. One really important note though is that every topic actually comes with a default meta topic as a sub topic. The idea is for this meta topic to be used to disseminate changes for the original topic descriptor, something we will cover in section \ref{subscription-management-event-dissemination}.
 
 Both descriptors have an author field that is self descriptive, essentially
 meaning the peer responsible for creating and, in the case of the topic,
@@ -159,6 +152,7 @@ which is the publisher field. This is because the producer of the content
 dissemination trees (publisher) might not actually be the same peer.
 
 \noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
 \begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor},captionpos=b]
 {
   "name": <string>,
@@ -167,6 +161,9 @@ dissemination trees (publisher) might not actually be the same peer.
     "/": <topic-id>
   },
   "#": {                          //Sub topic links
+		meta: {												//Meta topic
+			"/": "zdpuAkx9dPaPve3H9ezrtSipCSUhBCGt53EENDv8PrfZNmRnk"
+		},
     <topic-name>: {
       "/": <topic-id>
     },
@@ -187,6 +184,7 @@ dissemination trees (publisher) might not actually be the same peer.
   }
 }
 \end{lstlisting}
+\vspace{8pt}
 \end{minipage}
 
 Metadata for the event descriptor is quite simple. It includes a creation
@@ -197,7 +195,7 @@ persistent and verifiable, something we take advantage of. On the other hand
 the topic descriptor is a bit more complex. Besides the timestamp and version,
 it includes further configuration options that tell us how event dissemination
 and event linking will be handled for all of the topic, something we will cover
-in the next section.
+in section \ref{subscription-management-event-dissemination}.
 
 A key objective for these data structures and, specifically, to the metadata
 design has been for it to be easily extensible. The protocol version aids us
@@ -207,6 +205,7 @@ and publisher signatures, so that peers could verify the authenticity of all
 the content.
 
 \noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
 \begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor},captionpos=b]
 {
   "name": <string>,
@@ -225,20 +224,43 @@ the content.
   }
 }
 \end{lstlisting}
+\vspace{8pt}
 \end{minipage}
 
+The data in Pulsarcast however is distributed, as illustrated by figure \ref{fig:pulsarcast-local-vs-distributed-state}, which means we have to deal with
+an extra layer of complexity in our system. We again tackle this with the way
+our data is represented, the Merkle DAG. The fact that all the data is
+addressed based on its content means that the representation and indexing done
+at each node is the same we do system wide. Descriptors are persisted using the
+Kadmelia DHT and disseminated through the Pulsarcast overlay, with each node
+then keeping this state locally. This allows us to abstract state at each node
+in a manner where you can refer to the same piece of data in the same way and
+expect the same representation and result, weather you're looking locally or
+system wide.
 
-
-\begin{itemize}
-\item Introduzir conceito de event descriptor e topic descriptor
-\item Abordar imutabilidade mais a fundo
-\item JSON schemas de Topic Descriptor, Event Descriptor e RPC messages
-\item Meta topic
-\end{itemize}
-
-TODO
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/pulsarcast-local-vs-distributed-state.png}
+  \caption{Overview of how state is kept across the network}
+  \label{fig:pulsarcast-local-vs-distributed-state}
+\end{figure}
 
 \section{Subscription Management and Event Dissemination}\label{subscription-management-event-dissemination}
+
+In Pulsarcast, both the subscription management and the event dissemination lie
+on top of the multiple overlays built on a per topic basis or, as we call it,
+the dissemination trees. These trees represent the path traversed by the events
+in order to reach the necessary subscribers, so, in the end, these end up being
+the actual representation of both subscriptions and dissemination paths. In
+order to better understand them we will start by understanding how the system
+handles the creation of topics, new subscriptions, followed by how events are
+propagated (with a detailed view of the algorithms used). We will see some of
+the configurations the topic descriptor allows for that will change the way
+events are propagated and published. Finally we will run through the messages
+sent by each node in order to perform these operations, a key part in our
+distributed system.
+
+Before we can speak about a new subscription a topic must already exist. As we have detailed previously, a node creates a topic descriptor and stores it in the Kadmelia DHT, making it available to the whole network. From this point on, this node will act as the root node in this newly created topic dissemination tree. When a node wants to subscribe to this topic it starts by fetching it from the Kademlia DHT
 
 TODO
 \begin{itemize}
