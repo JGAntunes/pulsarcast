@@ -260,51 +260,23 @@ events are propagated and published. Finally we will run through the messages
 sent by each node in order to perform these operations, a key part in our
 distributed system.
 
-Before we can speak about a new subscription a topic must already exist. As we have detailed previously, a node creates a topic descriptor and stores it in the Kadmelia DHT, making it available to the whole network. From this point on, this node will act as the root node in this newly created topic dissemination tree. When a node wants to subscribe to this topic it starts by fetching it from the Kademlia DHT
-
-TODO
-\begin{itemize}
-\item Árvores de disseminação
-\item Event linking (last seen vs custom)
-\item Request to publish
-\item Allowed publishers
-\item Uso da DHT
-\item Algoritmos em detalhe
-\item Disseminação de eventos
-\end{itemize}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{img/pulsarcast-subscription-flow.png}
-  \caption{Overview of the flow for creating a new subscription}
-  \label{fig:pulsarcast-subscription-flow}
-\end{figure}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-order-guarantee.png}
-  \caption{Event dissemination mechanism for a topic with a order guarantee configuration}
-  \label{fig:pulsarcast-publish-order-guarantee}
-\end{figure}
-
-TODO
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-custom.png}
-  \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
-  \label{fig:pulsarcast-publish-custom}
-\end{figure}
-
-TODO
-
+Before we can speak about a new subscription a topic must already exist. In
+order for this to happen a node starts by creating the meta topic descriptor.
+This meta topic descriptor is to be used to disseminate any changes relative to
+the topic descriptor at hand and is linked as a sub topic of it. Only after it
+has been created and stored in the Kadmelia DHT does the node proceed to create
+the actual topic descriptor (with the meta topic linked as a sub topic), which
+is then also persisted in the DHT. When any change to the original topic
+descriptor is in order, a new topic descriptor is created (remember the
+immutability of our data structures) but with the original topic descriptor
+linked as a parent and with the same meta topic linked as sub topic. When these
+changes happen the new topic is always published as an event in the meta topic.
+The algorithm \ref{alg:new-topic} provides an overview of the procedure to
+create a new topic.
 
 \SetKwProg{Fn}{Function}{}{}
 
+\vspace{8pt}
 \begin{algorithm}[H]
   \SetAlgoLined
   \Fn{CreateTopic(newTopic)}{
@@ -326,10 +298,31 @@ TODO
   	}
 	}
   \caption{Create a new topic}
+	\label{alg:new-topic}
 \end{algorithm}
+\vspace{8pt}
 
-TODO
+With the topic descriptor stored and available to the whole network, its
+creator will act as the root node in this newly created topic dissemination
+tree. When a node wants to subscribe to this topic it starts by fetching its
+descriptor from the Kademlia DHT. After some sanity checks, such as checking if
+the node is already part of the dissemination tree, we use the Kadmelia DHT to
+find the closest known peer to the author of the topic. Keep in mind that we
+are not actually hitting the network and performing a Kadmelia lookup
+operation, we are in fact resorting to information previously stored locally by
+the DHT in its K buckets. The closest known peer id is used by the node and
+stored as its parent in this topic dissemination tree. The join request is then
+forwarded to it where the sender peer id is extracted and used as its children
+in this topic dissemination tree, followed by repeating the whole process
+again. This recursive operation across the network ends when the join request
+hits a node that is either already part of the dissemination tree for this
+topic or, the actual author of the topic. Algorithm \ref{alg:subscribe}
+provides a more detailed generic procedure to be used at every node when
+receiving or sending a subscription request (or a join request as we call it)
+and figure \ref{fig:pulsarcast-subscription-flow} tries to provide a visual
+representation of the whole subscription flow.
 
+\vspace{8pt}
 \begin{algorithm}[H]
   \SetAlgoLined
   \Fn{ReceivedJoin(fromNodeId, topicId)}{
@@ -358,7 +351,53 @@ TODO
   	}
 	}
   \caption{Join request handler for each node}
+	\label{alg:subscribe}
 \end{algorithm}
+\vspace{8pt}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/pulsarcast-subscription-flow.png}
+  \caption{Overview of the flow for creating a new subscription}
+  \label{fig:pulsarcast-subscription-flow}
+\end{figure}
+
+TODO
+\begin{itemize}
+\item Árvores de disseminação
+\item Event linking (last seen vs custom)
+\item Request to publish
+\item Allowed publishers
+\item Uso da DHT
+\item Algoritmos em detalhe
+\item Disseminação de eventos
+\end{itemize}
+
+TODO
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-order-guarantee.png}
+  \caption{Event dissemination mechanism for a topic with a order guarantee configuration}
+  \label{fig:pulsarcast-publish-order-guarantee}
+\end{figure}
+
+TODO
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-custom.png}
+  \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
+  \label{fig:pulsarcast-publish-custom}
+\end{figure}
+
+TODO
+
+
+TODO
+
 
 TODO
 
