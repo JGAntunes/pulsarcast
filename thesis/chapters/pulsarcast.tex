@@ -27,19 +27,23 @@ model and how it is distributed across the network. Finally, we will look into
 one of the most important parts of our architecture in section
 \ref{subscription-management-event-dissemination} where, based on the covered
 related work and the taxonomy we defined, we present the algorithms and
-mechanisms used for managing the subscriptions and event dissemination.
+mechanisms used for managing the subscriptions and event dissemination. (TODO missing more chapters)
 
 \section{Use Case}\label{use-case}
 
 Pulsarcast is a fully decentralised solution, as it has been previously
 introduced. This means that each node plays a key part in fulfilling the system
-purpose, delivering events and ensuring its dissemination. From a broader
-perspective Pulsarcast relies on two overlays to fulfil its needs. Kadmelia
-DHT, used for a range of purposes from peer discovery, content discovery and to
-bootstrap our other overlay, the Pulsarcast overlay. The Pulsarcast overlay is
-actually a set of different overlays or, as we call it, dissemination trees.
-These trees are on a per topic basis and are the key factor in the way we
-disseminate information across our decentralised network. Figure \ref{fig:pulsarcast-overlays} illustrates the multiple overlays in action.
+purpose, delivering events and ensuring its dissemination. Conceptually
+speaking, Pulsarcast provides four methods for clients and applications to
+interact with the system, create a topic, subscribe to a topic, unsubscribe
+from a topic and publish an event in a topic. From a broader perspective
+Pulsarcast relies on two overlays to fulfil its needs. Kadmelia DHT, used for a
+range of purposes from peer discovery, content discovery and to bootstrap our
+other overlay, the Pulsarcast overlay. The Pulsarcast overlay is actually a set
+of different overlays or, as we call it, dissemination trees.  These trees are
+on a per topic basis and are the key factor in the way we disseminate
+information across our decentralised network. Figure
+\ref{fig:pulsarcast-overlays} illustrates the multiple overlays in action.
 
 \begin{figure}[hb!]
   \centering
@@ -52,7 +56,7 @@ The subscription model followed by Pulsarcast is a topic based one, but still
 allowing for some expressiveness through the usage of sub-topics to enable more
 complex structures. When a peer publishes an event or creates a new topic a set
 of the overlays described is used accordingly. For Pulsarcast, both of these
-actions, happen to take a similar course. That's because the system views these
+actions, happen to take a similar course. That is because the system views these
 pieces of information (or descriptors as we call it) as fairly similar, given
 their importance. Figures \ref{fig:pulsarcast-descriptor-creation} and
 \ref{fig:pulsarcast-descriptor-query} provide an overview of what flow for
@@ -80,14 +84,14 @@ in the Kadmelia DHT prior to being forwarded through the topic dissemination
 trees. This ensures the data is persisted by a set of nodes (that might even be
 extraneous to the topic at hand) and anyone is later able to fetch the data
 using only the DHT if they want to. Afterwards, we forward the data through the
-appropriate dissemination trees previously built (we'll cover tis process in
-section TODO). Currently, every node participating in the data transmission through
-the dissemination tree stores it indefinitely, although it is something due to
-be changed in a later revision of our protocol. On the other hand, when someone
-wants to fetch a piece of data (a topic or an event) it starts by performing a
-local search in the system, it might have been something that the node as ran
-through when forwarding events across their dissemination trees. If this fails
-though, a query to the DHT is in order.
+appropriate dissemination trees previously built (we will cover tis process in
+section TODO). Currently, every node participating in the data transmission
+through the dissemination tree stores it indefinitely, although it is something
+due to be changed in a later revision of our protocol. On the other hand, when
+someone wants to fetch a piece of data (a topic or an event) it starts by
+performing a local search in the system, it might have been something that the
+node as ran through when forwarding events across their dissemination trees. If
+this fails though, a query to the DHT is in order.
 
 \section{Data Structures}\label{data-structures}
 
@@ -96,13 +100,13 @@ as event and topic descriptors. To help us represent this data we rely on a
 concept already introduced in our related work, the Merkle DAG.
 
 All of our data structures are immutable, content addressable and linked
-together to form a Direct Acyclic Graph. Events link both to their respective
-topic descriptor and a past event in that topic. Topics on the other hand, link
-to their sub-topics (if any) and a previous version of themselves. Figure
-\ref{fig:pulsarcast-dag} provides a broader picture of how it all fits
+together to form a Direct Acyclic Graph (Merkle DAG). Events link both to their
+respective topic descriptor and a past event in that topic. Topics on the other
+hand, link to their sub-topics (if any) and a previous version of themselves.
+Figure \ref{fig:pulsarcast-dag} provides a broader picture of how it all fits
 together. Immutability and content-addressability give us verifiability and,
 consequently, the assurance that the state of our distributed system is the
-same no matter where we're accessing it from or who's viewing it. It also
+same no matter where we are accessing it from or who is viewing it. It also
 allows us to build a notion of history which, if you think about it, plays nice
 into a pub-sub scenario. Through these links and the mechanisms described in
 the previous section, users and applications are free to rebuild their topic
@@ -117,8 +121,20 @@ network failure, acting as a NACK (not acknowledged) for relevant events.
   \label{fig:pulsarcast-dag}
 \end{figure}
 
-Each of the descriptors contain a set of relevant metadata as well as the
-actual information that they refer to. The following JSON like representations
+Given we are discussing addressability and linking between content, the
+representation used for our identifiers is an important part of our system
+specification. That was one of the main reasons for us to borrow inspiration
+from systems like IPFS and decided to use
+\emph{multihash}~\footnote{https://github.com/multiformats/multihash}.
+Multihash is a convention for representing the output of many different
+cryptographic hash functions in a compact, deterministic encoding that is
+accommodating of future change. This is because multihash actually encodes the
+type of hash function used to produce the output. All of the relevant
+identifiers in our system are multihashes, this includes node identifiers as
+well as the identifiers for both event descriptors and topic descriptors
+themselves (given they are actually the hash of its content). Each of the
+descriptors contain a set of relevant metadata as well as the actual
+information that they refer to. The following JSON like representations
 \ref{topic-descriptor} and \ref{event-descriptor} provide an accurate
 description of the schema and format of our data structures. We will cover
 however some of the properties.
@@ -153,7 +169,7 @@ dissemination trees (publisher) might not actually be the same peer.
 
 \noindent\begin{minipage}{\textwidth}
 \vspace{8pt}
-\begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor},captionpos=b]
+\begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor}]
 {
   "name": <string>,
   "author": <peer-id>,
@@ -161,7 +177,7 @@ dissemination trees (publisher) might not actually be the same peer.
     "/": <topic-id>
   },
   "#": {                          //Sub topic links
-		meta: {												//Meta topic
+		"meta": {												//Meta topic
 			"/": "zdpuAkx9dPaPve3H9ezrtSipCSUhBCGt53EENDv8PrfZNmRnk"
 		},
     <topic-name>: {
@@ -206,7 +222,7 @@ the content.
 
 \noindent\begin{minipage}{\textwidth}
 \vspace{8pt}
-\begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor},captionpos=b]
+\begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor}]
 {
   "name": <string>,
   "publisher": <peer-id>,         //Peer who published the event
@@ -235,7 +251,7 @@ at each node is the same we do system wide. Descriptors are persisted using the
 Kadmelia DHT and disseminated through the Pulsarcast overlay, with each node
 then keeping this state locally. This allows us to abstract state at each node
 in a manner where you can refer to the same piece of data in the same way and
-expect the same representation and result, weather you're looking locally or
+expect the same representation and result, weather you are looking locally or
 system wide.
 
 \begin{figure}[hb!]
@@ -320,7 +336,12 @@ topic or, the actual author of the topic. Algorithm \ref{alg:subscribe}
 provides a more detailed generic procedure to be used at every node when
 receiving or sending a subscription request (or a join request as we call it)
 and figure \ref{fig:pulsarcast-subscription-flow} tries to provide a visual
-representation of the whole subscription flow.
+representation of the whole subscription flow. It is important to note that in
+order to maintain the dissemination trees every node must keep some state of
+its neighbours for every tree. If by some chance a node is unable to connect to
+a neighbour, a retry mechanism is in place for a limited amount of retries (a
+configurable parameter). If the node is still unable to connect then it goes
+through the subscription procedure again.
 
 \vspace{8pt}
 \begin{algorithm}[H]
@@ -362,29 +383,27 @@ representation of the whole subscription flow.
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
 
-TODO
-\begin{itemize}
-\item Árvores de disseminação
-\item Event linking (last seen vs custom)
-\item Request to publish
-\item Allowed publishers
-\item Uso da DHT
-\item Algoritmos em detalhe
-\item Disseminação de eventos
-\end{itemize}
-
-TODO
-
-TODO
+Considering the topic creation and subscription management previously discussed
+we can see that event dissemination becomes easier to handle, almost as a
+consequence of the way the subscription management was built, and dissemination
+trees again play their key part here. Pulsarcast however allows for some
+additional customisation and configuration at the topic level focused on
+providing a lot more flexibility to our system. At topic creation, the author
+of it has the ability to configure which nodes are allowed to publish, if and
+which nodes can request to publish and how events are linked together (through
+the parent link). These options are \emph{requestToPublish},
+\emph{allowedPublishers} and \emph{eventLinking}, all mentioned in the previous
+section TODO, we will see how each one of these fits together with the way
+events are disseminated. Figures \ref{fig:pulsarcast-publish-order-guarantee}
+and \ref{fig:pulsarcast-publish-custom} provide visual aids to how these
+options come together for event dissemination.
 
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.6\textwidth]{img/pulsarcast-publish-order-guarantee.png}
-  \caption{Event dissemination mechanism for a topic with a order guarantee configuration}
+  \caption{Event dissemination mechanism for a topic with only the author allowed to publish, last seen event linking and request to publish allowed. This scenario provides order guarantee.}
   \label{fig:pulsarcast-publish-order-guarantee}
 \end{figure}
-
-TODO
 
 \begin{figure}[hb!]
   \centering
@@ -393,14 +412,42 @@ TODO
   \label{fig:pulsarcast-publish-custom}
 \end{figure}
 
-TODO
+When a node wants to publish an event in a topic it starts by fetching the
+topic descriptor, first locally and then, if it is not present, from the
+Kadmelia DHT.  This way we have access to the topic data as well as its
+configurations. The node then checks if it is actually allowed to publish
+through the topic configuration whitelist mechanism. This option,
+\emph{allowedPublishers}, can either be enabled and, if so, a list of nodes is
+provided that is checked before publishing, or it can be disabled and in that
+scenario every node can publish a message. If the node cannot publish the
+message, it will check if it can submit a request to publish. This request to
+publish is another option set in the topic descriptor, through the
+\emph{requestToPublish} field, that, if enabled, allows every node in the
+network to submit these special requests. Optionally, it can also be a
+whitelist of nodes allowed to submit these. When a request to publish is
+forwarded across the network, it will propagate across the dissemination tree
+(from children nodes to parents) until it eventually finds a node which is
+actually allowed to publish this event. This will dictate the difference in the
+publisher (node who actually publishes the content) and the author (node
+responsible by creating the content in the first place).
 
+Upon receiving a publish event request, weather if it was initiated at this
+node or through a remote request to publish, the node starts by appropriately
+linking the new event to a parent event. This is where the \emph{eventLinking}
+option in our topic descriptor comes into play. Right now this option can
+either be \emph{CUSTOM} or \emph{LAST\_SEEN}. When the topic allows for custom
+linking, the client application has the ability to set a custom parent event,
+as long as it exists. With the last seen option however, the Pulsarcast node
+takes care of linking the given event to the event last seen by it. After the
+linking is done, the node can safely store the event descriptor in the Kademlia
+DHT, followed by disseminating it through its children and parent nodes in this
+topic dissemination tree. From this point forward, nodes along the
+dissemination tree will forward the event across branches of the tree where
+this has not gone through. All of the logic we have covered around event
+dissemination is better detailed in the algorithms \ref{alg:receive-event} and
+\ref{alg:send-event}.
 
-TODO
-
-
-TODO
-
+\vspace{8pt}
 \begin{algorithm}[H]
   \SetAlgoLined
   \Fn{ReceivedEvent(fromNodeId, eventData)}{
@@ -414,16 +461,17 @@ TODO
 				$SendEvent(fromNodeId, eventData)$\;
   	  }{
 				\If{$AllowedToRequestToPublish(nodeId, topicData$}{
-					$SendRequestToPublish(eventData)$\;
+					$SendRequestToPublish(eventData)$\tcp*[r]{Send request to publish to parent node}\
 				}
 			}
   	}
 	}
   \caption{Event handler for each node}
+	\label{alg:receive-event}
 \end{algorithm}
+\vspace{8pt}
 
-TODO
-
+\vspace{8pt}
 \begin{algorithm}[H]
   \SetAlgoLined
   \Fn{SendEvent(eventData)}{
@@ -441,13 +489,180 @@ TODO
 				$EmitEvent(eventData.topicId, eventData)$\;
 			}
 			\For{$peer \leftarrow GetChildren(eventData.topicId), GetParents(eventData.topicId)$}{
-				\If(\tcp*[r]{Don't send the event back}){$fromNodeId \neq peer$}{
+				\If(\tcp*[r]{Do not send the event back}){$fromNodeId \neq peer$}{
 					$SendRPC(eventData, peer)$\;
 				}
 			}
   	}
 	}
   \caption{Event forwarding function}
+	\label{alg:send-event}
 \end{algorithm}
+\vspace{8pt}
 
+It is important to understand some of the properties that these multiple
+configuration options allow for. The simplest example would be a scenario where
+only the author of a topic is allowed to publish, event linking is based on the
+last seen event and request to publish is allowed. In this example, despite
+every node being allowed to create content, we can achieve order guarantee,
+with a single stream of events all linked together. Another example would be a
+scenario where we actually have a whitelist of allowed publishers, no request
+to publish allowed and last seen event linking taking place. With this we
+essentially get a simple producer/consumer scenario, with a list of a few
+selected and vouched for producers that every node is aware of (that could even
+be expanded later on by the topic author). Finally, on the other end of the
+spectrum, we have a scenario where everyone is allowed to publish and custom
+event linking is allowed. Here, we are essentially giving the ability for
+clients and applications to use event trees to represent data in however they
+see fit given that, with custom event linking, applications have the ability to
+shape the event trees however they like. Links can go as far as to imply event
+causality if applications are programmed and configured as such. All of these
+scenarios came from a realisation that, it did not make sense to limit
+Pulsarcast's uses out of the box, specially taking account that through simple
+configuration we could cater for a broader set of use cases and applications.
+
+\section{RPC message protocol}\label{rpc-message}
+
+We have ran through the overall architecture of Pulsarcast, however we still
+have not detailed how the nodes communicate with each other. The fact is,
+Pulsarcast does not favour or define a wire protocol to be used. In our view
+Pulsarcast can and should work independently of what is used in the transport
+layer. It does however specify a well defined communication protocol built
+using Protocol
+Buffers~\footnote{https://developers.google.com/protocol-buffers/}. Protocol
+Buffers (or protobuf for short) are Google's open source, language-neutral,
+platform-neutral, extensible mechanism for serializing structured data. It
+allows us to define common light weight interfaces that, through source code
+generation, work across platforms. Plus, it is fast and quite small once
+encoded to the protocol buffer binary format (what actually runs in the wire),
+while also supporting a text based representation, similar to JSON, for
+readability purposes. With protobuf's, we have defined a set of Remote
+Procedure Call (RPC) schemas used by our system to communicate between nodes.
+
+We started by defining a common interface for all of our RPC messages as showed
+in the listing \ref{proto-rpc-message}. In protobufs, every field is associated
+with a number. These are used to uniquely identify a field in the protobuf
+binary
+format~\footnote{https://developers.google.com/protocol-buffers/docs/encoding}.
+Our message format is quite straight forward, with 3 fields, \emph{op} (for
+operation), \emph{payload} representing a generic payload and finally
+\emph{metadata} containing relevant metadata such as the creation date of this
+message and the protocol version used. The supported operations for now
+essentially translate all the actions a node might undertake, which are
+publishing an event, joining a topic, leaving a topic, creating a topic and
+requesting to publish. The payload is actually an abstraction and it can hold a
+topic descriptor, an event descriptor or a topic id depending on the operation
+field of this message. Finally the RPC schema itself is actually an array of
+the messages, so that if needed a node can forward multiple operations in one
+go.
+
+\noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
+\begin{lstlisting}[language=protobuf3,caption={Protobuf schema for our RPC messages},label={proto-rpc-message}]
+message RPC {
+  enum Operation {
+    PUBLISH_EVENT = 2;
+    JOIN_TOPIC = 3;
+    LEAVE_TOPIC = 4;
+    NEW_TOPIC = 5;
+    REQUEST_TO_PUBLISH = 6;
+  }
+
+  message Message {
+    optional Operation op = 1;
+    oneof payload {
+      TopicDescriptor topic = 2;
+      EventDescriptor event = 3;
+      bytes topicId = 5;
+    }
+    optional MetaData metadata = 6;
+  }
+
+  message MetaData {
+    optional string created = 1;
+    optional string protocolVersion = 2;
+  }
+
+  repeated Message msgs = 1;
+}
+\end{lstlisting}
+\vspace{8pt}
+\end{minipage}
+
+The topic and event descriptors also have a specific protobuf schema,
+essentially a representation of what we have already covered in section
+\ref{data-structures}. Listings \ref{proto-topic-descriptor} and
+\ref{proto-event-descriptor} show us the specification of these. In order to
+keep our messages as lightweight as possible and avoid unnecessarily burdening
+the network, we opted to have all of our multihash identifiers (such as the
+author, links, etc.) sent in binary format. Otherwise, the remaining fields end
+up being a one to one mapping from the event descriptor and topic descriptor
+data structure schemas.
+
+\noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
+\begin{lstlisting}[language=protobuf3,caption={Protobuf schema of the topic descriptor},label={proto-topic-descriptor}]
+message Link {
+  optional bytes / = 1;
+}
+
+message TopicDescriptor {
+
+  optional string name = 1;
+  optional bytes author = 2;
+  optional Link parent = 2;
+  map<string, Link> # = 3;
+  optional MetaData metadata = 4;
+
+  message MetaData {
+
+    enum EventLinking {
+      LAST_SEEN = 0;
+      CUSTOM = 1;
+    }
+
+    message PublishersList {
+      optional bool enabled = 1;
+      repeated bytes publishers = 2;
+    }
+
+    optional string created = 1;
+    optional string protocolVersion = 2;
+    optional PublishersList allowedPublishers = 3;
+    optional PublishersList requestToPublish = 4;
+    optional EventLinking eventLinking = 5;
+  }
+}
+\end{lstlisting}
+\vspace{8pt}
+\end{minipage}
+
+\noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
+\begin{lstlisting}[language=protobuf3,caption={Protobuf schema of the event descriptor},label={proto-event-descriptor}]
+message Link {
+  optional bytes / = 1;
+}
+
+message EventDescriptor {
+
+  message MetaData {
+    optional string created = 1;
+    optional string protocolVersion = 2;
+  }
+
+  optional bytes author = 1;
+  optional Link topic = 2;
+  optional bytes payload = 3;
+  optional bytes publisher = 4;
+  optional Link parent = 5;
+  optional MetaData metadata = 6;
+}
+\end{lstlisting}
+\vspace{8pt}
+\end{minipage}
+
+\section{Summary}\label{summary}
+
+TODO
 

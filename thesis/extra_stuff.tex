@@ -9,14 +9,103 @@
 \usepackage[linesnumbered,vlined,algoruled]{algorithm2e}
 \usepackage[official]{eurosym}
 
-\definecolor{purple}{RGB}{158,16,95}
-\definecolor{lightgray}{rgb}{.6,.6,.6}
+% Colors taken from the 'Tomorrow' color scheme of Chris Kempson
+% https://github.com/chriskempson/tomorrow-theme/blob/master/vim/colors/Tomorrow.vim
+\definecolor{basic}{RGB}{77, 77, 76}          % dark grey
+\definecolor{keyword}{RGB}{245, 135, 31}      % orange
+\definecolor{type}{RGB}{66, 113, 174}         % purple
+\definecolor{options}{RGB}{137, 89, 168}
+\definecolor{comment}{RGB}{142, 144, 140}
+\definecolor{string}{RGB}{113, 140, 0}        % green
+\definecolor{number}{RGB}{137, 89, 168}
+\definecolor{ident}{RGB}{200, 40, 41}         % red
+\definecolor{digits}{RGB}{245, 135, 31}       % orange
+
+% \definecolor{purple}{RGB}{158,16,95}
+% \definecolor{lightgray}{rgb}{.6,.6,.6}
 
 \lstdefinelanguage{JSON}{
   string=[s]{"}{"},
-  stringstyle=\color{purple},
+  % stringstyle=\color{purple},
   comment=[l]{//},
-  commentstyle=\color{lightgray},
+  % commentstyle=\color{lightgray},
+}
+
+
+% Extracted from: https://github.com/aytchell/latex-listings-protobu
+\lstdefinelanguage[2]{protobuf}{%
+	sensitive=true,%
+	morecomment=[l]{//},%
+	morecomment=[s]{/*}{*/},%
+	morestring=[b]{"},%
+	% For the keywords of Protocol Buffers
+	% see https://developers.google.com/protocol-buffers/docs/proto
+	morekeywords={enum,oneof,map,syntax,public,import,option,package,message,%
+		group,optional,required,repeated,default,reserved,extend,extensions,%
+		to,max,service,rpc,returns,true,false},%
+	% Basic types
+	% see https://developers.google.com/protocol-buffers/docs/proto#scalar
+	morekeywords=[2]{%
+		double,float,int32,int64,uint32,uint64,sint32,sint64,%
+		fixed32,fixed64,sfixed32,sfixed64,bool,string,bytes},%
+	% Options
+	% taken from 'google/protobuf/descriptor.proto'
+	morekeywords=[3]{%
+		% Generic Options
+		deprecated, uninterpreted_option,%
+		% File Options
+		java_package,java_outer_classname,java_multiple_files,%
+		java_generate_equals_and_hash,java_string_check_utf8,optimize_for,%
+		go_package,cc_generic_services,java_generic_services,%
+		py_generic_services,cc_enable_arenas,obj_class_prefix,%
+		csharp_namespace,%
+		% Message Options
+		message_set_wire_format,no_standard_descriptor_accessor,map_entry,%
+		% Field Options
+		ctype, packed,jstype,lazy,weak,%
+		% Enum Options
+		allow_alias}%
+}
+\lstalias[]{protobuf2}[2]{protobuf}
+
+\lstdefinelanguage[3]{protobuf}[2]{protobuf}{%
+	% Language keywords
+		% see https://developers.google.com/protocol-buffers/docs/proto3
+		deletekeywords={
+			% 'group' was marked as deprecated in protobuf2; now it's disallowed
+			group,%
+			% in protobuf3 the Any type replaces extensions (from protobuf2)
+			extensions, to, extend, max,%
+			% 'required' is no longer allowed
+			required,%
+			% 'optional' is default; stating it explicitly is disallowed
+			optional,%
+			% explicit default values are no longer allowed
+			default}%
+}
+\lstalias[]{protobuf3}[3]{protobuf}
+
+\lstset{
+  language={JSON},
+  basicstyle=\color{basic}\small\ttfamily, % Global Code Style
+  captionpos=b, % Position of the Caption (t for top, b for bottom)
+  extendedchars=true, % Allows 256 instead of 128 ASCII characters
+  tabsize=2, % number of spaces indented when discovering a tab 
+  columns=fixed, % make all characters equal width
+  keepspaces=true, % does not ignore spaces to fit width, convert tabs to spaces
+  showstringspaces=false, % lets spaces in strings appear as real spaces
+  breaklines=true, % wrap lines if they don't fit
+  frame=trbl, % draw a frame at the top, right, left and bottom of the listing
+  frameround=tttt, % make the frame round at all four corners
+  framesep=4pt, % quarter circle size of the round corners
+  numbers=left, % show line numbers at the left
+  numberstyle=\color{number}\tiny\ttfamily, % style of the line numbers
+  commentstyle=\color{comment}, % style of comments
+	keywordstyle=[1]\color{keyword},
+  keywordstyle=[2]\color{type},
+  keywordstyle=[3]\color{options},
+  stringstyle=\color{string}, % style of strings
+	identifierstyle=\color{ident}
 }
 
 % \lstdefinelanguage{JavaScript}{
