@@ -30,9 +30,21 @@ implementation focused on cross compatibility between server and browser. This
 is not to say that in the future we will not have other implementations in
 different languages, that is in fact one of the reasons for the clear
 separation between the Pulcarcast specification and its actual implementation.
-However, we had to choose, and in our view Javascript is the clear winner.
+However, we had to choose, and in our view Javascript is the clear winner. It is worth noting that, much like the work we built on top of, this module is open source~\footnote{https://github.com/JGAntunes/js-pulsarcast}.
 
-TODO next
+\subsection{Dependencies}\label{subsec:dependencies}
+
+Figure \ref{fig:pulsarcast-in-libp2p} gives us an overview of how our module
+fits in the libp2p ecosystem. libp2p defines interfaces responsible for routing
+content (peer routing), discovering other peers in the network (peer
+discovery), network transports and leveraging multiple network connections
+(switch). These all come bundled in the libp2p javascript
+module~\footnote{https://github.com/libp2p/js-libp2} which we use in
+Pulsarcast. Besides the main libp2p module we also use some other utility
+modules such as the CID
+module~\footnote{https://github.com/multiformats/js-cid} and the Peer-id
+module~\footnote{https://github.com/libp2p/js-peer-id}, both designed to reason
+with content identifiers (peer identifiers are also content identifiers). 
 
 \begin{figure}[hb!]
   \centering
@@ -41,12 +53,62 @@ TODO next
   \label{fig:pulsarcast-in-libp2p}
 \end{figure}
 
+Other than the libp2p dependencies, we have used other open source community
+modules. The listing \ref{dependencies} shows our dependency list, pulled from
+our \emph{package.json} (our module manifest). We have used a couple of helpers
+for handling data streams~\footnote{https://github.com/pull-stream/pull-stream}
+as well as a library to help us with the asynchronous control
+flow~\footnote{https://github.com/caolan/async}. To help us with protocol
+buffers we use protons~\footnote{https://github.com/ipfs/protons} and finally,
+joi~\footnote{https://github.com/hapijs/joi} is our validation library of
+choice.
+
+\noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
+\begin{lstlisting}[language=JSON,caption={Pulsarcast module dependency list},label={dependencies}]
+{
+	...
+	"dependencies": {
+		"async": "^2.6.1",
+		"bs58": "^4.0.1",
+		"cids": "^0.5.5",
+		"debug": "^3.1.0",
+		"ipld-dag-cbor": "^0.13.0",
+		"joi": "^13.4.0",
+		"joi-browser": "^13.4.0",
+		"peer-id": "^0.12.2",
+		"peer-info": "^0.14.1",
+		"protons": "^1.0.1",
+		"pull-length-prefixed": "^1.3.1",
+		"pull-stream": "^3.6.9"
+	},
+	...
+}
+\end{lstlisting}
+\vspace{8pt}
+\end{minipage}
+
+\subsection{Code Organisation}\label{subsec:code-organisation}
+
+TODO
+
+\subsection{Classes}\label{subsec:classes}
+
+TODO
+
 \begin{figure}[hb!]
   \center
   \includegraphics[width=1\textwidth]{img/uml-pulsarcast.png}
   \caption{UML representation of the classes in our Pulsarcast system}
   \label{fig:pulsarcast-uml}
 \end{figure}
+
+\subsection{RPC Handlers}\label{subsec:rpc-handlers}
+
+Joi, allows us to define schemas validation schemas  
+
+TODO
+
 
 \section{Testbed}\label{testbed}
 

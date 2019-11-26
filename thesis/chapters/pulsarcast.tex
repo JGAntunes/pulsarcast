@@ -124,20 +124,22 @@ network failure, acting as a NACK (not acknowledged) for relevant events.
 Given we are discussing addressability and linking between content, the
 representation used for our identifiers is an important part of our system
 specification. That was one of the main reasons for us to borrow inspiration
-from systems like IPFS and decided to use
+from systems like IPFS and decided to use \emph{CIDs} (Content
+Identifiers)~\footnote{https://github.com/multiformats/cid}.  A CID is a
+self-describing content-addressed identifier. It uses cryptographic hashes to
+achieve content addressing and is powered by
 \emph{multihash}~\footnote{https://github.com/multiformats/multihash}.
 Multihash is a convention for representing the output of many different
 cryptographic hash functions in a compact, deterministic encoding that is
 accommodating of future change. This is because multihash actually encodes the
 type of hash function used to produce the output. All of the relevant
-identifiers in our system are multihashes, this includes node identifiers as
-well as the identifiers for both event descriptors and topic descriptors
-themselves (given they are actually the hash of its content). Each of the
-descriptors contain a set of relevant metadata as well as the actual
-information that they refer to. The following JSON like representations
-\ref{topic-descriptor} and \ref{event-descriptor} provide an accurate
-description of the schema and format of our data structures. We will cover
-however some of the properties.
+identifiers in our system are CIDs, this includes node identifiers as well as
+the identifiers for both event descriptors and topic descriptors themselves
+(given they are actually the hash of its content). Each of the descriptors
+contain a set of relevant metadata as well as the actual information that they
+refer to. The following JSON like representations \ref{topic-descriptor} and
+\ref{event-descriptor} provide an accurate description of the schema and format
+of our data structures. We will cover however some of the properties.
 
 Parent links in the event descriptor serve as a reference to previous events in
 the topic tree. A Pulsarcast node that has just received an event can, through
@@ -594,7 +596,7 @@ essentially a representation of what we have already covered in section
 \ref{data-structures}. Listings \ref{proto-topic-descriptor} and
 \ref{proto-event-descriptor} show us the specification of these. In order to
 keep our messages as lightweight as possible and avoid unnecessarily burdening
-the network, we opted to have all of our multihash identifiers (such as the
+the network, we opted to have all of our content identifiers (such as the
 author, links, etc.) sent in binary format. Otherwise, the remaining fields end
 up being a one to one mapping from the event descriptor and topic descriptor
 data structure schemas.
