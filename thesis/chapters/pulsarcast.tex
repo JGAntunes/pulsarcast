@@ -99,6 +99,8 @@ Pulsarcast has a set of two very important data structures to which we refer to
 as event and topic descriptors. To help us represent this data we rely on a
 concept already introduced in our related work, the Merkle DAG.
 
+\subsection{Content-Addressability}\label{subsec:content-addressability}
+
 All of our data structures are immutable, content addressable and linked
 together to form a Direct Acyclic Graph (Merkle DAG). Events link both to their
 respective topic descriptor and a past event in that topic. Topics on the other
@@ -141,34 +143,6 @@ refer to. The following JSON like representations \ref{topic-descriptor} and
 \ref{event-descriptor} provide an accurate description of the schema and format
 of our data structures. We will cover however some of the properties.
 
-Parent links in the event descriptor serve as a reference to previous events in
-the topic tree. A Pulsarcast node that has just received an event can, through
-its parent link, know a previous event of this same topic and act on it
-accordingly (fetch it or not). Depending on the type of topic we have at hand
-(something we will cover further in this document) this parent link can have
-different meanings and relevance.
-
-As for the parent links in the topic descriptor, these act as a reference to a
-previous version of this same topic. Keep in mind that data in Pulsarcast is
-immutable, as such, one cannot update content that has already been published
-and disseminated. We can however create a new reference of it and link to what
-we consider to be a previous version. This is the exact use case for the parent
-links in the topic descriptor, to act as a link to previous versions of this
-same topic. Possible changes to the topic descriptor can encompass changes to
-the topic metadata for example, or additions of new sub-topics.
-
-In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
-Commonly, these are indexed by name, but it is not mandatory, it is actually up
-to the topic and consequently its owner to choose accordingly.  There is no
-limit to how many sub-topics a topic can have. One really important note though is that every topic actually comes with a default meta topic as a sub topic. The idea is for this meta topic to be used to disseminate changes for the original topic descriptor, something we will cover in section \ref{subscription-management-event-dissemination}.
-
-Both descriptors have an author field that is self descriptive, essentially
-meaning the peer responsible for creating and, in the case of the topic,
-maintaining this descriptor. The topic descriptor however has an extra field
-which is the publisher field. This is because the producer of the content
-(author) and the peer responsible for actually pushing this into the Pulsarcast
-dissemination trees (publisher) might not actually be the same peer.
-
 \noindent\begin{minipage}{\textwidth}
 \vspace{8pt}
 \begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor}]
@@ -205,23 +179,6 @@ dissemination trees (publisher) might not actually be the same peer.
 \vspace{8pt}
 \end{minipage}
 
-Metadata for the event descriptor is quite simple. It includes a creation
-timestamp in ISO8601 format and the version of the protocol at the time the
-event was published. Remember, these are content addressable immutable data
-structures, as such the info we provide in these metadata fields will be
-persistent and verifiable, something we take advantage of. On the other hand
-the topic descriptor is a bit more complex. Besides the timestamp and version,
-it includes further configuration options that tell us how event dissemination
-and event linking will be handled for all of the topic, something we will cover
-in section \ref{subscription-management-event-dissemination}.
-
-A key objective for these data structures and, specifically, to the metadata
-design has been for it to be easily extensible. The protocol version aids us
-with this, easily conveying any kind of breaking changes. Examples of fields
-and properties that could be added in the future include things such as author
-and publisher signatures, so that peers could verify the authenticity of all
-the content.
-
 \noindent\begin{minipage}{\textwidth}
 \vspace{8pt}
 \begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor}]
@@ -244,6 +201,57 @@ the content.
 \end{lstlisting}
 \vspace{8pt}
 \end{minipage}
+
+\subsection{Data links (Merkle links)}\label{subsec:data-links}
+
+Parent links in the event descriptor serve as a reference to previous events in
+the topic tree. A Pulsarcast node that has just received an event can, through
+its parent link, know a previous event of this same topic and act on it
+accordingly (fetch it or not). Depending on the type of topic we have at hand
+(something we will cover further in this document) this parent link can have
+different meanings and relevance.
+
+As for the parent links in the topic descriptor, these act as a reference to a
+previous version of this same topic. Keep in mind that data in Pulsarcast is
+immutable, as such, one cannot update content that has already been published
+and disseminated. We can however create a new reference of it and link to what
+we consider to be a previous version. This is the exact use case for the parent
+links in the topic descriptor, to act as a link to previous versions of this
+same topic. Possible changes to the topic descriptor can encompass changes to
+the topic metadata for example, or additions of new sub-topics.
+
+In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
+Commonly, these are indexed by name, but it is not mandatory, it is actually up
+to the topic and consequently its owner to choose accordingly.  There is no
+limit to how many sub-topics a topic can have. One really important note though is that every topic actually comes with a default meta topic as a sub topic. The idea is for this meta topic to be used to disseminate changes for the original topic descriptor, something we will cover in section \ref{subscription-management-event-dissemination}.
+
+Both descriptors have an author field that is self descriptive, essentially
+meaning the peer responsible for creating and, in the case of the topic,
+maintaining this descriptor. The topic descriptor however has an extra field
+which is the publisher field. This is because the producer of the content
+(author) and the peer responsible for actually pushing this into the Pulsarcast
+dissemination trees (publisher) might not actually be the same peer.
+
+\subsection{Metadata}\label{subsec:metadata}
+
+Metadata for the event descriptor is quite simple. It includes a creation
+timestamp in ISO8601 format and the version of the protocol at the time the
+event was published. Remember, these are content addressable immutable data
+structures, as such the info we provide in these metadata fields will be
+persistent and verifiable, something we take advantage of. On the other hand
+the topic descriptor is a bit more complex. Besides the timestamp and version,
+it includes further configuration options that tell us how event dissemination
+and event linking will be handled for all of the topic, something we will cover
+in section \ref{subscription-management-event-dissemination}.
+
+A key objective for these data structures and, specifically, to the metadata
+design has been for it to be easily extensible. The protocol version aids us
+with this, easily conveying any kind of breaking changes. Examples of fields
+and properties that could be added in the future include things such as author
+and publisher signatures, so that peers could verify the authenticity of all
+the content.
+
+\subsection{Distributed and local state}\label{subsec:distributed-and-local-state}
 
 The data in Pulsarcast however is distributed, as illustrated by figure \ref{fig:pulsarcast-local-vs-distributed-state}, which means we have to deal with
 an extra layer of complexity in our system. We again tackle this with the way
@@ -277,6 +285,8 @@ the configurations the topic descriptor allows for that will change the way
 events are propagated and published. Finally we will run through the messages
 sent by each node in order to perform these operations, a key part in our
 distributed system.
+
+\subsection{Topic creation}\label{subsec:topic-creation}
 
 Before we can speak about a new subscription a topic must already exist. In
 order for this to happen a node starts by creating the meta topic descriptor.
@@ -319,6 +329,8 @@ create a new topic.
 	\label{alg:new-topic}
 \end{algorithm}
 \vspace{8pt}
+
+\subsection{Subscribing}\label{subsec:subscribing}
 
 With the topic descriptor stored and available to the whole network, its
 creator will act as the root node in this newly created topic dissemination
@@ -384,6 +396,8 @@ through the subscription procedure again.
   \caption{Overview of the flow for creating a new subscription}
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
+
+\subsection{Publishing and event dissemination}\label{subsec:publishing-and-event-dissemination}
 
 Considering the topic creation and subscription management previously discussed
 we can see that event dissemination becomes easier to handle, almost as a
