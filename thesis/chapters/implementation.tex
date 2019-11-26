@@ -90,7 +90,82 @@ choice.
 
 \subsection{Code Organisation}\label{subsec:code-organisation}
 
-TODO
+When it comes to code organisation and despite not existing a clear standard
+for modules in Javascript, we follow what is most generally conceived as best
+practices. Listing \ref{file-tree} gives us an overview of the file structure
+of our project. 
+
+Our \emph{src} (source) directory has all the components that constitute our
+Pulsarcast node. \emph{src/index.js} holds our top level class, Pulsarcast,
+that is exported and listed as the main component to import when applications
+\emph{require} our module. Internal components are split into folders according
+its functionality. The classes for our event and topic descriptors, as well as
+its trees, are under the \emph{dag} directory. The \emph{messages} directory
+keeps all the relevant pieces of functionality relative to our RPC messages,
+including its Protocol buffers, validators and marshalling logic. Our RPC
+handlers, containing Pulsarcast's core algorithms and logic, are kept under
+\emph{rpc}. Finally, on the root of our source directory we keep our default
+node configuration, our peer class and an \emph{utils} directory, were we store
+a series of utility functions used across our code base.
+
+Apart from our source directory we have a series of unit and integration tests,
+currently kept under \emph{test}. These tests exercise the key components of
+our system, running a series of nodes locally, making sure it is functionally
+sound. Besides being able to run locally, these tests are what we currently run
+on our \emph{CI}~\footnote{https://www.thoughtworks.com/continuous-integration}
+environment on every code submission we perform.
+
+\noindent\begin{minipage}{\textwidth}
+\vspace{8pt}
+\begin{lstlisting}[caption={File tree for our Pulsarcast implementation},label={file-tree}]
+.
+|-- docs
+|   `-- api.md
+|-- LICENSE
+|-- package.json
+|-- package-lock.json
+|-- README.md
+|-- src
+|   |-- config.js
+|   |-- dag
+|   |   |-- event-node.js
+|   |   |-- event-tree.js
+|   |   |-- topic-node.js
+|   |   |-- topic-tree.js
+|   |   `-- utils.js
+|   |-- index.js
+|   |-- messages
+|   |   |-- create-rpc.js
+|   |   |-- index.js
+|   |   |-- marshalling.js
+|   |   |-- protobuffers
+|   |   |   |-- index.js
+|   |   |   `-- messages.proto.js
+|   |   `-- schemas
+|   |       |-- event-descriptor.js
+|   |       |-- index.js
+|   |       |-- peer-tree.js
+|   |       |-- rpc.js
+|   |       `-- topic-descriptor.js
+|   |-- peer.js
+|   |-- rpc
+|   |   |-- index.js
+|   |   |-- receive.js
+|   |   `-- send.js
+|   `-- utils
+|       |-- dht-helpers.js
+|       `-- logger.js
+`-- test
+    |-- integration
+    |   |-- 2-nodes.js
+    |   `-- multiple-nodes.js
+    |-- test-node.js
+    `-- utils.js
+
+\end{lstlisting}
+\vspace{8pt}
+\end{minipage}
+
 
 \subsection{Classes}\label{subsec:classes}
 
@@ -109,6 +184,9 @@ Joi, allows us to define schemas validation schemas
 
 TODO
 
+\subsection{Usage}\label{subsec:usage}
+
+TODO
 
 \section{Testbed}\label{testbed}
 
