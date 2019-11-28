@@ -3,34 +3,36 @@
 \chapter{Implementation}
 \label{chapter:implementation}
 
-For our Pulsarcast implementation we decided to take advantage of the
+For our Pulsarcast implementation, we decided to take advantage of the
 \emph{libp2p} ecosystem as it solves a lot of the underlying issues of building
-a peer to peer system, not specific to our pubsub scenario. This includes
-dealing with connection multiplexing, NAT traversal, discovery mechanisms, etc.
-All of which libp2p, a community focused project with implementations in
-multiple languages already solves. We can also take advantage of the utility
+a peer to peer system, not specific to our pub-sub scenario. This includes
+dealing with connection multiplexing, NAT traversal, discovery mechanisms and
+others.  All of which libp2p, a community-focused project with implementations
+in multiple languages already solves. We can also take advantage of the utility
 modules it has and the advantage of having an already working implementation of
 the Kadmelia DHT. Our focus is then to build a module, implementing the
-Pulsarcast specification, that clients and apps can take advantage of. Section
+Pulsarcast specification that clients and apps can take advantage of. Section
 \ref{pulsarcast-javascript-module} provides a detailed description of it.
 
 Besides our module, we also needed to find a suitable way to test our system as
-whole. Given our specific needs, we opted to build a custom testbed, detailed
+a whole. Given our specific needs, we opted to build a custom testbed, detailed
 in section \ref{testbed} and the basis of the evaluation detailed in chapter
 \ref{chapter:evaluation}. 
 
 \section{Pulscarcast Javascript module}\label{pulsarcast-javascript-module}
 
-We chose to implement our Pulsarcast module in Javascript. As it was covered in
-our related work, Javascript is ubiquitous, running in browsers, servers and
-many different kinds of devices and architectures. Through it, we are able to
-run our Pulscarcast nodes in a multitude of systems and most importantly,
-direct its usage for the World Wide Web. Plus, libp2p has a Javascript
-implementation focused on cross compatibility between server and browser. This
-is not to say that in the future we will not have other implementations in
-different languages, that is in fact one of the reasons for the clear
-separation between the Pulcarcast specification and its actual implementation.
-However, we had to choose, and in our view Javascript is the clear winner. It is worth noting that, much like the work we built on top of, this module is open source~\footnote{https://github.com/JGAntunes/js-pulsarcast}.
+We chose to implement our Pulsarcast module in Javascript. As we covered in our
+related work, Javascript is ubiquitous, running in browsers, servers and many
+different kinds of devices and architectures. Through it, we can run our
+Pulscarcast nodes in a multitude of systems and most importantly, direct its
+usage for the World Wide Web. Plus, libp2p has a Javascript implementation
+focused on cross-compatibility between server and browser. This is not to say
+that in the future we will not have other implementations in different
+languages, that is, in fact, one of the reasons for the clear separation
+between the Pulcarcast specification and its actual implementation.  However,
+we had to choose, and in our view, Javascript is the clear winner. It is worth
+noting that, much like the work we built on top of, this module is open
+source~\footnote{https://github.com/JGAntunes/js-pulsarcast}.
 
 \subsection{Dependencies}\label{subsec:dependencies}
 
@@ -59,7 +61,7 @@ our \emph{package.json} (our module manifest). We have used a couple of helpers
 for handling data streams~\footnote{https://github.com/pull-stream/pull-stream}
 as well as a library to help us with the asynchronous control
 flow~\footnote{https://github.com/caolan/async}. To help us with protocol
-buffers we use protons~\footnote{https://github.com/ipfs/protons} and finally,
+buffers, we use protons~\footnote{https://github.com/ipfs/protons} and finally,
 joi~\footnote{https://github.com/hapijs/joi} is our validation library of
 choice.
 
@@ -90,29 +92,31 @@ choice.
 
 \subsection{Code Organisation}\label{subsec:code-organisation}
 
-When it comes to code organisation and despite not existing a clear standard
+When it comes to code organisation, and despite not existing a clear standard
 for modules in Javascript, we follow what is most generally conceived as best
 practices. Listing \ref{file-tree} gives us an overview of the file structure
 of our project. 
 
 Our \emph{src} (source) directory has all the components that constitute our
-Pulsarcast node. \emph{src/index.js} holds our top level class, Pulsarcast,
+Pulsarcast node. \emph{src/index.js} holds our top-level class, Pulsarcast,
 that is exported and listed as the main component to import when applications
-\emph{require} our module. Internal components are split into folders according
-its functionality. The classes for our event and topic descriptors, as well as
-its trees, are under the \emph{dag} directory. The \emph{messages} directory
-keeps all the relevant pieces of functionality relative to our RPC messages,
-including its Protocol buffers, validators and marshalling logic. Our RPC
-handlers, containing Pulsarcast's core algorithms and logic, are kept under
-\emph{rpc}. Finally, on the root of our source directory we keep our default
-node configuration, our peer class and an \emph{utils} directory, were we store
-a series of utility functions used across our code base.
+\emph{require} our module. We have split internal components into folders
+according to its functionality. The classes for our event and topic
+descriptors, as well as its trees, are under the \emph{dag} directory. The
+\emph{messages} directory keeps all the important pieces of functionality
+relative to our RPC messages, including its Protocol buffers, validators and
+marshalling logic. Our RPC handlers, containing Pulsarcast's core algorithms
+and logic, are kept under \emph{rpc}. Finally, on the root of our source
+directory, we keep our default node configuration, our peer class and an
+\emph{utils} directory, where we store a series of utility functions used
+across our codebase.
 
-Apart from our source directory we have a series of unit and integration tests,
-currently kept under \emph{test}. These tests exercise the key components of
-our system, running a series of nodes locally, making sure it is functionally
-sound. Besides being able to run locally, these tests are what we currently run
-on our \emph{CI}~\footnote{https://www.thoughtworks.com/continuous-integration}
+Apart from our source directory, we have a series of unit and integration
+tests, currently kept under \emph{test}. These tests exercise the critical
+components of our system, running a series of nodes locally, making sure it is
+functionally sound. Besides being able to run locally, these tests are what we
+currently run on our
+\emph{CI}~\footnote{https://www.thoughtworks.com/continuous-integration}~\footnote{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}
 environment on every code submission we perform.
 
 % \noindent\begin{minipage}{\textwidth}
@@ -187,7 +191,6 @@ Figure \ref{fig:pulsarcast-uml} shows the Unified Modelling Language  (UML)
 class diagram of our system, but we will run through those classes which we
 consider more relevant for a thorough look into its functioning.
 
-
 \begin{figure}[hb!]
   \center
   \includegraphics[width=1\textwidth]{img/uml-pulsarcast.png}
@@ -198,11 +201,11 @@ consider more relevant for a thorough look into its functioning.
 \subsubsection{Pulsarcast}\label{subsubsec:pulsarcast}
 
 Pulsarcast is our main class and essentially what makes a Pulsarcast node. It
-contains the state of subcriptions, topics, connections and event dissemination
-trees relevant to this node as well as the needed methods to interact with the
-Pulsarcast underlying system. It extends the built-in \verb|EventEmitter|
-class~\footnote{https://nodejs.org/api/events.html}, making our class capable
-of reproducing the event emitter
+contains the state of subscriptions, topics, connections and event
+dissemination trees relevant to this node as well as the needed methods to
+interact with the Pulsarcast underlying system. It extends the built-in
+\verb|EventEmitter| class~\footnote{https://nodejs.org/api/events.html}, making
+our class capable of reproducing the event emitter
 pattern~\footnote{https://nodejs.dev/the-nodejs-event-emitter}, the mechanism
 we use to bubble up new Pulsarcast events to the application level. It has a
 fairly simple constructor as one can see in the listing
@@ -210,11 +213,11 @@ fairly simple constructor as one can see in the listing
 
 \begin{itemize}
   \item
-    \verb|start(callback)| - Start the Pulsarcast node by registering our protocol with the \emph{libp2p} protocol connection handler.
+    \verb|start(callback)| -  Start the Pulsarcast node by registering our protocol with the \emph{libp2p} protocol connection handler.
   \item
     \verb|stop(callback)| - Stop the Pulsarcast node, gracefully close connections we might have to any peer and de-register our protocol from the \emph{libp2p} protocol connection handler.
   \item
-  \verb|createTopic(topicName, [options], callback)| - Create a Pulsarcast topic with the specified name. An optional object can be provided through which one can add \verb|subTopics}, \verb|parent| link and topic metadata configuration with \verb|allowedPublishers|, \verb|requestToPublish| and \verb|eventLinking|. By default no \verb|parent| link is added and only the topic author is allowed to publish (essentially creating an event dissemination tree with order guarantee).
+  \verb|createTopic(topicName, [options], callback)| - Create a Pulsarcast topic with the specified name. An optional object can be provided through which one can add \verb|subTopics}, \verb|parent| link and topic metadata configuration with \verb|allowedPublishers|, \verb|requestToPublish| and \verb|eventLinking|. By default, no \verb|parent| link is added and only the topic author is allowed to publish (essentially creating an event dissemination tree with order guarantee).
   \item
     \verb|subscribe(topicB58Str, [options], callback)| - Subscribe to a topic with the given base58 CID. An option \verb|subscribeToMeta| can be provided which will determine if this node will subscribe to this topic's meta-topic also (defaults to true).
   \item
@@ -261,17 +264,17 @@ class Pulsarcast extends EventEmitter {
 % \end{minipage}
 
 Pulscarcast's topic creation, subscribe/unsubscribe and publish methods are
-fairly simple, given our separation of concerns. All of them consist of a set
-of input sanity checks with control in the end being handover to our RPC
+relatively simple, given our separation of concerns. All of them consist of a
+set of input sanity checks with control, in the end, being handover to our RPC
 handlers, responsible for storing any relevant information in the DHT and
 forwarding/creating any RPC request that we might need. Listing
-\ref{pulsarcast-subscribe} shows us an example of the aforementioned logic, the
-subscribe method. New subscription calls in Pulsarcast are done via the topic's
-base58 CID. The Pulscarcast node keeps all the state relative to the topics we
-are subscribed to, as such we always check to see if we are already subscribed
-to topic given before performing any action. If all the input checks are good,
-we handle over to our RPC handlers to create the appropriate RPC messages and
-forward our request.
+\ref{pulsarcast-subscribe} shows us an example of the logic above, the
+subscribe method. New subscription calls in Pulsarcast are done using the
+topic's base58 CID. The Pulscarcast node keeps all the state relative to the
+topics we are subscribed. As such, before performing any action, we always
+check to see if we are subscribed to the topic given. If all the input checks
+are right, we hand over to our RPC handlers to create the appropriate RPC
+messages and forward our request.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
@@ -313,8 +316,8 @@ protocol handlers. When an incoming connection that matches our protocol
 reaches our node, the Pulsarcast class is responsible for internally handling
 it, creating the necessary Peer objects and registering the appropriate
 connection handlers so that when/if the connection drops we clear all the
-relevant state. The same goes for when the node needs to contact another peer,
-if a connection needs to be established it is up to the Pulsarcast class to do
+relevant state. The same goes for when the node needs to contact another peer.
+If a connection needs to be established, it is up to the Pulsarcast class to do
 it properly. Listing \ref{pulsarcast-connection-handlers} gives us a thorough
 look of all of the methods used for this purpose.
 
@@ -381,14 +384,14 @@ look of all of the methods used for this purpose.
 
 \subsubsection{Peer}\label{subsubsec:peer}
 
-The Peer class provides an abstraction for the state of each peer, this
-includes connections, information such its id and address and the dissemination
-trees it is part of. Listing \ref{peer-constructor} shows us the constructor of
-our class. Its \verb|trees| property is a \verb|Map| indexed by topic
-identifier, that keeps the peer's current dissemination trees neighbours.
-Listing \ref{peer-methods} shows the methods that interact with this property
-as well as the connection and message forwarding handlers that help our node
-forward messages to the necessary peers.
+The Peer class provides an abstraction for the state of each peer, including
+connections, information such its id and address and the dissemination trees it
+is part of. Listing \ref{peer-constructor} shows us the constructor of our
+class. Its \verb|trees| property is a \verb|Map| indexed by topic identifier,
+that keeps the peer's current dissemination trees neighbours.  Listing
+\ref{peer-methods} shows the methods that interact with this property as well
+as the connection and message forwarding handlers that help our node forward
+messages to the necessary peers.
 
 \begin{lstlisting}[language=JavaScript, float=p, caption={Peer class constructor},label={peer-constructor}]
 class Peer extends EventEmitter {
@@ -454,14 +457,12 @@ class Peer extends EventEmitter {
 \subsubsection{TopicNode and EventNode}\label{subsubsec:topic-node}
 
 The \verb|TopicNode| and \verb|EventNode| classes refer to our topic and event
-descriptor dag nodes respectively. They are quite similar in essence given
-that, in the end, they both abstract Merkle DAG nodes. Listings
-\ref{topic-node-constructor} and \ref{event-node-constructor} show us its
-constructors. Despite the similarities though some aspects are worth noting,
-such as the \verb|isPublished| field on the event descriptor, which is actually
-a getter (checks for the presence of the \verb|parent| field) and is crucial
-for our system to understand if this event has or has not been published yet
-(like, being forwarded in a request to publish for example).
+descriptor dag nodes respectively. They are quite similar given that, in the
+end, they both abstract Merkle DAG nodes. Listings \ref{topic-node-constructor}
+and \ref{event-node-constructor} show us its constructors. Despite the
+similarities, though, some aspects are worth noting. Such example is the
+\verb|isPublished| field on the event descriptor. Which is crucial for our
+system to understand if this event has or has not been published yet.
 
 \begin{lstlisting}[language=JavaScript, float=p, caption={TopicNode class constructor},label={topic-node-constructor}]
 class TopicNode {
@@ -531,21 +532,22 @@ Both of the classes have a series of methods which we feel like are worth descri
 
 \begin{itemize}
   \item
-    \verb|getCID(callback)| - Given our descriptors are content addressable, their identifiers are ever changing depending on the values of their properties. This method returns, through the callback function, the CID for this descriptor.
+    \verb|getCID(callback)| - Given our descriptors are content-addressable, their identifiers are ever-changing depending on the values of their properties. This method returns, through the callback function, the CID for this descriptor.
   \item
-    \verb|getReadableFormat()| - Return an object whose properties are human readable representations of the values of this object in the canonical format described in chapter \ref{chapter:pulsarcast}. This mostly consists in returning all the CIDs as base 58 strings.
+    \verb|getReadableFormat()| - Return an object whose properties are human-readable representations of the values of this object in the canonical format described in chapter \ref{chapter:pulsarcast}. Consists mostly of returning all the CIDs as base 58 strings.
   \item
-    \verb|serialize()| - Return an object in the canonical format described in chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the CIDs in binary format (buffers). This is mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
+    \verb|serialize()| - Return an object in the canonical format described in chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the CIDs in binary format (buffers). Mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
   \item
-    \verb|deserialize(node)| - Convert a descriptor in a serialized format to an instance of its class, returning that same instance. This is a static method of each class.
+    \verb|deserialize(node)| - Convert a descriptor in a serialized format to an instance of its class, returning that same instance. A static method for each class.
 \end{itemize}
+
 
 \subsection{RPC Handlers}\label{subsec:rpc-handlers}
 
 Pulsarcast's RPC handlers are responsible for containing the implementation of
-the key algorithm mentioned in chapter \ref{chapter:pulsarcast}. These
-functions are used not only used by the Pulsarcast class when a new command is
-invoked, but are also registered to handle incoming messages from other nodes.
+the critical algorithms mentioned in chapter \ref{chapter:pulsarcast}. These
+functions are not only used by the Pulsarcast class when a new command is
+invoked but are also registered to handle incoming messages from other nodes.
 A generic handler is responsible for receiving every incoming message and,
 depending on the type of operation (see \ref{proto-rpc-message}), forward it to
 the correct handler.
@@ -553,9 +555,10 @@ the correct handler.
 It is also the generic handler responsibility to validate incoming and outgoing
 messages, making sure they obey our pre-defined schemas. This is important
 because specific requirements and rules cannot be enforced at the protocol
-buffer level. For this purpose we use the already mentioned validation library
-Joi. Joi allows us to write up validation schemas that are easy to cope with,
-in Javascript. Listing \ref{joi-schema-event-descriptor} provides an example of such schema in practice.
+buffer level. For this purpose, we use the already mentioned validation
+library, Joi. Joi allows us to write up validation schemas that are easy to
+cope with, in Javascript. Listing \ref{joi-schema-event-descriptor} provides an
+example of such schema in practice.
 
 \begin{lstlisting}[language=JavaScript, float=h, caption={Joi schema for and event descriptor},label={joi-schema-event-descriptor}]
 const metadata = Joi.object()
@@ -580,36 +583,42 @@ const eventDescriptor = Joi.object().keys({
 })
 \end{lstlisting}
 
-We have split our RPC handlers into outgoing and incoming and tried to reuse as much logic as possible, hence why when a new command is invoked through the Pulsarcat API, control is handed over to the respective RPC handler, as if we had just received an RPC message from another node. Because of this, some of the logic described in the algorithms in chapter \ref{chapter:pulsarcast} is actually split between their incomning/outgoing RPC handler. The following list provides an overview of the functions we have created:
+We have split our RPC handlers into outgoing and incoming and tried to reuse as
+much logic as possible. Hence why when the client invokes a new command through
+the Pulsarcat API, control is handed over to the respective RPC handler as if
+we had just received an RPC message from another node. Consequently, some of
+the logic described in the algorithms in chapter \ref{chapter:pulsarcast} is
+split between incoming/outgoing RPC handlers. The following list provides an
+overview of the functions we have created:
 
 \begin{itemize}
   \item
     \verb|rpc.receive.genericHandler()| - The generic handle responsible for receiving all the incoming RPC messages, validating these and forwarding it accordingly.
   \item
-    \verb|rpc.receive.publish()| - The receiving RPC handler for publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
+    \verb|rpc.receive.publish()| - The receiving RPC handler for publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|), it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
   \item
-    \verb|rpc.receive.requestToPublish()| - The receiving RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to actually publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
+    \verb|rpc.receive.requestToPublish()| - The receiving RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
   \item
-    \verb|rpc.receive.join()| - The receiving RPC handler for a new subscription, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from other node, as such we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
+    \verb|rpc.receive.join()| - The receiving RPC handler for a new subscription, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the id of the peer sending, it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from another node, as such, we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
   \item
     \verb|rpc.receive.leave()| - The receiving RPC handler for unscribe requests. This function is similar to its counterpart responsible for subscribing to a topic.
   \item
-    \verb|rpc.send.publish()| - The outgoing RPC handler for event publishing, responsible for partially implementing algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node, if it is, it links it to its parent event accordingly and stores it in the DHT. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
+    \verb|rpc.send.publish()| - The outgoing RPC handler for event publishing, responsible for partially implementing algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node if it is, it links it to its parent event accordingly and stores it in the DHT. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
   \item
-    \verb|rpc.send.requestToPublish()| - The outgoing RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:send-event}, essentially consisting of forwarding the requests to the appropriate dissemination tree branches.
+    \verb|rpc.send.requestToPublish()| - The outgoing RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:send-event}, mainly consisting of forwarding the requests to the appropriate dissemination tree branches.
   \item
     \verb|rpc.send.join()| - The outgoing RPC handler for subscription requests, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon being called, it looks up for the closest known peer to the topic author, locally stored in DHT. With the closest peer id, we update our node's dissemination tree parent for this topic and send our join RPC request.
   \item
-    \verb|rpc.send.leave()| - The outgoing RPC handler for unsubscribe requests. Essentially, the same logic as its counterpart \verb|join| but for leaving a topic.
+    \verb|rpc.send.leave()| - The outgoing RPC handler for unsubscribe requests. Mostly the same logic as its counterpart \verb|join| but for leaving a topic.
   \item
-    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the DHT and finally propagating the new topic through the meta-tpic.
+    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the DHT and finally propagating the new topic through the meta-topic.
 \end{itemize}
 
 \subsection{Usage}\label{subsec:usage}
 
 Listing \ref{pulsarcast-usage-example} provides a usage example of our
 Javascript module. Keep in mind that this is a oversimplified example of
-course, with a single node, its purpose is just to understand how the API comes
+course, with a single node, its purpose is to understand how the API comes
 together and allows applications to integrate with it.
 
 \begin{lstlisting}[language=JavaScript, float=h, caption={Usage example of our Pulsarcast module},label={pulsarcast-usage-example}]
