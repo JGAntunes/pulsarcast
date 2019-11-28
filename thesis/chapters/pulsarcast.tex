@@ -143,9 +143,9 @@ refer to. The following JSON like representations \ref{topic-descriptor} and
 \ref{event-descriptor} provide an accurate description of the schema and format
 of our data structures. We will cover however some of the properties.
 
-\noindent\begin{minipage}{\textwidth}
-\vspace{8pt}
-\begin{lstlisting}[language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor}]
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, language=JSON,caption={Topic descriptor schema in a JSON based format},label={topic-descriptor}]
 {
   "name": <string>,
   "author": <peer-id>,
@@ -176,12 +176,12 @@ of our data structures. We will cover however some of the properties.
   }
 }
 \end{lstlisting}
-\vspace{8pt}
-\end{minipage}
+% \vspace{8pt}
+% \end{minipage}
 
-\noindent\begin{minipage}{\textwidth}
-\vspace{8pt}
-\begin{lstlisting}[language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor}]
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, language=JSON,caption={Event descriptor schema in a JSON based format},label={event-descriptor}]
 {
   "name": <string>,
   "publisher": <peer-id>,         //Peer who published the event
@@ -199,8 +199,8 @@ of our data structures. We will cover however some of the properties.
   }
 }
 \end{lstlisting}
-\vspace{8pt}
-\end{minipage}
+% \vspace{8pt}
+% \end{minipage}
 
 \subsection{Data links (Merkle links)}\label{subsec:data-links}
 
@@ -572,9 +572,9 @@ field of this message. Finally the RPC schema itself is actually an array of
 the messages, so that if needed a node can forward multiple operations in one
 go.
 
-\noindent\begin{minipage}{\textwidth}
-\vspace{8pt}
-\begin{lstlisting}[language=protobuf3,caption={Protobuf schema for our RPC messages},label={proto-rpc-message}]
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, language=protobuf3,caption={Protobuf schema for our RPC messages},label={proto-rpc-message}]
 message RPC {
   enum Operation {
     PUBLISH_EVENT = 2;
@@ -602,8 +602,8 @@ message RPC {
   repeated Message msgs = 1;
 }
 \end{lstlisting}
-\vspace{8pt}
-\end{minipage}
+% \vspace{8pt}
+% \end{minipage}
 
 The topic and event descriptors also have a specific protobuf schema,
 essentially a representation of what we have already covered in section
@@ -615,9 +615,9 @@ author, links, etc.) sent in binary format. Otherwise, the remaining fields end
 up being a one to one mapping from the event descriptor and topic descriptor
 data structure schemas.
 
-\noindent\begin{minipage}{\textwidth}
-\vspace{8pt}
-\begin{lstlisting}[language=protobuf3,caption={Protobuf schema of the topic descriptor},label={proto-topic-descriptor}]
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, language=protobuf3,caption={Protobuf schema of the topic descriptor},label={proto-topic-descriptor}]
 message Link {
   optional bytes / = 1;
 }
@@ -650,12 +650,12 @@ message TopicDescriptor {
   }
 }
 \end{lstlisting}
-\vspace{8pt}
-\end{minipage}
+% \vspace{8pt}
+% \end{minipage}
 
-\noindent\begin{minipage}{\textwidth}
-\vspace{8pt}
-\begin{lstlisting}[language=protobuf3,caption={Protobuf schema of the event descriptor},label={proto-event-descriptor}]
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, language=protobuf3,caption={Protobuf schema of the event descriptor},label={proto-event-descriptor}]
 message Link {
   optional bytes / = 1;
 }
@@ -675,8 +675,8 @@ message EventDescriptor {
   optional MetaData metadata = 6;
 }
 \end{lstlisting}
-\vspace{8pt}
-\end{minipage}
+% \vspace{8pt}
+% \end{minipage}
 
 \section{Summary}\label{summary}
 
