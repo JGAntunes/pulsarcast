@@ -648,7 +648,37 @@ const pulsarcastNode.start((err) => {
 
 \section{Testbed}\label{testbed}
 
-TODO
+As part of our implementation, we needed a way to test our Pulsarcast system.
+However we had a set of specific requirements that made our choice of tools
+harder. We needed something that fulfilled the following:
+
+\begin{itemize}
+  \item Easily deploy and test different versions of our module.
+	\item Able to extract relevant usage metrics.
+  \item Simulate network constraints such as latency.
+  \item Able to run locally but easily scalable to a large network.
+  \item Can be controlled from a central point, while being able to interact
+    with specific nodes in the system.
+  \item Easy to create scripts for, so that we could automate as much of our
+    test suite as possible.
+\end{itemize}
+
+Unfortunately for us, we could not find a tool that, straight out of the box,
+ticked all of these requirements. We were then faced with the need to create
+our own testbed. This however, did not mean that we needed to create everything
+from scratch. In fact, quite opposite. If we look carefully into the set of
+requirements we see that a core principle that can be extracted is
+reproducibility. Reproducibility allows us to run our testbed locally or in a
+cloud service somewhere in the world and still expect the same behaviour and
+results. Reproducibility is usually achieved through virtualisation mechanisms
+that allow a certain workload to behave and act the same, whether we are
+running it locally in our workstation or in a machine with different
+specifications in the other end of the world. Nowadays this is most commonly
+done through containerisation
+techniques~\footnote{https://www.freebsd.org/doc/handbook/jails.html}~\footnote{https://blog.jessfraz.com/post/containers-zones-jails-vms}
+with tools such as
+Docker~\footnote{https://www.docker.com/products/container-runtime}, which we
+used to create a containerised version of our module. To orchestrate our containerised application we used Kubernetes
 
 \section{Summary}\label{summary}
 
