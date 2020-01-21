@@ -654,7 +654,9 @@ harder. We needed something that fulfilled the following:
 
 \begin{itemize}
   \item Easily deploy and test different versions of our module.
-	\item Able to extract relevant usage metrics.
+  \item Run tests not only on Pulsarcast but also on IPFS' own pub-sub
+    implementation.
+  \item Able to extract relevant usage metrics.
   \item Simulate network constraints such as latency.
   \item Able to run locally but easily scalable to a large network.
   \item Can be controlled from a central point, while being able to interact
@@ -665,9 +667,12 @@ harder. We needed something that fulfilled the following:
 
 Unfortunately for us, we could not find a tool that, straight out of the box,
 ticked all of these requirements. We were then faced with the need to create
-our own testbed. This however, did not mean that we needed to create everything
-from scratch. In fact, quite opposite. If we look carefully into the set of
-requirements we see that a core principle that can be extracted is
+our own testbed which we further detail in the next sections.
+
+\subsection{Architecture}\label{testbed-architecture}
+
+If we look carefully into the set of
+requirements above we see that a core principle that can be extracted is
 reproducibility. Reproducibility allows us to run our testbed locally or in a
 cloud service somewhere in the world and still expect the same behaviour and
 results. Reproducibility is usually achieved through virtualisation mechanisms
@@ -678,7 +683,73 @@ done through containerisation
 techniques~\footnote{https://www.freebsd.org/doc/handbook/jails.html}~\footnote{https://blog.jessfraz.com/post/containers-zones-jails-vms}
 with tools such as
 Docker~\footnote{https://www.docker.com/products/container-runtime}, which we
-used to create a containerised version of our module. To orchestrate our containerised application we used Kubernetes
+used to create a containerised version of our module. To orchestrate our
+containerised application we used Kubernetes~\footnote{https://kubernetes.io/},
+an open source orchestration platform based on Google's learnings on running
+containerised workloads at
+scale~\footnote{https://research.google/pubs/pub43438/}, and one of the most
+popular solutions in the field.
+
+Kubernetes exposes a set of relevant usage
+metrics~\footnote{https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/}~\footnote{https://github.com/kubernetes/kube-state-metrics}
+however we still need to process, aggregate and correlate these with the data
+from our test runs. In order to do this we rely on
+Elasticsearch~\footnote{https://www.elastic.co/products/elasticsearch} to store
+metrics and test result data. Prior to consumption by the Elasticsearch, the
+data is piped through
+Logstash~\footnote{https://www.elastic.co/products/logstash} for adequate
+processing. At each Kubernetes node, a couple of agents entitled
+Beats~\footnote{https://www.elastic.co/products/beats} are responsible for
+forwarding metrics and test data acquired through logs (events published,
+messages sent, etc.). The final piece of the puzzle is
+Kibana~\footnote{https://www.elastic.co/products/kibana}, used to query data
+and build useful visualisations. Together, all these tools are commonly
+referred to as the Elastic
+Stack~\footnote{https://www.elastic.co/products/elastic-stack} and are the key
+to how we gather results from our test runs. Figure
+\ref{fig:ipfs-testbed-and-metrics} provides an overview of this pipeline in
+practice.
+
+As we know it, Pulsarcast is just a module that applications can use to build
+on top of. In order to test it properly we needed something to allow us to
+perform operations on demand in a Pulsarcast network (create a topic, subscribe
+publish, etc.). For both simplicity sake but also because we wanted to use it
+as our own test baseline, we've created a fork of the Javascript IPFS module,
+and some of its dependencies, that instantiates and exposes a Pulsarcast node.
+We stripped it down of anything that it didn't need in order to run Pulsarcast
+and its own version of pub-sub, so that we could avoid having extraneous logic
+disturb our test results and/or increase resource consumption. This way we got
+an application which exposed an HTTP API that allowed us to interact with both
+systems (Pulsarcast and IPFS' pub-sub). The source code for this fork is
+available and open source~\footnote{https://github.com/jgantunes/js-ipfs}.
+
+In order to accurately test our solution we needed a way to simulate abnormal
+network conditions. Toxiproxy~\footnote{http://toxiproxy.io} ended up being our
+tool of choice. Toxiproxy worked by acting as a TCP proxy that,
+programmatically through an HTTP API, allowed us to inject multiple kinds of
+faults (known as toxics in the project). By putting it in front of our IPFS
+nodes we were able to simulate different network conditions. Figure
+\ref{fig:ipfs-testbed-and-metrics} provides a visual explanation on how our
+IPFS deployment and Toxiproxy fit together.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/ipfs-testbed-and-metrics.png}
+  \caption{Overview of our ipfs-testbed deployment and our metrics/logs
+  pipeline}
+  \label{fig:ipfs-testbed-and-metrics}
+\end{figure}
+
+Our IPFS deployment together with Toxiproxy makes up a configurable deployment
+to which we call IPFS Testbed. The template for this deployment (built using
+Helm~\footnote{https://helm.sh/}) can be seen in our Helm Charts
+repository~\footnote{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}.
+This whole setup has been coded so that we can run it an automated
+fashion, being able to bootstrap the Kubernetes cluster, deploy the Elastic
+Stack and deploy any amount of IPFS Testbed nodes. As usual, the logic for this
+is open source and accessible to anyone~\footnote{https://github.com/JGAntunes/ipfs-testbed}
+
+\subsection{Usage}\label{testbed-architecture}
 
 \section{Summary}\label{summary}
 
