@@ -2,4 +2,87 @@
 
 \chapter{Evaluation}
 \label{chapter:evaluation}
-Evaluation here...
+
+In order to evaluate our system we start by looking at its core focus, its
+eventual delivery guarantees and overall performance. We not only test our
+system by itself but we also compare it with the current solution tied to
+libp2p, entitled floodsub. To do this we rely on the tools previously described
+in chapter \ref{chapter:implementation}. 
+
+Afterwards we seek to evaluate  Pulsarcast's new functionality, such as the
+ability to rebuild our topic stream history through data immutability and
+persistence.
+
+\section{Dataset}\label{dataset}
+
+To test our system accordingly, we wanted a dataset that could simulate a real
+life scenario as much as possible. We chose to use a dataset of
+Reddit's~\footnote{https://www.reddit.com/} comments from
+2007~\footnote{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}} consisting of a sample of approximately 25000 comments in a total of 23 topics (known as sub-reddits in the platform). For the purpose of our test runs, we used the comments as events to be injected in our system and the sub-reddits as the topics in which these were published.
+
+
+\subsection{Filtering and Normalisation}\label{subsec:filtering}
+
+Our dataset consisted in line separated JSON structures, each describing a
+comment. Given the large set of data, we started by sampling a set of 25000
+messages.  Following this we needed to first, remove comments from unknown
+users (users that had deleted the account at the time when the comments were
+scrapped), followed by normalising our user number (reduce the number of
+publishers in the dataset to the number of active nodes in our pulsarcast
+system), as well as correlating all of our data. We ended up creating a CLI
+tool that consumed data from this dataset and generated a document of multiple
+JSON objects separated by
+newlines~\footnote{https://github.com/JGAntunes/pulsarcast-test-harness}, ready
+to be used by our ipfs-testbed-cli, described in chapter
+\ref{chapter:implementation}. Examples of the output produced can be seen in
+\ref{dataset-output}
+
+\begin{lstlisting}[language=JSON, float, caption={Data example to be used in testbed},label={dataset-output}]
+// Topic
+{
+  "type": "topic",
+  "node": "node-71",
+  "name": "reddit.com",
+  "author": "test-user",
+  "totalNumberEvents": 1
+}
+
+// User
+{
+  "type": "user",
+  "name": "foobar",
+  "node": "node-71",
+  "events": [
+    {
+      "internalId": 0,
+      "topic": "reddit.com",
+      "body": "test",
+      "ups": 1,
+      "downs": 0,
+      "controversiality": 0
+    },
+    {
+      "internalId": 176,
+      "topic": "reddit.com",
+      "body": "test-123",
+      "ups": 1,
+      "downs": 4,
+      "controversiality": 0
+    }
+  ],
+  "subscriptions": {
+  	"reddit.com": true,
+  	"politics": true,
+  	"business": true,
+	}
+}
+\end{lstlisting}
+
+
+\section{Testbed configuration}\label{testbed-configuration}
+
+\section{Metrics}\label{metrics}
+
+\section{Executions}\label{executions}
+
+\section{Results}\label{results}

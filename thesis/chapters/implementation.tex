@@ -744,10 +744,20 @@ Our IPFS deployment together with Toxiproxy makes up a configurable deployment
 to which we call IPFS Testbed. The template for this deployment (built using
 Helm~\footnote{https://helm.sh/}) can be seen in our Helm Charts
 repository~\footnote{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}.
-This whole setup has been coded so that we can run it an automated
-fashion, being able to bootstrap the Kubernetes cluster, deploy the Elastic
-Stack and deploy any amount of IPFS Testbed nodes. As usual, the logic for this
-is open source and accessible to anyone~\footnote{https://github.com/JGAntunes/ipfs-testbed}
+
+This whole setup has been coded so that we can run it an automated fashion,
+being able to bootstrap the Kubernetes cluster, deploy the Elastic Stack and
+deploy any amount of IPFS Testbed nodes. Figure
+\ref{fig:ipfs-testbed-kubernetes-overview} gives us an idea of what this would
+look like. As usual, the logic for this is open source and
+accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/ipfs-testbed-kubernetes-overview.png}
+  \caption{Example of our system deployed in a Kubernetes cluster}
+  \label{fig:ipfs-testbed-kubernetes-overview}
+\end{figure}
 
 \subsection{Usage}\label{testbed-architecture}
 
