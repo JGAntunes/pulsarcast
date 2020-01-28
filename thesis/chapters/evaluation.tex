@@ -78,10 +78,63 @@ to be used by our ipfs-testbed-cli, described in chapter
 }
 \end{lstlisting}
 
-
 \section{Testbed configuration}\label{testbed-configuration}
 
+Our test runs were designed to be performed in managed infrastructure (commonly
+known as cloud services). For the initial runs and general fine tuning of the
+platform we relied in Google Cloud's managed Kubernetes solution. Later on, and
+for our actual test executions, we ran all of our tests in Microsoft's Azure
+Kubernetes solution, thanks to Microsoft and the Azure team we were kind enough
+to support our efforts and offer us free credits.
+
+Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
+nodes, each with 2 vCPUs, 16 GiB of RAM and 32 GiB of storage. In our cluster,
+besides other operational bits, we ran 3 Elasticsearch instances, 1 Logstash
+instance, 1 Kibana and a total of 100 IPFS Testbed deployments (as described in
+chapter \ref{chapter:implementation}). Because we wanted to avoid resource
+starvation and to better take advantage of the Kubernetes scheduler, our
+testbed deployments allocate 440 MiB per deployment, each burstable to a
+maximum of 500 MiB. During our whole test execution, periodic HTTP health
+checks (part of the Kubernetes platform) make sure our deployments are working
+accordingly.
+
+Test executions are managed through a single machine, from where all the
+commands are sent. During execution, a max of 5 commands are performed in
+parallel, with a slight 10 millisecond delay added between each bulk
+execution. All the requests are subject to retries, in case of failure, to a
+maximum of 5 attempts, after which the failure is registered and the execution
+moves on.
+
 \section{Metrics}\label{metrics}
+
+For each execution we look to extract two key groups of data. Resource usage
+data and QoS data. The following list describes these in more detail:
+
+\begin{itemize}
+  \item Resource usage as a total in the whole cluster, and per node (95/99
+  percentile and average)
+  \begin{itemize}
+    \item CPU Usage (CPU number)
+    \item Memory Usage (GiB)
+    \item Network Usage (MiB transmitted)
+  \end{itemize}
+  \item QoS
+  \begin{itemize}
+    \item Events published by topic and in total
+    \item Events received by topic and in total
+    \item Percentage of subscriptions fulfilled based on the number of events
+    successfully published
+    \item Percentage of subscriptions fulfilled based on the number of events
+    initially injected in the system
+    \item Number of RPC messages sent per topic and in total
+    \item Average, standard deviation and percentiles (99/95) of RPC messages
+    sent by node
+  \end{itemize}
+\end{itemize}
+
+It's important to keep in mind that some of the metrics under the QoS group
+only make sense in Pulsarcast test runs, hence will be ignored when running the
+baseline Floodsub solution.
 
 \section{Executions}\label{executions}
 
