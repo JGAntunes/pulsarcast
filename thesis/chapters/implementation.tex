@@ -16,7 +16,7 @@ Pulsarcast specification that clients and apps can take advantage of. Section
 
 Besides our module, we also needed to find a suitable way to test our system as
 a whole. Given our specific needs, we opted to build a custom testbed, detailed
-in section \ref{testbed} and the basis of the evaluation detailed in chapter
+in section \ref{sec:testbed} and the basis of the evaluation detailed in chapter
 \ref{chapter:evaluation}. 
 
 \section{Pulscarcast Javascript module}\label{pulsarcast-javascript-module}
@@ -56,8 +56,7 @@ with content identifiers (peer identifiers are also content identifiers).
 \end{figure}
 
 Other than the libp2p dependencies, we have used other open source community
-modules. The listing \ref{dependencies} shows our dependency list, pulled from
-our \emph{package.json} (our module manifest). We have used a couple of helpers
+modules. The listing \ref{dependencies} shows our dependency list, pulled from our \emph{package.json} (our module manifest). We have used a couple of helpers
 for handling data streams~\footnote{https://github.com/pull-stream/pull-stream}
 as well as a library to help us with the asynchronous control
 flow~\footnote{https://github.com/caolan/async}. To help us with protocol
@@ -646,7 +645,7 @@ const pulsarcastNode.start((err) => {
 })
 \end{lstlisting}
 
-\section{Testbed}\label{testbed}
+\section{Testbed}\label{sec:testbed}
 
 As part of our implementation, we needed a way to test our Pulsarcast system.
 However we had a set of specific requirements that made our choice of tools
@@ -669,7 +668,7 @@ Unfortunately for us, we could not find a tool that, straight out of the box,
 ticked all of these requirements. We were then faced with the need to create
 our own testbed which we further detail in the next sections.
 
-\subsection{Architecture}\label{testbed-architecture}
+\subsection{Architecture}\label{subsec:testbed-architecture}
 
 If we look carefully into the set of
 requirements above we see that a core principle that can be extracted is
@@ -759,7 +758,7 @@ accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
   \label{fig:ipfs-testbed-kubernetes-overview}
 \end{figure}
 
-\subsection{Usage}\label{testbed-architecture}
+\subsection{Usage}\label{subsec:testbed-usage}
 
 \section{Summary}\label{summary}
 

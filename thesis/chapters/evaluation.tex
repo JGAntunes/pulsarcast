@@ -7,11 +7,39 @@ In order to evaluate our system we start by looking at its core focus, its
 eventual delivery guarantees and overall performance. We not only test our
 system by itself but we also compare it with the current solution tied to
 libp2p, entitled floodsub. To do this we rely on the tools previously described
-in chapter \ref{chapter:implementation}. 
+in \ref{sec:testbed}. 
+TODO roadmap
 
 Afterwards we seek to evaluate  Pulsarcast's new functionality, such as the
 ability to rebuild our topic stream history through data immutability and
 persistence.
+
+\section{Testbed configuration}\label{testbed-configuration}
+
+Our test runs were designed to be performed in managed infrastructure (commonly
+known as cloud services). For the initial runs and general fine tuning of the
+platform we relied in Google Cloud's managed Kubernetes solution. Later on, and
+for our actual test executions, we ran all of our tests in Microsoft's Azure
+Kubernetes solution, thanks to Microsoft and the Azure team we were kind enough
+to support our efforts and offer us free credits.
+
+Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
+nodes, each with 2 vCPUs, 16 GiB of RAM and 32 GiB of storage. In our cluster,
+besides other operational bits, we ran 3 Elasticsearch instances, 1 Logstash
+instance, 1 Kibana and a total of 100 IPFS Testbed deployments (as described in
+\ref{subsec:testbed-architecture}). Because we wanted to avoid resource
+starvation and to better take advantage of the Kubernetes scheduler, our
+testbed deployments allocate 440 MiB per deployment, each burstable to a
+maximum of 500 MiB. During our whole test execution, periodic HTTP health
+checks (part of the Kubernetes platform) make sure our deployments are working
+accordingly.
+
+Test executions are managed through a single machine, from where all the
+commands are sent. During execution, a max of 5 commands are performed in
+parallel, with a slight 10 millisecond delay added between each bulk
+execution. All the requests are subject to retries, in case of failure, to a
+maximum of 5 attempts, after which the failure is registered and the execution
+moves on.
 
 \section{Dataset}\label{dataset}
 
@@ -19,7 +47,6 @@ To test our system accordingly, we wanted a dataset that could simulate a real
 life scenario as much as possible. We chose to use a dataset of
 Reddit's~\footnote{https://www.reddit.com/} comments from
 2007~\footnote{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}} consisting of a sample of approximately 25000 comments in a total of 23 topics (known as sub-reddits in the platform). For the purpose of our test runs, we used the comments as events to be injected in our system and the sub-reddits as the topics in which these were published.
-
 
 \subsection{Filtering and Normalisation}\label{subsec:filtering}
 
@@ -34,7 +61,7 @@ tool that consumed data from this dataset and generated a document of multiple
 JSON objects separated by
 newlines~\footnote{https://github.com/JGAntunes/pulsarcast-test-harness}, ready
 to be used by our ipfs-testbed-cli, described in chapter
-\ref{chapter:implementation}. Examples of the output produced can be seen in
+\ref{subsec:testbed-usage}. Examples of the output produced can be seen in
 \ref{dataset-output}
 
 \begin{lstlisting}[language=JSON, float, caption={Data example to be used in testbed},label={dataset-output}]
@@ -78,32 +105,36 @@ to be used by our ipfs-testbed-cli, described in chapter
 }
 \end{lstlisting}
 
-\section{Testbed configuration}\label{testbed-configuration}
+\subsection{Data distribution}\label{subsec:data-distribution}
 
-Our test runs were designed to be performed in managed infrastructure (commonly
-known as cloud services). For the initial runs and general fine tuning of the
-platform we relied in Google Cloud's managed Kubernetes solution. Later on, and
-for our actual test executions, we ran all of our tests in Microsoft's Azure
-Kubernetes solution, thanks to Microsoft and the Azure team we were kind enough
-to support our efforts and offer us free credits.
+The following graphs give us a distribution analysis of events published per
+topic \ref{fig:events-to-be-publisher-per-topic}, subscriptions per topic
+\ref{fig:subscriptions-per-topic} and subscription distribution per nodes
+\ref{fig:subscription-distribution-per-node}. Given our dataset choice, we
+aimed for a non uniform subscription distribution per topic and, as it would be
+expected in a real world scenario, the distribution of events follows a power
+law based on its popularity. 
 
-Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
-nodes, each with 2 vCPUs, 16 GiB of RAM and 32 GiB of storage. In our cluster,
-besides other operational bits, we ran 3 Elasticsearch instances, 1 Logstash
-instance, 1 Kibana and a total of 100 IPFS Testbed deployments (as described in
-chapter \ref{chapter:implementation}). Because we wanted to avoid resource
-starvation and to better take advantage of the Kubernetes scheduler, our
-testbed deployments allocate 440 MiB per deployment, each burstable to a
-maximum of 500 MiB. During our whole test execution, periodic HTTP health
-checks (part of the Kubernetes platform) make sure our deployments are working
-accordingly.
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/events-to-be-publisher-per-topic.png}
+  \caption{Event distribution per topic with log scale}
+  \label{fig:events-to-be-publisher-per-topic}
+\end{figure}
 
-Test executions are managed through a single machine, from where all the
-commands are sent. During execution, a max of 5 commands are performed in
-parallel, with a slight 10 millisecond delay added between each bulk
-execution. All the requests are subject to retries, in case of failure, to a
-maximum of 5 attempts, after which the failure is registered and the execution
-moves on.
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/subscriptions-per-topic.png}
+  \caption{Subscription distribution per topic}
+  \label{fig:subscriptions-per-topic}
+\end{figure}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/subscription-distribution-per-node.png}
+  \caption{Subscription distribution per number of nodes}
+  \label{fig:subscription-distribution-per-node}
+\end{figure}
 
 \section{Metrics}\label{metrics}
 
@@ -138,4 +169,125 @@ baseline Floodsub solution.
 
 \section{Executions}\label{executions}
 
+We have devised a total of 6 test executions we wanted to go through and
+compare results. Starting with the 3 base scenarios we wanted to test:
+
+\begin{itemize}
+  \item Pulsarcast without order delivery guarantee
+  \item Pulsarcast with order delivery guarantee
+  \item Floodsub (baseline solution)
+\end{itemize}
+
+For the first one, we run a scenario where every created topic in
+Pulsarcast allows every participating node to publish events. For the second
+execution, we configure the topics so that only the creator of the topic is
+allowed to publish, all the events from other nodes will need to be forwarded
+as a request to publish (as described in
+\ref{subsec:publishing-and-event-dissemination}). Floodsub was used as it is,
+as no configuration is required. 
+
+For each of the executions described above, we performed two tests, one without
+any network disturbances, and another using Toxiproxy's features, adding a
+latency of 500 milliseconds and 300 milliseconds of jitter to every incoming
+TCP packet. 
+
 \section{Results}\label{results}
+
+In this section we will evaluate the results for each of the executions we
+described, followed by a comparison of these.
+
+\subsection{Pulsarcast With Order Guarantee}\label{subsec:pulsarcast-with-order-guarantee}
+
+For this test we explored how the Pulsarcast system performed when only a
+single node (the creator of the topic), was allowed to effectively publish
+events. The execution took a total of 38 minutes, however, at the 10 minute
+mark, one of our nodes (the root node for the reddit.com topic) became
+unresponsive due to the load it was dealing with and the lack of CPU power to
+handle it, eventually leading the Kubernetes scheduler to restart it.  Given
+that Pulsarcast does not provide a recovery mechanism for root nodes for a
+topic out of the box and the fact that this was the only node allowed to
+publish, we ended up seeing a clear impact in our results.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-fulfillment-comparison.png}
+  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-order-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
+  \caption{Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Looking at \ref{fig:graph-pulsarcast-order-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison} we can
+see that, of the total of events injected into the system, Pulsarcast fulfilled 37\% of
+its subscriptions. For the events events published, Pulsarcast fulfilled 80\%
+of its subscriptions. The biggest contributors for these lower percentages were
+the reddit.com and the politics topic, effectively due to the drop-out node.
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-rpc.png}
+  \caption{Comparison of events received and RPC injected in the system}
+  \label{fig:graph-pulsarcast-order-rpc}
+\end{figure}
+
+Considering figure \ref{fig:graph-pulsarcast-order-rpc}, we see that the RPC
+messages injected in the system grow linearly with the number of events
+received.
+
+Table \ref{table:pulsarcast-order} provides an overview of the Memory and
+Network utilisation by node. Given these grew linearly throw the test execution
+we are only presenting the final values. We also provide an RPC message
+analysis by node. Despite having a low consumption overall (Network and Memory
+wise), we can see the presence of a relatively large set of outliers, a
+possible consequence of the unfairness of this execution, given its tendency to
+overload the owners of the topics. Now, looking at graph
+\ref{fig:graph-pulsarcast-order-cpu} which shows us the CPU usage across time,
+we can see the same outlier pattern as before, as well as the moment (at the 10
+minute mark) when the CPU usage picked for the node which eventually became
+unresponsive.
+
+\begin{table}
+\caption{Resource utilisation metrics}
+\label{table:pulsarcast-order}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Memory (GiB) & 0.207 & 0.358 & 0.178 & 17.84 \\
+   \hline
+   Network (MiB) & 26.26 & 99.41 & 10.5 & 1050.4 \\
+   \hline
+   RPC Messages Received & 8440 & 8961 & 7315.18 & [NA] \\
+   \hline
+   RPC Messages Sent & 33655.5 & 80058.5 & 5889.29 & [NA] \\ [1ex] 
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-cpu.png}
+  \caption{CPU usage across time}
+  \label{fig:graph-pulsarcast-order-cpu}
+\end{figure}
+
+\subsection{Pulsarcast Without Order Guarantee}\label{subsec:pulsarcast-without-order-guarantee}
+
+\subsection{Floodsub}\label{subsec:floodsub}
+
+\subsection{Pulsarcast With Order Guarantee and Latency}\label{subsec:pulsarcast-with-order-guarantee-and-latency}
+
+\subsection{Pulsarcast Without Order Guarantee and Latency}\label{subsec:pulsarcast-without-order-guarantee-and-latency}
+
+\subsection{Floodsub With Latency}\label{subsec:floodsub-with-latency}
+
+\subsection{Comparison and Discussion}\label{subsec:comparison}
