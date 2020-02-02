@@ -115,21 +115,21 @@ aimed for a non uniform subscription distribution per topic and, as it would be
 expected in a real world scenario, the distribution of events follows a power
 law based on its popularity. 
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/events-to-be-publisher-per-topic.png}
   \caption{Event distribution per topic with log scale}
   \label{fig:events-to-be-publisher-per-topic}
 \end{figure}
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/subscriptions-per-topic.png}
   \caption{Subscription distribution per topic}
   \label{fig:subscriptions-per-topic}
 \end{figure}
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/subscription-distribution-per-node.png}
   \caption{Subscription distribution per number of nodes}
@@ -208,14 +208,14 @@ that Pulsarcast does not provide a recovery mechanism for root nodes for a
 topic out of the box and the fact that this was the only node allowed to
 publish, we ended up seeing a clear impact in our results.
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-fulfillment-comparison.png}
   \caption{Comparison of of events fulfilled by topic in a log scale}
   \label{fig:graph-pulsarcast-order-event-fulfillment-comparison}
 \end{figure}
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
   \caption{Comparison of percentage of events fulfilled by topic}
@@ -229,7 +229,7 @@ its subscriptions. For the events events published, Pulsarcast fulfilled 80\%
 of its subscriptions. The biggest contributors for these lower percentages were
 the reddit.com and the politics topic, effectively due to the drop-out node.
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-rpc.png}
   \caption{Comparison of events received and RPC injected in the system}
@@ -252,7 +252,7 @@ we can see the same outlier pattern as before, as well as the moment (at the 10
 minute mark) when the CPU usage picked for the node which eventually became
 unresponsive.
 
-\begin{table}
+\begin{table}[!htb]
 \caption{Resource utilisation metrics}
 \label{table:pulsarcast-order}
   \begin{center}
@@ -273,7 +273,7 @@ unresponsive.
   \end{center}
 \end{table}
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-cpu.png}
   \caption{CPU usage across time}
@@ -282,7 +282,163 @@ unresponsive.
 
 \subsection{Pulsarcast Without Order Guarantee}\label{subsec:pulsarcast-without-order-guarantee}
 
+We will now be looking at the Pulsarcast scenario without order guarantee,
+which means, every node is able to publish messages to topics it is subscribed
+to. For this scenario, the execution took a total of 85 minutes.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-event-fulfillment-comparison.png}
+  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-event-percentage-fulfillment-comparison.png}
+  \caption{Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Looking at \ref{fig:graph-pulsarcast-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} we can
+see that, of the total of events injected into the system, Pulsarcast fulfilled
+99\% of
+its subscriptions. As for the events events published, Pulsarcast fulfilled 99\%
+of its subscriptions. A clear difference to the order guarantee execution.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-rpc.png}
+  \caption{Comparison of events received and RPC injected in the system}
+  \label{fig:graph-pulsarcast-rpc}
+\end{figure}
+
+Considering figure \ref{fig:graph-pulsarcast-rpc}, we see that the RPC
+messages injected in the system grow linearly with the number of events
+received.
+
+Table \ref{table:pulsarcast} provides an overview of the Memory and Network
+utilisation by node. As previously, these grew linearly throw the test
+execution we are only presenting the final values. We also provide an RPC
+message analysis by node. Memory wise, we have an evenly distributed
+consumption across nodes. In terms of network we still have a couple of
+outliers, which can probably be explained by how the dissemination trees were
+formed.  Now, looking at the graph \ref{fig:graph-pulsarcast-cpu} which shows
+us the CPU usage across time, we can see a low CPU usage in total, with a small
+set of outliers across time as these were the nodes publishing events at the
+time (explainable due to our heavy dependency on cryptographic hash functions).
+Overall though we see a clear difference in how resource consumption is more
+evenly distributed compared to the order guarantee experiment.
+
+\begin{table}[!htb]
+\caption{Resource utilisation metrics}
+\label{table:pulsarcast}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Memory (GiB) & 0.369 & 0.378 & 0.319 & 31.924 \\
+   \hline
+   Network (MiB) & 49.143 & 129.82 & 22.377 & 2237.736 \\
+   \hline
+   RPC Messages Received & 17843 & 17889.5 & 17708.4 & [NA] \\
+   \hline
+   RPC Messages Sent & 84055 & 267124.5 & 17708.4 & [NA] \\ [1ex] 
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-cpu.png}
+  \caption{CPU usage across time}
+  \label{fig:graph-pulsarcast-cpu}
+\end{figure}
+
 \subsection{Floodsub}\label{subsec:floodsub}
+
+Our next execution is a test run using Floodsub. The main goal of it is to act
+as baseline for our system. Taking a total of 70 minutes to finish, the whole
+network was unable to cope with the load of our execution and 10 minutes after
+our test started nodes became unresponsive and either crashed or were
+repeatedly terminated by our Kubernetes scheduler, eventually hitting a minimum
+of 15 nodes running. It took 50 minutes for the network to fully recover and
+have 100 nodes running again, only for the execution to finish 10 minutes
+later.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-event-fulfillment-comparison.png}
+  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-floodsub-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-event-percentage-fulfillment-comparison.png}
+  \caption{Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-floodsub-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Looking at \ref{fig:graph-floodsub-event-fulfillment-comparison} and
+\ref{fig:graph-floodsub-event-percentage-fulfillment-comparison} we can see
+that, of the total of events injected into the system, Floodsub fulfilled 41\%
+of its subscriptions. The same goes if we consider the events successfully
+published as the base reference. Analysing these values, we can see they are a
+little bit higher than how Pulsarcast with order guarantee performed but way
+lower than base Pulsarcast test. Another thing to take into account is the way
+Floodsub performed on a per topic basis, failing to fulfil a  whole range of
+low popularity topics, a clear consequence of the way the whole network
+crashed.
+
+Table \ref{table:floodsub} provides an overview of the Network utilisation by
+node. It grew linearly throw the test execution and as such we are only
+presenting the final values. Memory wise, contrary to previous executions, it
+fluctuated during the test (caused by the node failures) as such we are
+presenting these values in the form of a graph in
+\ref{fig:graph-floodsub-memory}. The CPU usage can be seen in
+\ref{fig:graph-floodsub-cpu}. Starting by analysing the network usage, we see a
+a total value of 6552 MiB transmitted, averaging at 66 MiB by node. This comes
+as no surprise, given Floodsub's algorithm which repeatedly retransmits the
+same event to all the peers each node is connected to. Now, looking at both the
+memory and CPU evolution across time, these clearly suffered from the node
+crashes. However, looking at the CPU usage, we see a total resource consumption
+greater than previous executions, as well as a more uniform distribution across
+nodes than for example the Pulsarcast order guarantee execution. With a P99
+sometimes greater than 0.2, this explains the node failures across the test.
+
+\begin{table}[!htb]
+\caption{Resource utilisation metrics}
+\label{table:floodsub}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Network (MiB) & 105.29 & 133.9 & 65.52 & 6552.4 \\
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-memory.png}
+  \caption{Memory usage across time}
+  \label{fig:graph-floodsub-memory}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
+  \caption{CPU usage across time}
+  \label{fig:graph-floodsub-cpu}
+\end{figure}
 
 \subsection{Pulsarcast With Order Guarantee and Latency}\label{subsec:pulsarcast-with-order-guarantee-and-latency}
 
