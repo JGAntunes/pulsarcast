@@ -43,7 +43,7 @@ discovery), network transports and leveraging multiple network connections
 (switch). These all come bundled in the libp2p javascript
 module~\footnote{https://github.com/libp2p/js-libp2} which we use in
 Pulsarcast. Besides the main libp2p module we also use some other utility
-modules such as the CID
+modules such as the \acrshort{cid}
 module~\footnote{https://github.com/multiformats/js-cid} and the Peer-id
 module~\footnote{https://github.com/libp2p/js-peer-id}, both designed to reason
 with content identifiers (peer identifiers are also content identifiers). 
@@ -218,11 +218,11 @@ fairly simple constructor as one can see in the listing
   \item
   \verb|createTopic(topicName, [options], callback)| - Create a Pulsarcast topic with the specified name. An optional object can be provided through which one can add \verb|subTopics}, \verb|parent| link and topic metadata configuration with \verb|allowedPublishers|, \verb|requestToPublish| and \verb|eventLinking|. By default, no \verb|parent| link is added and only the topic author is allowed to publish (essentially creating an event dissemination tree with order guarantee).
   \item
-    \verb|subscribe(topicB58Str, [options], callback)| - Subscribe to a topic with the given base58 CID. An option \verb|subscribeToMeta| can be provided which will determine if this node will subscribe to this topic's meta-topic also (defaults to true).
+    \verb|subscribe(topicB58Str, [options], callback)| - Subscribe to a topic with the given base58 \acrshort{cid}. An option \verb|subscribeToMeta| can be provided which will determine if this node will subscribe to this topic's meta-topic also (defaults to true).
   \item
-    \verb|unsubscribe(topicB58Str, callback)| - Unsubscribe from the topic with the given base58 CID. An option \verb|unsubscribeFromMeta| can be provided which will determine if this node will unsubscribe to this topic's meta-topic also (defaults to true).
+    \verb|unsubscribe(topicB58Str, callback)| - Unsubscribe from the topic with the given base58 \acrshort{cid}. An option \verb|unsubscribeFromMeta| can be provided which will determine if this node will unsubscribe to this topic's meta-topic also (defaults to true).
   \item
-    \verb|publish(topicB58Str, message, callback)| - Publish the provided message in the topic with the given base58 string as a CID.
+    \verb|publish(topicB58Str, message, callback)| - Publish the provided message in the topic with the given base58 string as a \acrshort{cid}.
 \end{itemize}
 
 % \noindent\begin{minipage}{\textwidth}
@@ -269,7 +269,7 @@ handlers, responsible for storing any relevant information in the DHT and
 forwarding/creating any RPC request that we might need. Listing
 \ref{pulsarcast-subscribe} shows us an example of the logic above, the
 subscribe method. New subscription calls in Pulsarcast are done using the
-topic's base58 CID. The Pulscarcast node keeps all the state relative to the
+topic's base58 \acrshort{cid}. The Pulscarcast node keeps all the state relative to the
 topics we are subscribed. As such, before performing any action, we always
 check to see if we are subscribed to the topic given. If all the input checks
 are right, we hand over to our RPC handlers to create the appropriate RPC
@@ -457,7 +457,7 @@ class Peer extends EventEmitter {
 
 The \verb|TopicNode| and \verb|EventNode| classes refer to our topic and event
 descriptor dag nodes respectively. They are quite similar given that, in the
-end, they both abstract Merkle DAG nodes. Listings \ref{topic-node-constructor}
+end, they both abstract Merkle \acrshort{dag} nodes. Listings \ref{topic-node-constructor}
 and \ref{event-node-constructor} show us its constructors. Despite the
 similarities, though, some aspects are worth noting. Such example is the
 \verb|isPublished| field on the event descriptor. Which is crucial for our
@@ -531,11 +531,11 @@ Both of the classes have a series of methods which we feel like are worth descri
 
 \begin{itemize}
   \item
-    \verb|getCID(callback)| - Given our descriptors are content-addressable, their identifiers are ever-changing depending on the values of their properties. This method returns, through the callback function, the CID for this descriptor.
+    \verb|getCID(callback)| - Given our descriptors are content-addressable, their identifiers are ever-changing depending on the values of their properties. This method returns, through the callback function, the \acrshort{cid} for this descriptor.
   \item
-    \verb|getReadableFormat()| - Return an object whose properties are human-readable representations of the values of this object in the canonical format described in chapter \ref{chapter:pulsarcast}. Consists mostly of returning all the CIDs as base 58 strings.
+    \verb|getReadableFormat()| - Return an object whose properties are human-readable representations of the values of this object in the canonical format described in chapter \ref{chapter:pulsarcast}. Consists mostly of returning all the \acrshort{cid}s as base 58 strings.
   \item
-    \verb|serialize()| - Return an object in the canonical format described in chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the CIDs in binary format (buffers). Mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
+    \verb|serialize()| - Return an object in the canonical format described in chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the \acrshort{cid}s in binary format (buffers). Mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
   \item
     \verb|deserialize(node)| - Convert a descriptor in a serialized format to an instance of its class, returning that same instance. A static method for each class.
 \end{itemize}
@@ -584,7 +584,7 @@ const eventDescriptor = Joi.object().keys({
 
 We have split our RPC handlers into outgoing and incoming and tried to reuse as
 much logic as possible. Hence why when the client invokes a new command through
-the Pulsarcat API, control is handed over to the respective RPC handler as if
+the Pulsarcat \acrshort{api}, control is handed over to the respective RPC handler as if
 we had just received an RPC message from another node. Consequently, some of
 the logic described in the algorithms in chapter \ref{chapter:pulsarcast} is
 split between incoming/outgoing RPC handlers. The following list provides an
@@ -617,7 +617,7 @@ overview of the functions we have created:
 
 Listing \ref{pulsarcast-usage-example} provides a usage example of our
 Javascript module. Keep in mind that this is a oversimplified example of
-course, with a single node, its purpose is to understand how the API comes
+course, with a single node, its purpose is to understand how the \acrshort{api} comes
 together and allows applications to integrate with it.
 
 \begin{lstlisting}[language=JavaScript, float=h, caption={Usage example of our Pulsarcast module},label={pulsarcast-usage-example}]
@@ -653,7 +653,7 @@ harder. We needed something that fulfilled the following:
 
 \begin{itemize}
   \item Easily deploy and test different versions of our module.
-  \item Run tests not only on Pulsarcast but also on IPFS' own pub-sub
+  \item Run tests not only on Pulsarcast but also on \acrshort{ipfs}' own pub-sub
     implementation.
   \item Able to extract relevant usage metrics.
   \item Simulate network constraints such as latency.
@@ -713,25 +713,27 @@ As we know it, Pulsarcast is just a module that applications can use to build
 on top of. In order to test it properly we needed something to allow us to
 perform operations on demand in a Pulsarcast network (create a topic, subscribe
 publish, etc.). For both simplicity sake but also because we wanted to use it
-as our own test baseline, we've created a fork of the Javascript IPFS module,
-and some of its dependencies, that instantiates and exposes a Pulsarcast node.
-We stripped it down of anything that it didn't need in order to run Pulsarcast
-and its own version of pub-sub, so that we could avoid having extraneous logic
-disturb our test results and/or increase resource consumption. This way we got
-an application which exposed an HTTP API that allowed us to interact with both
-systems (Pulsarcast and IPFS' pub-sub). The source code for this fork is
-available and open source~\footnote{https://github.com/jgantunes/js-ipfs}.
+as our own test baseline, we've created a fork of the Javascript
+\acrshort{ipfs} module, and some of its dependencies, that instantiates and
+exposes a Pulsarcast node.  We stripped it down of anything that it didn't need
+in order to run Pulsarcast and its own version of pub-sub, so that we could
+avoid having extraneous logic disturb our test results and/or increase resource
+consumption. This way we got an application which exposed an \acrshort{http}
+\acrshort{api} that allowed us to interact with both systems (Pulsarcast and
+\acrshort{ipfs}' pub-sub). The source code for this fork is available and open
+source~\footnote{https://github.com/jgantunes/js-ipfs}.
 
 In order to accurately test our solution we needed a way to simulate abnormal
 network conditions. Toxiproxy~\footnote{http://toxiproxy.io} ended up being our
 tool of choice. Toxiproxy worked by acting as a TCP proxy that,
-programmatically through an HTTP API, allowed us to inject multiple kinds of
-faults (known as toxics in the project). By putting it in front of our IPFS
-nodes we were able to simulate different network conditions. Figure
-\ref{fig:ipfs-testbed-and-metrics} provides a visual explanation on how our
-IPFS deployment and Toxiproxy fit together.
+programmatically through an \acrshort{http} \acrshort{api}, allowed us to
+inject multiple kinds of faults (known as toxics in the project). By putting it
+in front of our \acrshort{ipfs} nodes we were able to simulate different
+network conditions.  Figure \ref{fig:ipfs-testbed-and-metrics} provides a
+visual explanation on how our \acrshort{ipfs} deployment and Toxiproxy fit
+together.
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.95\textwidth]{img/ipfs-testbed-and-metrics.png}
   \caption{Overview of our ipfs-testbed deployment and our metrics/logs
@@ -739,19 +741,19 @@ IPFS deployment and Toxiproxy fit together.
   \label{fig:ipfs-testbed-and-metrics}
 \end{figure}
 
-Our IPFS deployment together with Toxiproxy makes up a configurable deployment
-to which we call IPFS Testbed. The template for this deployment (built using
+Our \acrshort{ipfs} deployment together with Toxiproxy makes up a configurable deployment
+to which we call \acrshort{ipfs} Testbed. The template for this deployment (built using
 Helm~\footnote{https://helm.sh/}) can be seen in our Helm Charts
 repository~\footnote{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}.
 
 This whole setup has been coded so that we can run it an automated fashion,
 being able to bootstrap the Kubernetes cluster, deploy the Elastic Stack and
-deploy any amount of IPFS Testbed nodes. Figure
+deploy any amount of \acrshort{ipfs} Testbed nodes. Figure
 \ref{fig:ipfs-testbed-kubernetes-overview} gives us an idea of what this would
 look like. As usual, the logic for this is open source and
 accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
 
-\begin{figure}[hb!]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.95\textwidth]{img/ipfs-testbed-kubernetes-overview.png}
   \caption{Example of our system deployed in a Kubernetes cluster}
@@ -759,6 +761,50 @@ accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
 \end{figure}
 
 \subsection{Usage}\label{subsec:testbed-usage}
+
+After our testbed is built and running, we still need to come up with a way to
+easily interact with it. Our goal was to able to orchestrate everything from a
+single machine and, of course, make it in a way that can easily be automated so
+that human intervention is barely required. For this purpose we have built a
+CLI tool that allows us to interact with our testbed nodes, named
+ipfs-testbed-cli~\footnote{https://github.com/JGAntunes/ipfs-testbed-cli}. 
+
+Under the hood our tool interacts with the Kubernetes \acrshort{api} Server,
+using the credentials locally stored in the machine, to extract the addresses
+for our testbed node's \acrshort{ipfs} and Toxiproxy \acrshort{api}s. Throw
+these we are able to inject either \acrshort{ipfs} commands or Toxiproxy
+configurations in any node. Listing \ref{ipfs-testbed-cli-examples} gives us a
+set of example usages. Specifically for the purpose of our test runs, we have
+introduced two commands that allowed for running a set of bulk operations using
+\acrshort{ipfs}' Floodsub and Pulsarcast \acrshort{api}s.  Our Toxiproxy
+command also supported bulk creation. This allowed us to automate most of our
+test executions to a couple of one line commands from our machine.
+
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[language=bash, float, caption={\acrshort{ipfs} Testbed CLI example
+usages},label={ipfs-testbed-cli-examples}]
+# Create latency toxics of 500 ms with 300 ms jitter on all of the nodes (bulk=1)
+ >$ ipt create toxic latency --latency=500 --jitter=300 --bulk=1
+
+# Execute a ping from one node to another
+ >$ ipt exec ping <from-peer-id> <to-peer-id>
+
+# Execute a create pulsarcast topic command at node-1
+ >$ ipt exec pulsarcast create sports --node-id=node-1
+
+# Execute a floodsub subscribe command at node-1
+ >$ ipt exec floodsub subscribe sports --node-id=node-1
+
+# Execute a series of bulk pulsarcast commands from file
+ >$ ipt exec pulsarcast load some-bulk-file
+
+# Execute a series of bulk floodsub commands from file
+ >$ ipt exec floodsub load some-bulk-file
+
+\end{lstlisting}
+% \vspace{8pt}
+% \end{minipage}
 
 \section{Summary}\label{summary}
 

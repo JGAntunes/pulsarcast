@@ -193,20 +193,21 @@ on how these broker networks organise. In both Gryphon and Jedi, these nodes org
 a hierarchical fashion, or define what we call a \textbf{broker hierarchy}. As for Siena,
 the nodes resort to not following a specific structure, making it effectively a \textbf{broker mesh}.
 
-The asynchronous nature of the pub-sub paradigm also allows for a
-different approach to message forwarding, with both producers and
-consumers being responsible for storing and forwarding messages, without
-the need of an intermediary entity. This approach is referred to as a
-\textbf{decentralised architecture} as there is no central entity that could easily
-become a bottleneck for the whole system. Additionally, when the network is
-\textbf{fully decentralised} it is commonly referred to as peer to peer (P2P) architecture,
-for it relies solely on the communication between peers in the same network.
-An example of a pub-sub system following this approach is Scribe \cite{Castro2002}.
-This kind of systems have a great focus on scalability and, consequently, on efficient message delivery.
+The asynchronous nature of the pub-sub paradigm also allows for a different
+approach to message forwarding, with both producers and consumers being
+responsible for storing and forwarding messages, without the need of an
+intermediary entity. This approach is referred to as a \textbf{decentralised
+architecture} as there is no central entity that could easily become a
+bottleneck for the whole system. Additionally, when the network is
+\textbf{fully decentralised} it is commonly referred to as \acrfull{p2p}
+architecture, for it relies solely on the communication between peers in the
+same network.  An example of a pub-sub system following this approach is Scribe
+\cite{Castro2002}.  This kind of systems have a great focus on scalability and,
+consequently, on efficient message delivery.
 
 \subsection{Overlay structure}\label{overlay-structure}
 
-Working with a P2P architecture has its own set of challenges. When we
+Working with a \acrshort{p2p} architecture has its own set of challenges. When we
 rely on the communication between peers we need a way to create and
 maintain links between multiple nodes in a network. Hence the overlay
 networks. The idea is to have a structure of logical links and nodes,
@@ -217,7 +218,7 @@ physical topology (presence and connectivity of hosts), but by logical
 relationships between peers. This way we have the potential to
 manipulate the logical network at the application level, without needing
 to change the network backbone that connects the nodes. This approach
-was key to deploy P2P applications such as Gnutella~\footnote{https://web.archive.org/web/20000620113133/http://gnutella.wego.com},
+was key to deploy \acrshort{p2p} applications such as Gnutella~\footnote{https://web.archive.org/web/20000620113133/http://gnutella.wego.com},
 Kazaa~\footnote{https://web.archive.org/web/20040701062605/http://www.kazaa.com:80/us/index.htm}
 or Skype~\footnote{https://www.skype.com} on top of the existing Internet infrastructure.
 
@@ -231,7 +232,7 @@ or Skype~\footnote{https://www.skype.com} on top of the existing Internet infras
 In practical terms, each node maintains a view of its neighbours in the
 overlay network, which translates into the communication links between
 them. There are different approaches to the way this state is stored and
-maintained, with two main categories dominating the P2P ecosystem. At
+maintained, with two main categories dominating the \acrshort{p2p} ecosystem. At
 one end of the spectrum we have the \textbf{unstructured overlay}
 networks, where peers form a network with no clear structure or
 hierarchy (commonly referred to as a network mesh) with each peer
@@ -575,7 +576,7 @@ Siena \cite{Carzaniga2003} is a content based pub-sub system built
 on top of a centralised broker mesh topology. Siena does not make any
 assumptions on how the communication between servers and client-server
 works, as this is not vital for the system to work. Instead, for server
-to server communication, it provides a set of options ranging from P2P
+to server communication, it provides a set of options ranging from \acrshort{p2p}
 communication to a more hierarchical structure, each with its respective
 advantages and shortcomings.
 
@@ -614,7 +615,7 @@ forwarded through these activated paths.
 \subsection{Scribe}\label{scribe}
 
 Scribe \cite{Castro2002} is a topic based pub-sub system built
-on top of a fully decentralised network (P2P). In order to do this, it
+on top of a fully decentralised network (\acrshort{p2p}). In order to do this, it
 relies on Pastry DHT as its overlay structure. This allows it to
 leverage the robustness, self-organisation, locality and reliability
 properties of Pastry. Pastry DHT is at all similar to the DHTs described
@@ -653,7 +654,7 @@ routed to a new root node which has access to the previous state of the
 \subsection{Meghdoot}\label{meghdoot}
 
 Meghdoot \cite{Gupta2004} is a content based pub-sub system.
-It is built on top of a P2P network, specifically CAN DHT (already
+It is built on top of a \acrshort{p2p} network, specifically CAN DHT (already
 covered in the previous section). Meghdoot leverages the
 multidimensional space provided by the CAN DHT in order to create an
 expressive content based system.
@@ -769,7 +770,7 @@ addressed in the previous sections.
 When building any kind of network focused system nowadays, there is no question
 that one should take advantage of the full potential that the web has to offer.
 Browsers evolved a lot over the past years and allow for a vast world of
-possibilities in terms of applications that can be built on top of it. P2P
+possibilities in terms of applications that can be built on top of it. \acrshort{p2p}
 applications are no exception here. In the next sections, we will cover a set
 of technologies that allow for a modern distributed application to run, not
 only on the desktops and servers we are used, but also in browsers running in
@@ -818,36 +819,35 @@ the sudden possibility offered by having the same programming language
 supporting different environments (browsers, servers, desktops, etc.),
 all of this powered by a common way of publishing and sharing code.
 
-When focusing specifically on P2P apps, the past years have brought
+When focusing specifically on \acrshort{p2p} apps, the past years have brought
 together a set of new network protocols that empower communication
 between browsers in a real-time fashion and also provide alternatives to
 TCP~\footnote{https://tools.ietf.org/html/rfc793}. \textbf{WebSockets}~\footnote{https://tools.ietf.org/html/rfc6455}
 aimed at providing a real-time, full-duplex communication
 between clients and servers over TCP, but it was \textbf{WebRTC}~\footnote{https://www.w3.org/TR/webrtc/}
-that paved the way for new P2P applications that could
+that paved the way for new \acrshort{p2p} applications that could
 run in the browser. WebRTC focuses on powering real-time communications,
 like audio/video stream or just arbitrary data, between browsers,
 without the need of an intermediary. This, of course, is a real
-breakthrough in the P2P field as it allows browsers to receive incoming
+breakthrough in the \acrshort{p2p} field as it allows browsers to receive incoming
 connections. On other hand, alternatives to the TCP transport, such as
 \textbf{uTP}~\footnote{http://www.bittorrent.org/beps/bep\_0029.html} and
 \textbf{QUIC}~\footnote{https://datatracker.ietf.org/wg/quic/about/}
 , came through, seeking to bring reliability and order delivery
 without the poor latency and congestion control issues of TCP. This
 provided new suitable alternatives to communication between peers on top
-of UDP, a transport that has been vital in P2P applications that need an
+of UDP, a transport that has been vital in \acrshort{p2p} applications that need an
 affordable way to perform NAT~\footnote{https://tools.ietf.org/html/rfc2663} traversal.
 
 In the application realm, there have been quite a few in the past years
 that seek to leverage all these new technologies and breakthroughs. One
-of the examples most worth mentioning is the \textbf{InterPlanetary File
-System} (IPFS)~\footnote{https://ipfs.io}, a P2P hypermedia protocol designed
+of the examples most worth mentioning is the \textbf{\acrfull{ipfs}}~\footnote{https://ipfs.io}, a \acrshort{p2p} hypermedia protocol designed
 to create a persistent, content-addressable network on top of the
 distributed web.
 
-At the core of IPFS is what they refer to as the \textbf{Merkle
-DAG}~\footnote{https://github.com/ipld/specs/blob/95df205ca5fdb961ec2c2265a169989fef595db1/FOUNDATIONS.md}.
-The Merkle DAG is a graph structure used to store and represent data, where
+At the core of \acrshort{ipfs} is what they refer to as the \textbf{Merkle
+\acrshort{dag}}~\footnote{https://github.com/ipld/specs/blob/95df205ca5fdb961ec2c2265a169989fef595db1/FOUNDATIONS.md}.
+The Merkle \acrshort{dag} is a graph structure used to store and represent data, where
 each node can be linked to based on the hash of its content. Figure
 \ref{fig:merkle-node} provides an example of this. 
 
@@ -865,40 +865,39 @@ chain like, structure that is immutable as documented in figure
 \begin{figure}[hb!]
   \centering
   \includegraphics[max height=5cm,max width=0.95\textwidth]{img/merkle-dag.png}
-  \caption{Graph visualisation of a Merkle DAG and its respective hash function dependencies}
+  \caption{Graph visualisation of a Merkle \acrshort{dag} and its respective hash function dependencies}
   \label{fig:merkle-dag}
 \end{figure}
 
-IPFS has an interface around this structure referred to as
-\textbf{InterPlanetary Linked Data} (IPLD)
-which focuses on bringing together all the hash-linked data structures
-(e.g.~git) under a unified JSON-based model. In order
-to interact with IPLD, IPFS exposes an API that allows us to insert and
-request random blobs of data, files, JSON objects and other complex
-structures. Having implementations in both Go and
-Javascript, IPFS leverages the modularity mantra in a fascinating way,
-focusing on creating common interfaces that allow for different pieces
-of the architecture to be changed and selected according to one's needs.
-All of this without impacting the overall application and its top level API.
+\acrshort{ipfs} has an interface around this structure referred to as
+\textbf{\acrfull{ipld}} which focuses on bringing together all the hash-linked
+data structures (e.g.~git) under a unified JSON-based model. In order to
+interact with \acrshort{ipld}, \acrshort{ipfs} exposes an \acrshort{api} that
+allows us to insert and request random blobs of data, files, JSON objects and
+other complex structures. Having implementations in both Go and Javascript,
+\acrshort{ipfs} leverages the modularity mantra in a fascinating way, focusing
+on creating common interfaces that allow for different pieces of the
+architecture to be changed and selected according to one's needs.  All of this
+without impacting the overall application and its top level \acrshort{api}.
 These came from the observation that the web we have today is a set of
 different heterogeneous clients, that have different needs and resources. As
 such, not everyone can rely on the same set of transports, storage management
-and discovery mechanisms. These small modules that constitute IPFS have
-recently been brought together under the same umbrella, as
+and discovery mechanisms. These small modules that constitute \acrshort{ipfs}
+have recently been brought together under the same umbrella, as
 \textbf{libp2p}~\footnote{https://libp2p.io}, a set of packages that seek to
-solve common challenges in P2P applications. 
+solve common challenges in \acrshort{p2p} applications. 
 
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/ipfs-stack.png}
-  \caption{An illustration on the IPFS architecture}
+  \caption{An illustration on the \acrshort{ipfs} architecture}
   \label{fig:ipfs-stack}
 \end{figure}
 
-Interestingly enough, a recent addition to libp2p, and consequently IPFS, was a
+Interestingly enough, a recent addition to libp2p, and consequently \acrshort{ipfs}, was a
 pub-sub module, with a naive implementation using a simple network flooding
 technique. Even though libp2p was created with the initial purpose of serving
-as the foundation of IPFS it is now possible to use libp2p as a standalone
+as the foundation of \acrshort{ipfs} it is now possible to use libp2p as a standalone
 module for peer to peer apps, with the possibility to hand pick the
 functionalities we intend to use.
 
@@ -911,5 +910,37 @@ functionalities we intend to use.
 
 \section{Summary}\label{summary}
 
-TODO
+Over the course of this chapter we looked at what defines the pub-sub paradigm.
+We started by laying the ground with our taxonomy in
+\ref{distributed-publish-subscribe-paradigm}, which we have split into the
+following:
 
+\begin{itemize}
+  \item
+    Subscription model - topic based, content based or type based models
+  \item
+    Network architecture - centralised vs decentralised
+  \item
+    Overlay structure - for decentralised approaches we could have structure,
+    unstructured of hybrid overlays
+  \item
+    Subscription management and event dissemination - how it is managed the
+    state that ensures subscription requirements are met. Some examples are
+    \emph{rendezvous} nodes or multidimensional spaces
+\end{itemize}
+
+
+Afterwards, we deep dived into a series of practical systems that have been key
+to the foundation of our knowledge base in \ref{relevant-pub-sub-systems}.
+Systems like Gryphon, Siena, Meghdoot or the more recent Poldercast. We
+analysed and compared these using our previously defined taxonomy.
+
+We concluded our chapter by looking into the web technologies that
+would be the driver of our pub-sub system in \ref{web-technologies}. We looked
+at technologies like Javascript which have been at the forefront of the web,
+not only due to its recently acquired ubiquity with NodeJS, but also through
+tools like NPM. We also addressed new network protocols that came up, specially
+those powering \acrshort{p2p} applications, like WebRTC, or transport protocols that offer
+new and exciting opportunities such as uTP and QUIC. Lastly, we briefly
+analysed applications like \acrshort{ipfs} and its underlying libp2p, seeking to solve
+some of the problems of the decentralised web.

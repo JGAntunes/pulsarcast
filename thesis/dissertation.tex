@@ -65,46 +65,65 @@
 \thispagestyle{empty}
 \input{variables.tex}
 
+\cleardoublepage
+\pdfbookmark[0]{Cover}{cover} % Adds a PDF bookmark.
 \include{cover}
 \NewPage
 
 \pagenumbering{roman}
 
 \if\includeAcknowledgments 1
+\cleardoublepage
+\pdfbookmark[0]{Acknowledgements}{acknowledgements} % Adds a PDF bookmark.
 \input{acknowledgments/acknowledgments.tex}
 \NewPage
 \fi
 
+\cleardoublepage
+\pdfbookmark[0]{Abstract}{abstract} % Adds a PDF bookmark.
 \include{abstract/abstract-en}
 \NewPage
+\cleardoublepage
+\pdfbookmark[0]{Resumo}{resumo} % Adds a PDF bookmark.
 \include{abstract/abstract-pt}
 \NewPage
 
 % Table of contents
+\cleardoublepage
+\pdfbookmark[0]{\contentsname}{toc} % Adds a PDF bookmark for the TOC.
 \tableofcontents
 % A new page is necessary only if table of contents has an odd number of pages
-\NewPage
+% \NewPage
 
+\cleardoublepage
+\phantomsection
 % List of tables
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 % A new page is necessary only if list of tables has an odd number of pages
 \NewPage
 
+\cleardoublepage
+\phantomsection
 % List of figures
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 % A new page is necessary only if list of figures has an odd number of pages
-\NewPage
+% \NewPage
 
+\cleardoublepage
+\phantomsection
 % List of acronyms
 \printglossary[type=\acronymtype]
+\NewPage
 
 \pagenumbering{arabic}% Arabic page numbers (and reset to 1)
 
 \input{chapters/main.tex}
 
 \bibliographystyle{ieeetr}
+\cleardoublepage
+\phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{bibliography/dissertation}
 

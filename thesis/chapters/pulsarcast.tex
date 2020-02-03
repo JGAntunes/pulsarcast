@@ -22,12 +22,13 @@ We divided this chapter as follows. We start by covering the use case of our
 system in section \ref{use-case}, where we will introduce some of our broader
 architectural decisions. Next, we will move to section \ref{data-structures}
 where we will deep dive into Pulsarcast's data structure model and how it is
-distributed across the network. Finally, we will look into one of the most
+distributed across the network. Afterwards, we will look into one of the most
 critical parts of our architecture in section
 \ref{subscription-management-event-dissemination} where, based on the covered
 related work and the taxonomy we defined, we present the algorithms and
-mechanisms used for managing the subscriptions and event dissemination. (TODO
-missing more sections)
+mechanisms used for managing the subscriptions and event dissemination. We
+finish this chapter by looking into the RPC messages that power Pulsarcast in
+section \ref{rpc-message}
 
 \section{Use Case}\label{use-case}
 
@@ -85,7 +86,7 @@ This ensures the data is persisted by a set of nodes (that might even be
 extraneous to the topic at hand) and anyone is later able to fetch the data
 using only the DHT if they want to. Afterwards, we forward the data through the
 appropriate dissemination trees previously built (we will cover this process in
-section TODO). Currently, every node participating in the data transmission
+section \ref{subscription-management-event-dissemination}). Currently, every node participating in the data transmission
 through the dissemination tree stores it indefinitely, although it is something
 due to being changed in a later revision of our protocol. On the other hand,
 when someone wants to fetch a piece of data (a topic or an event) it starts by
@@ -97,14 +98,14 @@ this fails, though, a query to the DHT is in order.
 
 Pulsarcast has a set of two fundamental data structures to which we refer to as
 event and topic descriptors. To help us represent this data, we rely on a
-concept already introduced in our related work, the Merkle DAG.
+concept already introduced in our related work, the Merkle \acrshort{dag}.
 
 \subsection{Content-Addressability}\label{subsec:content-addressability}
 
 All of our data structures are immutable, content addressable and linked
-together to form a Direct Acyclic Graph (Merkle DAG). Events link both to their
-respective topic descriptor and a past event in that topic. Topics, on the
-other hand, link to their sub-topics (if any) and a previous version of
+together to form a \acrlong{dag} (Merkle \acrshort{dag}). Events link both to
+their respective topic descriptor and a past event in that topic. Topics, on
+the other hand, link to their sub-topics (if any) and a previous version of
 themselves.  Figure \ref{fig:pulsarcast-dag} provides a broader picture of how
 it all fits together. Immutability and content-addressability give us
 verifiability. Consequently, the assurance that the state of our distributed
@@ -119,14 +120,14 @@ failure, acting as a NACK (not acknowledged) for relevant events.
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/pulsarcast-dag.png}
-  \caption{Representation of the Pulsarcast DAG}
+  \caption{Representation of the Pulsarcast \acrshort{dag}}
   \label{fig:pulsarcast-dag}
 \end{figure}
 
 Given we are discussing addressability and linking between content, the
 representation used for our identifiers is an important part of our system
 specification. That was one of the main reasons for us to borrow inspiration
-from systems like IPFS and decided to use \emph{CIDs} (Content
+from systems like \acrshort{ipfs} and decided to use \emph{CIDs} (Content
 Identifiers)~\footnote{https://github.com/multiformats/cid}.  A CID is a
 self-describing content-addressed identifier. It uses cryptographic hashes to
 achieve content addressing and is powered by
@@ -262,7 +263,7 @@ content.
 The data in Pulsarcast, however, is distributed, as illustrated by figure
 \ref{fig:pulsarcast-local-vs-distributed-state}, which means we have to deal
 with an extra layer of complexity in our system. We again tackle this with the
-way we represent our data, the Merkle DAG. The fact that all data is addressed
+way we represent our data, the Merkle \acrshort{dag}. The fact that all data is addressed
 based on its content means that the representation and indexing done at each
 node is the same we do system-wide. Descriptors are persisted using the
 Kadmelia DHT and disseminated through the Pulsarcast overlay, with each node
@@ -423,9 +424,9 @@ topic, it can configure:
 \end{itemize}
 
 These options are \emph{requestToPublish}, \emph{allowedPublishers} and
-\emph{eventLinking}, all mentioned in the previous section TODO, we will see
-how each one of these fits together with the way Pulsarcast nodes dissminate
-events. Figures \ref{fig:pulsarcast-publish-order-guarantee} and
+\emph{eventLinking}, mentioned in the previous section \ref{data-structures},
+we will see how each one of these fits together with the way Pulsarcast nodes
+dissminate events. Figures \ref{fig:pulsarcast-publish-order-guarantee} and
 \ref{fig:pulsarcast-publish-custom} provide visual aids to how these options
 come together for event dissemination.
 
@@ -692,5 +693,25 @@ message EventDescriptor {
 
 \section{Summary}\label{summary}
 
-TODO
+In this chapter we presented a technical and architectural overview of
+Pulsarcast. We started by introducing the use case for our decentralised topic
+based system in section \ref{use-case}, with a brief overview of what we are
+seeking to accomplish as well as our broader architectural decisions. We looked
+at how clients can interact with our system (create topic, publish, subscribe
+and unsubscribe) and how the Kadmelia DHT powers our underlying system and its
+dissemination trees.
+
+In \ref{data-structures} we introduced our immutable, content-addressable data
+structures, based on the Merkle \acrshort{dag}, representing events and topics and how
+these are distributed across the network.
+
+Applying the taxonomy we had previously defined in chapter
+\ref{chapter:related-work}, we looked into how subscriptions are managed and
+events are disseminated in section
+\ref{subscription-management-event-dissemination}, focusing on the algorithms
+responsible for topic creation, subscription handling and event handling.
+
+Finally, we focused on how Pulsarcast works under the hood in
+\ref{rpc-message}, taking a closer look at how our RPC messages, built using
+Protocol Buffer, drive all the functionality we described previously.
 

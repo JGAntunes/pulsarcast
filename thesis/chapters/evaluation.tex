@@ -30,9 +30,9 @@ instance, 1 Kibana and a total of 100 IPFS Testbed deployments (as described in
 \ref{subsec:testbed-architecture}). Because we wanted to avoid resource
 starvation and to better take advantage of the Kubernetes scheduler, our
 testbed deployments allocate 440 MiB per deployment, each burstable to a
-maximum of 500 MiB. During our whole test execution, periodic HTTP health
-checks (part of the Kubernetes platform) make sure our deployments are working
-accordingly.
+maximum of 500 MiB. During our whole test execution, periodic \acrshort{http}
+health checks (part of the Kubernetes platform) make sure our deployments are
+working accordingly.
 
 Test executions are managed through a single machine, from where all the
 commands are sent. During execution, a max of 5 commands are performed in
