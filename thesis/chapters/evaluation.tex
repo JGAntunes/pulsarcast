@@ -446,4 +446,79 @@ sometimes greater than 0.2, this explains the node failures across the test.
 
 \subsection{Floodsub With Latency}\label{subsec:floodsub-with-latency}
 
+Our last and final execution is a test run using Floodsub but with latency
+induced through Toxiproxy. As previously all the nodes have an inbound latency
+of 500 ms with 300 ms of jitter. The main goal for this test was for us to see
+the behaviour of our baseline solution when under unfavourable network
+conditions. Taking a total of 60 minutes to finish, and similar to our test run
+in \ref{subsec:floodsub} the whole network was unable to cope with the load of
+our execution and 10 minutes after our test started nodes became unresponsive
+and either crashed or were repeatedly terminated by our Kubernetes scheduler,
+eventually hitting a minimum of 14 nodes running. It took 40 minutes for the
+network to fully recover and have 100 nodes running again.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-event-fulfillment-comparison.png}
+  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-floodsub-latency-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-event-percentage-fulfillment-comparison.png}
+  \caption{Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Looking at \ref{fig:graph-floodsub-latency-event-fulfillment-comparison} and
+\ref{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison} we can
+see that, of the total of events injected into the system, Floodsub fulfilled
+31\% of its subscriptions as well as if we consider the events successfully
+published as the base reference. Compared to the Floodsub experiment without
+latency we see a drop of 10\% in subscription fulfillment.
+
+Table \ref{table:floodsub-latency} provides an overview of the Network
+utilisation by node. As expected, it grew linearly during the test execution
+and as such we are only presenting the final values. Memory wise, it fluctuated
+during the test (consequence of the node failures) as such we are presenting
+these values in the form of a graph in \ref{fig:graph-floodsub-latency-memory}.
+The CPU usage can be seen in \ref{fig:graph-floodsub-latency-cpu}. Starting by
+analysing the network usage, we see a a total value of 6475 MiB transmitted,
+averaging at 65 MiB by node. Comparing with the latency free execution we again
+see little to no difference at all. As expected, looking at memory and CPU
+usages we see that these were clearly impacted by the node crashes. Compared to
+the latency free execution we don't see much changes other than a slight drop
+in CPU usage overall, probably a cause of the increased network latency which
+increased the CPU idle time.
+
+\begin{table}[!htb]
+\caption{Resource utilisation metrics}
+\label{table:floodsub-latency}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Network (MiB) & 117.56 & 122.42 & 64.75 & 6474.79 \\
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-memory.png}
+  \caption{Memory usage across time}
+  \label{fig:graph-floodsub-latency-memory}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
+  \caption{CPU usage across time}
+  \label{fig:graph-floodsub-latency-cpu}
+\end{figure}
+
 \subsection{Comparison and Discussion}\label{subsec:comparison}
