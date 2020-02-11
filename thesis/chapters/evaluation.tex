@@ -3,66 +3,75 @@
 \chapter{Evaluation}
 \label{chapter:evaluation}
 
-In order to evaluate our system we start by looking at its core focus, its
-eventual delivery guarantees and overall performance. We not only test our
-system by itself but we also compare it with the current solution tied to
-libp2p, entitled floodsub. To do this we rely on the tools previously described
-in \ref{sec:testbed}. 
-TODO roadmap
 
-Afterwards we seek to evaluate  Pulsarcast's new functionality, such as the
-ability to rebuild our topic stream history through data immutability and
-persistence.
+In order to evaluate our system, we want to look at its core focus, its
+eventual delivery guarantees and overall performance. We not only test our
+system by itself, but we also compare it with the current solution tied to
+libp2p, entitled Floodsub. To do this, we rely on the tools previously
+described in \ref{sec:testbed}.
+
+We start our evaluation by looking into how our testbed is configured in
+section \ref{testbed-configuration}. In section \ref{dataset}, we document the
+dataset we used as well as the transformations necessary to make this data
+viable. We then move on to an analysis of the metrics we intended to gather in
+\ref{metrics}. We are now ready to look into our executions in \ref{executions}
+as well as its results \ref{results}, where we not only compare Pulsarcast's
+performance but also address its new functionalities, such as the ability to
+rebuild our topic stream.
 
 \section{Testbed configuration}\label{testbed-configuration}
 
-Our test runs were designed to be performed in managed infrastructure (commonly
-known as cloud services). For the initial runs and general fine tuning of the
-platform we relied in Google Cloud's managed Kubernetes solution. Later on, and
-for our actual test executions, we ran all of our tests in Microsoft's Azure
-Kubernetes solution, thanks to Microsoft and the Azure team we were kind enough
-to support our efforts and offer us free credits.
+We designed our test runs to be executed in managed infrastructure (commonly
+known as cloud services). For the initial runs and general fine-tuning of the
+platform, we relied on Google Cloud's managed Kubernetes solution. Later on,
+and for our actual test executions, we ran all of our tests in Microsoft's
+Azure Kubernetes solution, thanks to Microsoft and the Azure team, we were kind
+enough to support our efforts and offer us free credits.
 
 Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
-nodes, each with 2 vCPUs, 16 GiB of RAM and 32 GiB of storage. In our cluster,
-besides other operational bits, we ran 3 Elasticsearch instances, 1 Logstash
-instance, 1 Kibana and a total of 100 IPFS Testbed deployments (as described in
-\ref{subsec:testbed-architecture}). Because we wanted to avoid resource
-starvation and to better take advantage of the Kubernetes scheduler, our
-testbed deployments allocate 440 MiB per deployment, each burstable to a
-maximum of 500 MiB. During our whole test execution, periodic \acrshort{http}
-health checks (part of the Kubernetes platform) make sure our deployments are
-working accordingly.
+nodes, each with two vCPUs, 16 GiB of RAM and 32 GiB of storage. In our
+cluster, besides other operational bits, we ran 3 Elasticsearch instances, 1
+Logstash instance, 1 Kibana and a total of 100 \acrshort{ipfs} Testbed
+deployments (as described in \ref{subsec:testbed-architecture}). Because we
+wanted to avoid resource starvation and to better take advantage of the
+Kubernetes scheduler, our testbed deployments allocate 440 MiB per deployment,
+each burstable to a maximum of 500 MiB. During our whole test execution,
+periodic \acrshort{http} health checks (part of the Kubernetes platform) make
+sure our deployments are working accordingly.
 
 Test executions are managed through a single machine, from where all the
 commands are sent. During execution, a max of 5 commands are performed in
-parallel, with a slight 10 millisecond delay added between each bulk
-execution. All the requests are subject to retries, in case of failure, to a
-maximum of 5 attempts, after which the failure is registered and the execution
-moves on.
+parallel, with a slight 10-millisecond delay added between each bulk execution.
+All the requests are subject to retries. In case of failure, a maximum of 5
+attempts can be executed. After these, the failure is registered, and the
+execution moves on.
 
 \section{Dataset}\label{dataset}
 
-To test our system accordingly, we wanted a dataset that could simulate a real
-life scenario as much as possible. We chose to use a dataset of
+To test our system accordingly, we wanted a dataset that could simulate a
+real-life scenario as much as possible. We chose to use a dataset of
 Reddit's~\footnote{https://www.reddit.com/} comments from
-2007~\footnote{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}} consisting of a sample of approximately 25000 comments in a total of 23 topics (known as sub-reddits in the platform). For the purpose of our test runs, we used the comments as events to be injected in our system and the sub-reddits as the topics in which these were published.
+2007~\footnote{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}}
+consisting of a sample of approximately 25000 comments in a total of 23 topics
+(known as subreddits in the platform). For our test runs, the comments
+represent events and the topics subreddits.
 
 \subsection{Filtering and Normalisation}\label{subsec:filtering}
 
-Our dataset consisted in line separated JSON structures, each describing a
-comment. Given the large set of data, we started by sampling a set of 25000
-messages.  Following this we needed to first, remove comments from unknown
+Our dataset consisted of line separated JSON structures, each describing a
+comment. Given the broad set of data, we started by sampling a set of 25000
+messages.  Following this, we needed to first, remove comments from unknown
 users (users that had deleted the account at the time when the comments were
-scrapped), followed by normalising our user number (reduce the number of
-publishers in the dataset to the number of active nodes in our pulsarcast
-system), as well as correlating all of our data. We ended up creating a CLI
-tool that consumed data from this dataset and generated a document of multiple
-JSON objects separated by
+scrapped). Next, we had to normalise our user number (reduce the number of
+publishers in the dataset to the number of active nodes in our Pulsarcast
+system). A final step of data correlation had to take place as well. We ended
+up creating a CLI tool that consumed data from this dataset and generated a
+document of multiple JSON objects separated by
 newlines~\footnote{https://github.com/JGAntunes/pulsarcast-test-harness}, ready
 to be used by our ipfs-testbed-cli, described in chapter
 \ref{subsec:testbed-usage}. Examples of the output produced can be seen in
 \ref{dataset-output}
+
 
 \begin{lstlisting}[language=JSON, float, caption={Data example to be used in testbed},label={dataset-output}]
 // Topic
@@ -111,8 +120,8 @@ The following graphs give us a distribution analysis of events published per
 topic \ref{fig:events-to-be-publisher-per-topic}, subscriptions per topic
 \ref{fig:subscriptions-per-topic} and subscription distribution per nodes
 \ref{fig:subscription-distribution-per-node}. Given our dataset choice, we
-aimed for a non uniform subscription distribution per topic and, as it would be
-expected in a real world scenario, the distribution of events follows a power
+aimed for a non-uniform subscription distribution per topic and, as it would be
+expected in a real-world scenario, the distribution of events follows a power
 law based on its popularity. 
 
 \begin{figure}[!htb]
@@ -138,11 +147,11 @@ law based on its popularity.
 
 \section{Metrics}\label{metrics}
 
-For each execution we look to extract two key groups of data. Resource usage
+For each execution, we look to extract two key groups of data. Resource usage
 data and QoS data. The following list describes these in more detail:
 
 \begin{itemize}
-  \item Resource usage as a total in the whole cluster, and per node (95/99
+  \item Resource usage as a total in the whole cluster, and per-node (95/99
   percentile and average)
   \begin{itemize}
     \item CPU Usage (CPU number)
@@ -163,14 +172,14 @@ data and QoS data. The following list describes these in more detail:
   \end{itemize}
 \end{itemize}
 
-It's important to keep in mind that some of the metrics under the QoS group
+It is essential to keep in mind that some of the metrics under the QoS group
 only make sense in Pulsarcast test runs, hence will be ignored when running the
 baseline Floodsub solution.
 
 \section{Executions}\label{executions}
 
 We have devised a total of 6 test executions we wanted to go through and
-compare results. Starting with the 3 base scenarios we wanted to test:
+compare results. Starting with the three base scenarios, we wanted to test:
 
 \begin{itemize}
   \item Pulsarcast without order delivery guarantee
@@ -178,13 +187,12 @@ compare results. Starting with the 3 base scenarios we wanted to test:
   \item Floodsub (baseline solution)
 \end{itemize}
 
-For the first one, we run a scenario where every created topic in
-Pulsarcast allows every participating node to publish events. For the second
-execution, we configure the topics so that only the creator of the topic is
-allowed to publish, all the events from other nodes will need to be forwarded
-as a request to publish (as described in
-\ref{subsec:publishing-and-event-dissemination}). Floodsub was used as it is,
-as no configuration is required. 
+For the first one, we run a scenario where every created topic in Pulsarcast
+allows every participating node to publish events. For the second execution, we
+configure the topics so that only the creator of the topic is allowed to
+publish, all the events from other nodes will need to be forwarded as a request
+to publish (as described in \ref{subsec:publishing-and-event-dissemination}).
+Floodsub was used as it is, as no configuration is required. 
 
 For each of the executions described above, we performed two tests, one without
 any network disturbances, and another using Toxiproxy's features, adding a
@@ -198,41 +206,41 @@ described, followed by a comparison of these.
 
 \subsection{Pulsarcast With Order Guarantee}\label{subsec:pulsarcast-with-order-guarantee}
 
-For this test we explored how the Pulsarcast system performed when only a
+For this test, we explored how the Pulsarcast system performed when only a
 single node (the creator of the topic), was allowed to effectively publish
-events. The execution took a total of 38 minutes, however, at the 10 minute
+events. The execution took a total of 38 minutes. However, at the 10-minute
 mark, one of our nodes (the root node for the reddit.com topic) became
 unresponsive due to the load it was dealing with and the lack of CPU power to
 handle it, eventually leading the Kubernetes scheduler to restart it.  Given
-that Pulsarcast does not provide a recovery mechanism for root nodes for a
-topic out of the box and the fact that this was the only node allowed to
-publish, we ended up seeing a clear impact in our results.
+that Pulsarcast does not provide a recovery mechanism for root nodes of a topic
+out of the box and the fact that this was the only node allowed to publish (for
+this specific topic), we ended up seeing a clear impact in our results.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-fulfillment-comparison.png}
-  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \caption{Pulsarcast with order guarantee - Comparison of of events fulfilled by topic in a log scale}
   \label{fig:graph-pulsarcast-order-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
-  \caption{Comparison of percentage of events fulfilled by topic}
+  \caption{Pulsarcast with order guarantee - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison}
 \end{figure}
 
 Looking at \ref{fig:graph-pulsarcast-order-event-fulfillment-comparison} and
 \ref{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison} we can
-see that, of the total of events injected into the system, Pulsarcast fulfilled 37\% of
-its subscriptions. For the events events published, Pulsarcast fulfilled 80\%
+see that, of the total of events injected into the system, Pulsarcast fulfilled
+37\% of its subscriptions. For the events published, Pulsarcast fulfilled 80\%
 of its subscriptions. The biggest contributors for these lower percentages were
 the reddit.com and the politics topic, effectively due to the drop-out node.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-rpc.png}
-  \caption{Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast with order guarantee - Comparison of events received and RPC injected in the system}
   \label{fig:graph-pulsarcast-order-rpc}
 \end{figure}
 
@@ -241,10 +249,10 @@ messages injected in the system grow linearly with the number of events
 received.
 
 Table \ref{table:pulsarcast-order} provides an overview of the Memory and
-Network utilisation by node. Given these grew linearly throw the test execution
-we are only presenting the final values. We also provide an RPC message
-analysis by node. Despite having a low consumption overall (Network and Memory
-wise), we can see the presence of a relatively large set of outliers, a
+Network utilisation by node. Given these grew linearly through the test
+execution, we are only presenting the final values. We also provide an RPC
+message analysis by node. Despite having a low consumption overall (Network and
+Memory wise), we can see the presence of a relatively large set of outliers, a
 possible consequence of the unfairness of this execution, given its tendency to
 overload the owners of the topics. Now, looking at graph
 \ref{fig:graph-pulsarcast-order-cpu} which shows us the CPU usage across time,
@@ -253,7 +261,7 @@ minute mark) when the CPU usage picked for the node which eventually became
 unresponsive.
 
 \begin{table}[!htb]
-\caption{Resource utilisation metrics}
+\caption{Pulsarcast with order guarantee - Resource utilisation metrics}
 \label{table:pulsarcast-order}
   \begin{center}
    \begin{tabular}{|c| c c c c|} 
@@ -276,63 +284,62 @@ unresponsive.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-cpu.png}
-  \caption{CPU usage across time}
+  \caption{Pulsarcast with order guarantee - CPU usage across time}
   \label{fig:graph-pulsarcast-order-cpu}
 \end{figure}
 
 \subsection{Pulsarcast Without Order Guarantee}\label{subsec:pulsarcast-without-order-guarantee}
 
 We will now be looking at the Pulsarcast scenario without order guarantee,
-which means, every node is able to publish messages to topics it is subscribed
-to. For this scenario, the execution took a total of 85 minutes.
+which means, every node can publish messages to topics it is subscribed to. For
+this scenario, the execution took a total of 85 minutes.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-event-fulfillment-comparison.png}
-  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \caption{Pulsarcast without order guarantee - Comparison of of events fulfilled by topic in a log scale}
   \label{fig:graph-pulsarcast-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-event-percentage-fulfillment-comparison.png}
-  \caption{Comparison of percentage of events fulfilled by topic}
+  \caption{Pulsarcast without order guarantee - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-event-percentage-fulfillment-comparison}
 \end{figure}
 
 Looking at \ref{fig:graph-pulsarcast-event-fulfillment-comparison} and
-\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} we can
-see that, of the total of events injected into the system, Pulsarcast fulfilled
-99\% of
-its subscriptions. As for the events events published, Pulsarcast fulfilled 99\%
-of its subscriptions. A clear difference to the order guarantee execution.
+\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} we can see
+that, of the total of events injected into the system, Pulsarcast fulfilled
+99\% of its subscriptions. As for the events published, Pulsarcast fulfilled
+99\% of its subscriptions. A clear difference to the order guarantee execution.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-rpc.png}
-  \caption{Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast without order guarantee - Comparison of events received and RPC injected in the system}
   \label{fig:graph-pulsarcast-rpc}
 \end{figure}
 
-Considering figure \ref{fig:graph-pulsarcast-rpc}, we see that the RPC
-messages injected in the system grow linearly with the number of events
-received.
+Considering figure \ref{fig:graph-pulsarcast-rpc}, we see that the RPC messages
+injected in the system grow linearly with the number of events received.
 
 Table \ref{table:pulsarcast} provides an overview of the Memory and Network
 utilisation by node. As previously, these grew linearly throw the test
 execution we are only presenting the final values. We also provide an RPC
 message analysis by node. Memory wise, we have an evenly distributed
-consumption across nodes. In terms of network we still have a couple of
+consumption across nodes. In terms of network, we still have a couple of
 outliers, which can probably be explained by how the dissemination trees were
 formed.  Now, looking at the graph \ref{fig:graph-pulsarcast-cpu} which shows
-us the CPU usage across time, we can see a low CPU usage in total, with a small
-set of outliers across time as these were the nodes publishing events at the
-time (explainable due to our heavy dependency on cryptographic hash functions).
-Overall though we see a clear difference in how resource consumption is more
-evenly distributed compared to the order guarantee experiment.
+us the CPU usage across time, we can see a low CPU usage in total. As for the
+distribution, we can see a small set of outliers across time as these were the
+nodes publishing events at the time (explainable due to our heavy dependence on
+cryptographic hash functions).  Overall though we see a clear difference in how
+resource consumption is more evenly distributed compared to the order guarantee
+experiment.
 
 \begin{table}[!htb]
-\caption{Resource utilisation metrics}
+\caption{Pulsarcast without order guarantee - Resource utilisation metrics}
 \label{table:pulsarcast}
   \begin{center}
    \begin{tabular}{|c| c c c c|} 
@@ -355,32 +362,32 @@ evenly distributed compared to the order guarantee experiment.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-cpu.png}
-  \caption{CPU usage across time}
+  \caption{Pulsarcast without order guarantee - CPU usage across time}
   \label{fig:graph-pulsarcast-cpu}
 \end{figure}
 
 \subsection{Floodsub}\label{subsec:floodsub}
 
 Our next execution is a test run using Floodsub. The main goal of it is to act
-as baseline for our system. Taking a total of 70 minutes to finish, the whole
-network was unable to cope with the load of our execution and 10 minutes after
-our test started nodes became unresponsive and either crashed or were
-repeatedly terminated by our Kubernetes scheduler, eventually hitting a minimum
-of 15 nodes running. It took 50 minutes for the network to fully recover and
-have 100 nodes running again, only for the execution to finish 10 minutes
-later.
+as a baseline for our system. It took a total of 70 minutes to finish. However,
+the whole network was unable to cope with the load of our execution and 10
+minutes after our test started nodes became unresponsive and either crashed or
+were repeatedly terminated by our Kubernetes scheduler, eventually hitting a
+minimum of 15 nodes running. It took 50 minutes for the network to fully
+recover and have 100 nodes running again, only for the execution to finish 10
+minutes later.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-event-fulfillment-comparison.png}
-  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \caption{Floodsub - Comparison of of events fulfilled by topic in a log scale}
   \label{fig:graph-floodsub-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-event-percentage-fulfillment-comparison.png}
-  \caption{Comparison of percentage of events fulfilled by topic}
+  \caption{Floodsub - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-floodsub-event-percentage-fulfillment-comparison}
 \end{figure}
 
@@ -396,23 +403,23 @@ low popularity topics, a clear consequence of the way the whole network
 crashed.
 
 Table \ref{table:floodsub} provides an overview of the Network utilisation by
-node. It grew linearly throw the test execution and as such we are only
+node. It grew linearly throw the test execution, and as such, we are only
 presenting the final values. Memory wise, contrary to previous executions, it
 fluctuated during the test (caused by the node failures) as such we are
 presenting these values in the form of a graph in
 \ref{fig:graph-floodsub-memory}. The CPU usage can be seen in
 \ref{fig:graph-floodsub-cpu}. Starting by analysing the network usage, we see a
-a total value of 6552 MiB transmitted, averaging at 66 MiB by node. This comes
-as no surprise, given Floodsub's algorithm which repeatedly retransmits the
-same event to all the peers each node is connected to. Now, looking at both the
-memory and CPU evolution across time, these clearly suffered from the node
-crashes. However, looking at the CPU usage, we see a total resource consumption
-greater than previous executions, as well as a more uniform distribution across
-nodes than for example the Pulsarcast order guarantee execution. With a P99
+total value of 6552 MiB transmitted, averaging at 66 MiB per node. This result
+comes as no surprise, given Floodsub's algorithm, which repeatedly retransmits
+the same event to all the peers each node is connected to. Now, looking at both
+the memory and CPU evolution across time, these suffered from the node crashes.
+However, looking at the CPU usage, we see a total resource consumption greater
+than previous executions, as well as a more uniform distribution across nodes
+than, for example, the Pulsarcast order guarantee execution. With a P99
 sometimes greater than 0.2, this explains the node failures across the test.
 
 \begin{table}[!htb]
-\caption{Resource utilisation metrics}
+\caption{Floodsub - Resource utilisation metrics}
 \label{table:floodsub}
   \begin{center}
    \begin{tabular}{|c| c c c c|} 
@@ -429,20 +436,239 @@ sometimes greater than 0.2, this explains the node failures across the test.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-memory.png}
-  \caption{Memory usage across time}
+  \caption{Floodsub - Memory usage across time}
   \label{fig:graph-floodsub-memory}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
-  \caption{CPU usage across time}
+  \caption{Floodsub - CPU usage across time}
   \label{fig:graph-floodsub-cpu}
 \end{figure}
 
 \subsection{Pulsarcast With Order Guarantee and Latency}\label{subsec:pulsarcast-with-order-guarantee-and-latency}
 
+For our next test, we explored how the Pulsarcast system performed when only a
+single node (the creator of the topic), was allowed to effectively publish
+events but, with a caveat, all the nodes were injected with an inbound latency
+of 500 ms and 300 ms of jitter. The execution took a total of 226 minutes,
+however, similar to what happened in the latency-free experiment, two of our
+nodes (the root nodes for the reddit.com and politics topics) became
+unresponsive at the 48 minutes and 196-minute marks respectively. This result
+was due to the load both nodes were dealing with and the lack of CPU power to
+handle it, eventually leading the Kubernetes scheduler to restart them. These
+two events ended up interfering with our results, just as it happened in the
+latency-free experiment.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-event-fulfillment-comparison.png}
+  \caption{Pulsarcast with order guarantee and latency - Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-order-latency-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
+  \caption{Pulsarcast with order guarantee and latency - Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Analysing \ref{fig:graph-pulsarcast-order-latency-event-fulfillment-comparison}
+and
+\ref{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
+we can see that, of the total of events injected into the system, Pulsarcast
+fulfilled 32\% of its subscriptions. For the events published, Pulsarcast
+fulfilled 62\% of its subscriptions. The biggest contributors for these lower
+percentages were the reddit.com and politics topics, effectively due to the
+drop-out nodes. One interesting fact from this experiment is that, even though
+we increased the latency of the underlying network, the QoS did not suffer a
+clear impact.  However, the whole experiment took a long time to fulfil. This
+is because the Pulsarcast implementation, when running the commands we
+discussed, waits on the initial propagation of events/topics before returning
+control to the caller (and consequently replying to the clients of our
+\acrshort{http} \acrshort{api}). This ended up working as a backpressure system for our
+test suite.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-rpc.png}
+  \caption{Pulsarcast with order guarantee and latency - Comparison of events received and RPC injected in the system}
+  \label{fig:graph-pulsarcast-order-latency-rpc}
+\end{figure}
+
+
+As expected, figure \ref{fig:graph-pulsarcast-order-latency-rpc} shows us that
+the RPC messages injected in the system grow linearly with the number of events
+received.
+
+Table \ref{table:pulsarcast-order-latency} provides an overview of the Memory
+and Network utilisation by node. Similar to the previous experiments, these
+grew linearly throughout the test execution. As such, we are only presenting
+the final values. We also provide an RPC message analysis by node. Just as it
+happened in the latency-free execution, we have an overall low resource
+consumption, however, the presence of a clear set of outliers shows how unfair
+the network can be when order guarantee is enforced.
+
+The graph \ref{fig:graph-pulsarcast-order-latency-cpu} shows us the CPU
+consumption per node during the first 60 minutes. For simplicity sake, we only
+show a slice of the execution given that that same pattern repeats until the
+end of the test run. In it, we can see a spike pattern, consequence of the
+network latency induced. Each spike represented when the overall network was
+busy handling events. It is during one of these spikes that our first node
+became unresponsive (at the 48-minute mark) as well as the second node later
+on.
+
+\begin{table}[!htb]
+\caption{Pulsarcast with order guarantee and latency - Resource utilisation metrics}
+\label{table:pulsarcast-order-latency}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Memory (GiB) & 0.23 & 0.35 & 0.2 & 19.99 \\
+   \hline
+   Network (MiB) & 37.05 & 150.18 & 15.96 & 1595.6 \\
+   \hline
+   RPC Messages Received & 11731 & 11862.5 & 9647.13 & [NA] \\
+   \hline
+   RPC Messages Sent & 43018.5 & 106661.5 & 8215.28 & [NA] \\ [1ex] 
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-cpu.png}
+  \caption{Pulsarcast with order guarantee and latency - CPU usage across time}
+  \label{fig:graph-pulsarcast-order-latency-cpu}
+\end{figure}
+
 \subsection{Pulsarcast Without Order Guarantee and Latency}\label{subsec:pulsarcast-without-order-guarantee-and-latency}
+
+The next execution explores how the Pulsarcast system performed when all the
+nodes were allowed to publish but, just as in the previous experiment, all the
+nodes experienced an inbound network latency of 500 ms and 300 ms of jitter.
+The execution took a total of 13 hours, our most lengthened experiment from all
+of the scenarios. Just as we described before, commands in Pulsarcast wait for
+the initial events/topics to be injected in the network before returning
+control to the client. For topics where everyone is allowed to publish (this
+execution exactly), this will mean that for each event published, Pulsarcast
+will also wait for the event to be persisted in the DHT. Similar to what
+happened in \ref{subsec:pulsarcast-with-order-guarantee-and-latency}, this
+behaviour created a natural backpressure mechanism. Unfortunately for us, we
+are running on a tight set of specifications, and currently all the state is
+kept in memory. This meant that, when the execution ended up running longer
+than what we originally predicted, two nodes ended up being killed by our
+Kubernetes scheduler due to shortage of memory resources at the 9-hour mark.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-latency-event-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-latency-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison}
+\end{figure}
+
+Looking at figures
+\ref{fig:graph-pulsarcast-latency-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison} we
+can see that, of the total of events injected into the system, Pulsarcast
+fulfilled 51\% of its subscriptions. For the  events published, Pulsarcast
+fulfilled 86\% of its subscriptions. Although somewhat low for the total of
+events expected to be published, our fulfilment rate for events actually
+published was quite high (86\%). Our high number of retries for our test run
+gives us a clear hint into what happened. The low percentage can be explained
+by the fact that most of the times, the events did not even get published to
+begin with. The key difference for why this was noticeable here but not in the
+execution with order guarantee is because given every node publishes in this
+execution, all the initial publish commands originate a publish event, to begin
+with, which is a more network intensive operation than a request to publish one
+(as we persist events in the DHT).
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-latency-rpc.png}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of events received and RPC injected in the system}
+  \label{fig:graph-pulsarcast-latency-rpc}
+\end{figure}
+
+Just as it happened for all of our past experiments, figure
+\ref{fig:graph-pulsarcast-latency-rpc} shows us that the RPC messages injected
+in the system grow linearly with the number of events received.
+
+Table \ref{table:pulsarcast-latency} provides an overview of the Memory and
+Network utilisation by node. Similar to the previous experiments, these grew
+linearly throughout the test execution. As such, we are only presenting the
+final values. We also provide an RPC message analysis by node. Through this
+table we can see how the duration of our test run impacted our resource
+consumption, starting with the Memory usage and the Network bytes transmitted,
+which were quite high in total compared to the same latency injected execution
+with order guarantee. More than twice for our network transmission rate and
+almost twice the memory usage.
+
+Contrary to the other experiments we present the CPU usage in a table format
+\ref{table:pulsarcast-latency-cpu} using ranges for both time and CPU number.
+This is both for the sake of simplicity and readability, given the CPU usage
+followed a similar pattern as the one we have seen in
+\ref{subsec:pulsarcast-with-order-guarantee-and-latency}. Just as in that
+execution, we encounter a spiky behaviour, consequence of the latency induced
+in the system. However, we experience an overall set of stable values. With
+most of these inside a particular range throughout all the execution. Similar
+to other executions, the spotted outliers can be explained, as these were the
+nodes publishing messages at the time.
+
+\begin{table}[!htb]
+\caption{Pulsarcast without order guarantee and latency - Resource utilisation metrics}
+\label{table:pulsarcast-latency}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   Memory (GiB) & 0.41 & 0.43 & 0.36 & 35.8 \\
+   \hline
+   Network (MiB) & 91.01 & 214.51 & 34.23 & 3423 \\
+   \hline
+   RPC Messages Received & 19624.35 & 19838.92 & 18773.3 & [NA] \\
+   \hline
+   RPC Messages Sent & 113367.75 & 412396.32 & 21756.75 & [NA] \\ [1ex] 
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[!htb]
+\caption{Pulsarcast without order guarantee and latency - CPU utilisation across time, using ranges}
+\label{table:pulsarcast-latency-cpu}
+  \begin{center}
+   \begin{tabular}{|c| c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   Time Range & P95 & P99 & Average & Total \\ [0.5ex] 
+   \hline\hline
+   [0 - 1] & [0.01 - 0.04] & [0.1 - 0.02] & 0.01 & [0.6 - 1.25] \\
+   \hline
+   ]1 - 8[ & [0.01 - 0.04] & [0.03 - 0.06]  & 0.01 & [0.6 - 1.25] \\
+   \hline
+   8 & [0.01 - 0.05] & [0.03 - 0.06] & 0.01 & [0.6 - 1.25] \\
+   \hline
+   [8 - 13] & [0.01 - 0.04] & [0.03 - 0.06]  & 0.01 & [0.6 - 1.25] \\
+   \hline
+  \end{tabular}
+  \end{center}
+\end{table}
 
 \subsection{Floodsub With Latency}\label{subsec:floodsub-with-latency}
 
@@ -450,24 +676,24 @@ Our last and final execution is a test run using Floodsub but with latency
 induced through Toxiproxy. As previously all the nodes have an inbound latency
 of 500 ms with 300 ms of jitter. The main goal for this test was for us to see
 the behaviour of our baseline solution when under unfavourable network
-conditions. Taking a total of 60 minutes to finish, and similar to our test run
-in \ref{subsec:floodsub} the whole network was unable to cope with the load of
-our execution and 10 minutes after our test started nodes became unresponsive
-and either crashed or were repeatedly terminated by our Kubernetes scheduler,
+conditions. It took a total of 60 minutes to finish. Similar to our test run in
+\ref{subsec:floodsub}, the whole network was unable to cope with the load of
+our execution. Ten minutes after our test started nodes became unresponsive and
+either crashed or were repeatedly terminated by our Kubernetes scheduler,
 eventually hitting a minimum of 14 nodes running. It took 40 minutes for the
 network to fully recover and have 100 nodes running again.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-event-fulfillment-comparison.png}
-  \caption{Comparison of of events fulfilled by topic in a log scale}
+  \caption{Floodsub with latency - Comparison of of events fulfilled by topic in a log scale}
   \label{fig:graph-floodsub-latency-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-event-percentage-fulfillment-comparison.png}
-  \caption{Comparison of percentage of events fulfilled by topic}
+  \caption{Floodsub with latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison}
 \end{figure}
 
@@ -476,24 +702,10 @@ Looking at \ref{fig:graph-floodsub-latency-event-fulfillment-comparison} and
 see that, of the total of events injected into the system, Floodsub fulfilled
 31\% of its subscriptions as well as if we consider the events successfully
 published as the base reference. Compared to the Floodsub experiment without
-latency we see a drop of 10\% in subscription fulfillment.
-
-Table \ref{table:floodsub-latency} provides an overview of the Network
-utilisation by node. As expected, it grew linearly during the test execution
-and as such we are only presenting the final values. Memory wise, it fluctuated
-during the test (consequence of the node failures) as such we are presenting
-these values in the form of a graph in \ref{fig:graph-floodsub-latency-memory}.
-The CPU usage can be seen in \ref{fig:graph-floodsub-latency-cpu}. Starting by
-analysing the network usage, we see a a total value of 6475 MiB transmitted,
-averaging at 65 MiB by node. Comparing with the latency free execution we again
-see little to no difference at all. As expected, looking at memory and CPU
-usages we see that these were clearly impacted by the node crashes. Compared to
-the latency free execution we don't see much changes other than a slight drop
-in CPU usage overall, probably a cause of the increased network latency which
-increased the CPU idle time.
+latency we see a drop of 10\% in subscription fulfilment.
 
 \begin{table}[!htb]
-\caption{Resource utilisation metrics}
+\caption{Floodsub with latency - Resource utilisation metrics}
 \label{table:floodsub-latency}
   \begin{center}
    \begin{tabular}{|c| c c c c|} 
@@ -510,15 +722,31 @@ increased the CPU idle time.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-latency-memory.png}
-  \caption{Memory usage across time}
+  \caption{Floodsub with latency - Memory usage across time}
   \label{fig:graph-floodsub-latency-memory}
 \end{figure}
+
+Table \ref{table:floodsub-latency} provides an overview of the Network
+utilisation by node. As expected, it grew linearly during the test execution ,
+and as such, we are only presenting the final values. Memory wise, it
+fluctuated during the test (a consequence of the node failures) as such we are
+presenting these values in the form of a graph in
+\ref{fig:graph-floodsub-latency-memory}.  The CPU usage can be seen in
+\ref{fig:graph-floodsub-latency-cpu}. Starting by analysing the network usage,
+we see a total value of 6475 MiB transmitted, averaging at 65 MiB by node.
+Comparing with the latency-free execution, we again see little to no difference
+at all. As expected, looking at memory and CPU usages, we see that the node
+crashes impacted these. Compared to the latency-free execution, we do not see
+much changes other than a slight drop in CPU usage overall, probably a cause of
+the increased network latency, which increased the CPU idle time.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
-  \caption{CPU usage across time}
+  \caption{Floodsub with latency - CPU usage across time}
   \label{fig:graph-floodsub-latency-cpu}
 \end{figure}
 
 \subsection{Comparison and Discussion}\label{subsec:comparison}
+
+TODO

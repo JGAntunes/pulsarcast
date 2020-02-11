@@ -552,7 +552,7 @@ node. Figure \ref{fig:gryphon} illustrates this approach.
 \begin{figure}[hb!]
   \centering
   \includegraphics[width=0.95\textwidth]{img/gryphon.png}
-  \caption{extracted from \cite{Kermarrec2013}. Each level of the broker tree represents an attribute.
+  \caption{Extracted from \cite{Kermarrec2013}. Each level of the broker tree represents an attribute.
   When the event $e = <1, 2, 3, 1, 2>$ is published,
   all dark circles (representing brokers) are visited.}
   \label{fig:gryphon}
@@ -910,37 +910,35 @@ functionalities we intend to use.
 
 \section{Summary}\label{summary}
 
-Over the course of this chapter we looked at what defines the pub-sub paradigm.
-We started by laying the ground with our taxonomy in
+Throughout this chapter, we looked at what defines the pub-sub paradigm. We
+started by laying the ground with our taxonomy in
 \ref{distributed-publish-subscribe-paradigm}, which we have split into the
 following:
 
 \begin{itemize}
   \item
-    Subscription model - topic based, content based or type based models
+    Subscription model - topic-based, content-based or type-based models
   \item
     Network architecture - centralised vs decentralised
   \item
     Overlay structure - for decentralised approaches we could have structure,
     unstructured of hybrid overlays
   \item
-    Subscription management and event dissemination - how it is managed the
-    state that ensures subscription requirements are met. Some examples are
-    \emph{rendezvous} nodes or multidimensional spaces
+    Subscription management and event dissemination - how it is managed the state that ensures subscription requirements are met. Some examples are \emph{rendezvous} nodes or multidimensional spaces
 \end{itemize}
 
 
-Afterwards, we deep dived into a series of practical systems that have been key
-to the foundation of our knowledge base in \ref{relevant-pub-sub-systems}.
-Systems like Gryphon, Siena, Meghdoot or the more recent Poldercast. We
-analysed and compared these using our previously defined taxonomy.
+Afterwards, we deep-dived into a series of systems that have been key to the
+foundation of our knowledge base in \ref{relevant-pub-sub-systems} — systems
+like Gryphon, Siena, Meghdoot or the more recent Poldercast. We analysed and
+compared these using our previously defined taxonomy.
 
-We concluded our chapter by looking into the web technologies that
-would be the driver of our pub-sub system in \ref{web-technologies}. We looked
-at technologies like Javascript which have been at the forefront of the web,
-not only due to its recently acquired ubiquity with NodeJS, but also through
-tools like NPM. We also addressed new network protocols that came up, specially
-those powering \acrshort{p2p} applications, like WebRTC, or transport protocols that offer
-new and exciting opportunities such as uTP and QUIC. Lastly, we briefly
-analysed applications like \acrshort{ipfs} and its underlying libp2p, seeking to solve
-some of the problems of the decentralised web.
+We concluded our chapter by looking into the web technologies that would be the
+driver of our pub-sub system in \ref{web-technologies}. We looked at
+technologies like Javascript, which have been at the forefront of the web. Not
+only due to its recently acquired ubiquity with NodeJS, but also through tools
+like NPM. We also addressed new network protocols that came up, specially those
+powering \acrshort{p2p} applications, like WebRTC, or transport protocols that
+offer new and exciting opportunities such as uTP and QUIC. Lastly, we briefly
+analysed applications like \acrshort{ipfs} and its underlying libp2p, seeking
+to solve some of the problems of the decentralised web.

@@ -765,20 +765,20 @@ accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
 After our testbed is built and running, we still need to come up with a way to
 easily interact with it. Our goal was to able to orchestrate everything from a
 single machine and, of course, make it in a way that can easily be automated so
-that human intervention is barely required. For this purpose we have built a
+that human intervention is barely required. For this purpose, we have built a
 CLI tool that allows us to interact with our testbed nodes, named
 ipfs-testbed-cli~\footnote{https://github.com/JGAntunes/ipfs-testbed-cli}. 
 
 Under the hood our tool interacts with the Kubernetes \acrshort{api} Server,
 using the credentials locally stored in the machine, to extract the addresses
 for our testbed node's \acrshort{ipfs} and Toxiproxy \acrshort{api}s. Throw
-these we are able to inject either \acrshort{ipfs} commands or Toxiproxy
-configurations in any node. Listing \ref{ipfs-testbed-cli-examples} gives us a
-set of example usages. Specifically for the purpose of our test runs, we have
-introduced two commands that allowed for running a set of bulk operations using
-\acrshort{ipfs}' Floodsub and Pulsarcast \acrshort{api}s.  Our Toxiproxy
-command also supported bulk creation. This allowed us to automate most of our
-test executions to a couple of one line commands from our machine.
+these we can inject either \acrshort{ipfs} commands or Toxiproxy configurations
+in any node. Listing \ref{ipfs-testbed-cli-examples} gives us a set of example
+usages. Specifically, for our test runs, we have introduced two commands that
+allowed for running a set of bulk operations using \acrshort{ipfs}' Floodsub
+and Pulsarcast \acrshort{api}s.  Our Toxiproxy command also supported bulk
+creation. This allowed us to automate most of our test executions to a couple
+of one-line commands from our machine.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
