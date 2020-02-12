@@ -29,13 +29,13 @@ Azure Kubernetes solution, thanks to Microsoft and the Azure team, we were kind
 enough to support our efforts and offer us free credits.
 
 Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
-nodes, each with two vCPUs, 16 GiB of RAM and 32 GiB of storage. In our
+nodes, each with two \acrshort{vcpu}s, 16 \acrshort{gib} of \acrshort{ram} and 32 \acrshort{gib} of storage. In our
 cluster, besides other operational bits, we ran 3 Elasticsearch instances, 1
 Logstash instance, 1 Kibana and a total of 100 \acrshort{ipfs} Testbed
 deployments (as described in \ref{subsec:testbed-architecture}). Because we
 wanted to avoid resource starvation and to better take advantage of the
-Kubernetes scheduler, our testbed deployments allocate 440 MiB per deployment,
-each burstable to a maximum of 500 MiB. During our whole test execution,
+Kubernetes scheduler, our testbed deployments allocate 440 \acrshort{mib} per deployment,
+each burstable to a maximum of 500 \acrshort{mib}. During our whole test execution,
 periodic \acrshort{http} health checks (part of the Kubernetes platform) make
 sure our deployments are working accordingly.
 
@@ -148,17 +148,17 @@ law based on its popularity.
 \section{Metrics}\label{metrics}
 
 For each execution, we look to extract two key groups of data. Resource usage
-data and QoS data. The following list describes these in more detail:
+data and \acrshort{qos} data. The following list describes these in more detail:
 
 \begin{itemize}
   \item Resource usage as a total in the whole cluster, and per-node (95/99
   percentile and average)
   \begin{itemize}
-    \item CPU Usage (CPU number)
-    \item Memory Usage (GiB)
-    \item Network Usage (MiB transmitted)
+    \item \acrshort{cpu} Usage (\acrshort{cpu} number)
+    \item Memory Usage (\acrshort{gib})
+    \item Network Usage (\acrshort{mib} transmitted)
   \end{itemize}
-  \item QoS
+  \item \acrshort{qos}
   \begin{itemize}
     \item Events published by topic and in total
     \item Events received by topic and in total
@@ -166,13 +166,13 @@ data and QoS data. The following list describes these in more detail:
     successfully published
     \item Percentage of subscriptions fulfilled based on the number of events
     initially injected in the system
-    \item Number of RPC messages sent per topic and in total
-    \item Average, standard deviation and percentiles (99/95) of RPC messages
+    \item Number of \acrshort{rpc} messages sent per topic and in total
+    \item Average, standard deviation and percentiles (99/95) of \acrshort{rpc} messages
     sent by node
   \end{itemize}
 \end{itemize}
 
-It is essential to keep in mind that some of the metrics under the QoS group
+It is essential to keep in mind that some of the metrics under the \acrshort{qos} group
 only make sense in Pulsarcast test runs, hence will be ignored when running the
 baseline Floodsub solution.
 
@@ -210,7 +210,7 @@ For this test, we explored how the Pulsarcast system performed when only a
 single node (the creator of the topic), was allowed to effectively publish
 events. The execution took a total of 38 minutes. However, at the 10-minute
 mark, one of our nodes (the root node for the reddit.com topic) became
-unresponsive due to the load it was dealing with and the lack of CPU power to
+unresponsive due to the load it was dealing with and the lack of \acrshort{cpu} power to
 handle it, eventually leading the Kubernetes scheduler to restart it.  Given
 that Pulsarcast does not provide a recovery mechanism for root nodes of a topic
 out of the box and the fact that this was the only node allowed to publish (for
@@ -240,24 +240,24 @@ the reddit.com and the politics topic, effectively due to the drop-out node.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-rpc.png}
-  \caption{Pulsarcast with order guarantee - Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast with order guarantee - Comparison of events received and \acrshort{rpc} injected in the system}
   \label{fig:graph-pulsarcast-order-rpc}
 \end{figure}
 
-Considering figure \ref{fig:graph-pulsarcast-order-rpc}, we see that the RPC
+Considering figure \ref{fig:graph-pulsarcast-order-rpc}, we see that the \acrshort{rpc}
 messages injected in the system grow linearly with the number of events
 received.
 
 Table \ref{table:pulsarcast-order} provides an overview of the Memory and
 Network utilisation by node. Given these grew linearly through the test
-execution, we are only presenting the final values. We also provide an RPC
+execution, we are only presenting the final values. We also provide an \acrshort{rpc}
 message analysis by node. Despite having a low consumption overall (Network and
 Memory wise), we can see the presence of a relatively large set of outliers, a
 possible consequence of the unfairness of this execution, given its tendency to
 overload the owners of the topics. Now, looking at graph
-\ref{fig:graph-pulsarcast-order-cpu} which shows us the CPU usage across time,
+\ref{fig:graph-pulsarcast-order-cpu} which shows us the \acrshort{cpu} usage across time,
 we can see the same outlier pattern as before, as well as the moment (at the 10
-minute mark) when the CPU usage picked for the node which eventually became
+minute mark) when the \acrshort{cpu} usage picked for the node which eventually became
 unresponsive.
 
 \begin{table}[!htb]
@@ -269,13 +269,13 @@ unresponsive.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Memory (GiB) & 0.207 & 0.358 & 0.178 & 17.84 \\
+   Memory (\acrshort{gib}) & 0.207 & 0.358 & 0.178 & 17.84 \\
    \hline
-   Network (MiB) & 26.26 & 99.41 & 10.5 & 1050.4 \\
+   Network (\acrshort{mib}) & 26.26 & 99.41 & 10.5 & 1050.4 \\
    \hline
-   RPC Messages Received & 8440 & 8961 & 7315.18 & [NA] \\
+   \acrshort{rpc} Messages Received & 8440 & 8961 & 7315.18 & [NA] \\
    \hline
-   RPC Messages Sent & 33655.5 & 80058.5 & 5889.29 & [NA] \\ [1ex] 
+   \acrshort{rpc} Messages Sent & 33655.5 & 80058.5 & 5889.29 & [NA] \\ [1ex] 
    \hline
   \end{tabular}
   \end{center}
@@ -284,7 +284,7 @@ unresponsive.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-cpu.png}
-  \caption{Pulsarcast with order guarantee - CPU usage across time}
+  \caption{Pulsarcast with order guarantee - \acrshort{cpu} usage across time}
   \label{fig:graph-pulsarcast-order-cpu}
 \end{figure}
 
@@ -317,21 +317,21 @@ that, of the total of events injected into the system, Pulsarcast fulfilled
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-rpc.png}
-  \caption{Pulsarcast without order guarantee - Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast without order guarantee - Comparison of events received and \acrshort{rpc} injected in the system}
   \label{fig:graph-pulsarcast-rpc}
 \end{figure}
 
-Considering figure \ref{fig:graph-pulsarcast-rpc}, we see that the RPC messages
+Considering figure \ref{fig:graph-pulsarcast-rpc}, we see that the \acrshort{rpc} messages
 injected in the system grow linearly with the number of events received.
 
 Table \ref{table:pulsarcast} provides an overview of the Memory and Network
 utilisation by node. As previously, these grew linearly throw the test
-execution we are only presenting the final values. We also provide an RPC
+execution we are only presenting the final values. We also provide an \acrshort{rpc}
 message analysis by node. Memory wise, we have an evenly distributed
 consumption across nodes. In terms of network, we still have a couple of
 outliers, which can probably be explained by how the dissemination trees were
 formed.  Now, looking at the graph \ref{fig:graph-pulsarcast-cpu} which shows
-us the CPU usage across time, we can see a low CPU usage in total. As for the
+us the \acrshort{cpu} usage across time, we can see a low \acrshort{cpu} usage in total. As for the
 distribution, we can see a small set of outliers across time as these were the
 nodes publishing events at the time (explainable due to our heavy dependence on
 cryptographic hash functions).  Overall though we see a clear difference in how
@@ -347,13 +347,13 @@ experiment.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Memory (GiB) & 0.369 & 0.378 & 0.319 & 31.924 \\
+   Memory (\acrshort{gib}) & 0.369 & 0.378 & 0.319 & 31.924 \\
    \hline
-   Network (MiB) & 49.143 & 129.82 & 22.377 & 2237.736 \\
+   Network (\acrshort{mib}) & 49.143 & 129.82 & 22.377 & 2237.736 \\
    \hline
-   RPC Messages Received & 17843 & 17889.5 & 17708.4 & [NA] \\
+   \acrshort{rpc} Messages Received & 17843 & 17889.5 & 17708.4 & [NA] \\
    \hline
-   RPC Messages Sent & 84055 & 267124.5 & 17708.4 & [NA] \\ [1ex] 
+   \acrshort{rpc} Messages Sent & 84055 & 267124.5 & 17708.4 & [NA] \\ [1ex] 
    \hline
   \end{tabular}
   \end{center}
@@ -362,7 +362,7 @@ experiment.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-cpu.png}
-  \caption{Pulsarcast without order guarantee - CPU usage across time}
+  \caption{Pulsarcast without order guarantee - \acrshort{cpu} usage across time}
   \label{fig:graph-pulsarcast-cpu}
 \end{figure}
 
@@ -407,13 +407,13 @@ node. It grew linearly throw the test execution, and as such, we are only
 presenting the final values. Memory wise, contrary to previous executions, it
 fluctuated during the test (caused by the node failures) as such we are
 presenting these values in the form of a graph in
-\ref{fig:graph-floodsub-memory}. The CPU usage can be seen in
+\ref{fig:graph-floodsub-memory}. The \acrshort{cpu} usage can be seen in
 \ref{fig:graph-floodsub-cpu}. Starting by analysing the network usage, we see a
-total value of 6552 MiB transmitted, averaging at 66 MiB per node. This result
+total value of 6552 \acrshort{mib} transmitted, averaging at 66 \acrshort{mib} per node. This result
 comes as no surprise, given Floodsub's algorithm, which repeatedly retransmits
 the same event to all the peers each node is connected to. Now, looking at both
-the memory and CPU evolution across time, these suffered from the node crashes.
-However, looking at the CPU usage, we see a total resource consumption greater
+the memory and \acrshort{cpu} evolution across time, these suffered from the node crashes.
+However, looking at the \acrshort{cpu} usage, we see a total resource consumption greater
 than previous executions, as well as a more uniform distribution across nodes
 than, for example, the Pulsarcast order guarantee execution. With a P99
 sometimes greater than 0.2, this explains the node failures across the test.
@@ -427,7 +427,7 @@ sometimes greater than 0.2, this explains the node failures across the test.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Network (MiB) & 105.29 & 133.9 & 65.52 & 6552.4 \\
+   Network (\acrshort{mib}) & 105.29 & 133.9 & 65.52 & 6552.4 \\
    \hline
   \end{tabular}
   \end{center}
@@ -443,7 +443,7 @@ sometimes greater than 0.2, this explains the node failures across the test.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
-  \caption{Floodsub - CPU usage across time}
+  \caption{Floodsub - \acrshort{cpu} usage across time}
   \label{fig:graph-floodsub-cpu}
 \end{figure}
 
@@ -456,7 +456,7 @@ of 500 ms and 300 ms of jitter. The execution took a total of 226 minutes,
 however, similar to what happened in the latency-free experiment, two of our
 nodes (the root nodes for the reddit.com and politics topics) became
 unresponsive at the 48 minutes and 196-minute marks respectively. This result
-was due to the load both nodes were dealing with and the lack of CPU power to
+was due to the load both nodes were dealing with and the lack of \acrshort{cpu} power to
 handle it, eventually leading the Kubernetes scheduler to restart them. These
 two events ended up interfering with our results, just as it happened in the
 latency-free experiment.
@@ -483,35 +483,35 @@ fulfilled 32\% of its subscriptions. For the events published, Pulsarcast
 fulfilled 62\% of its subscriptions. The biggest contributors for these lower
 percentages were the reddit.com and politics topics, effectively due to the
 drop-out nodes. One interesting fact from this experiment is that, even though
-we increased the latency of the underlying network, the QoS did not suffer a
-clear impact.  However, the whole experiment took a long time to fulfil. This
-is because the Pulsarcast implementation, when running the commands we
-discussed, waits on the initial propagation of events/topics before returning
-control to the caller (and consequently replying to the clients of our
-\acrshort{http} \acrshort{api}). This ended up working as a backpressure system for our
-test suite.
+we increased the latency of the underlying network, the \acrshort{qos} did not
+suffer a clear impact.  However, the whole experiment took a long time to
+fulfil. This is because the Pulsarcast implementation, when running the
+commands we discussed, waits on the initial propagation of events/topics before
+returning control to the caller (and consequently replying to the clients of
+our \acrshort{http} \acrshort{api}). This ended up working as a backpressure
+system for our test suite.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-rpc.png}
-  \caption{Pulsarcast with order guarantee and latency - Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast with order guarantee and latency - Comparison of events received and \acrshort{rpc} injected in the system}
   \label{fig:graph-pulsarcast-order-latency-rpc}
 \end{figure}
 
 
 As expected, figure \ref{fig:graph-pulsarcast-order-latency-rpc} shows us that
-the RPC messages injected in the system grow linearly with the number of events
+the \acrshort{rpc} messages injected in the system grow linearly with the number of events
 received.
 
 Table \ref{table:pulsarcast-order-latency} provides an overview of the Memory
 and Network utilisation by node. Similar to the previous experiments, these
 grew linearly throughout the test execution. As such, we are only presenting
-the final values. We also provide an RPC message analysis by node. Just as it
+the final values. We also provide an \acrshort{rpc} message analysis by node. Just as it
 happened in the latency-free execution, we have an overall low resource
 consumption, however, the presence of a clear set of outliers shows how unfair
 the network can be when order guarantee is enforced.
 
-The graph \ref{fig:graph-pulsarcast-order-latency-cpu} shows us the CPU
+The graph \ref{fig:graph-pulsarcast-order-latency-cpu} shows us the \acrshort{cpu}
 consumption per node during the first 60 minutes. For simplicity sake, we only
 show a slice of the execution given that that same pattern repeats until the
 end of the test run. In it, we can see a spike pattern, consequence of the
@@ -529,13 +529,13 @@ on.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Memory (GiB) & 0.23 & 0.35 & 0.2 & 19.99 \\
+   Memory (\acrshort{gib}) & 0.23 & 0.35 & 0.2 & 19.99 \\
    \hline
-   Network (MiB) & 37.05 & 150.18 & 15.96 & 1595.6 \\
+   Network (\acrshort{mib}) & 37.05 & 150.18 & 15.96 & 1595.6 \\
    \hline
-   RPC Messages Received & 11731 & 11862.5 & 9647.13 & [NA] \\
+   \acrshort{rpc} Messages Received & 11731 & 11862.5 & 9647.13 & [NA] \\
    \hline
-   RPC Messages Sent & 43018.5 & 106661.5 & 8215.28 & [NA] \\ [1ex] 
+   \acrshort{rpc} Messages Sent & 43018.5 & 106661.5 & 8215.28 & [NA] \\ [1ex] 
    \hline
   \end{tabular}
   \end{center}
@@ -544,7 +544,7 @@ on.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-order-latency-cpu.png}
-  \caption{Pulsarcast with order guarantee and latency - CPU usage across time}
+  \caption{Pulsarcast with order guarantee and latency - \acrshort{cpu} usage across time}
   \label{fig:graph-pulsarcast-order-latency-cpu}
 \end{figure}
 
@@ -558,8 +558,8 @@ of the scenarios. Just as we described before, commands in Pulsarcast wait for
 the initial events/topics to be injected in the network before returning
 control to the client. For topics where everyone is allowed to publish (this
 execution exactly), this will mean that for each event published, Pulsarcast
-will also wait for the event to be persisted in the DHT. Similar to what
-happened in \ref{subsec:pulsarcast-with-order-guarantee-and-latency}, this
+will also wait for the event to be persisted in the \acrshort{dht}. Similar to
+what happened in \ref{subsec:pulsarcast-with-order-guarantee-and-latency}, this
 behaviour created a natural backpressure mechanism. Unfortunately for us, we
 are running on a tight set of specifications, and currently all the state is
 kept in memory. This meant that, when the execution ended up running longer
@@ -594,32 +594,32 @@ begin with. The key difference for why this was noticeable here but not in the
 execution with order guarantee is because given every node publishes in this
 execution, all the initial publish commands originate a publish event, to begin
 with, which is a more network intensive operation than a request to publish one
-(as we persist events in the DHT).
+(as we persist events in the \acrshort{dht}).
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-pulsarcast-latency-rpc.png}
-  \caption{Pulsarcast without order guarantee and latency - Comparison of events received and RPC injected in the system}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of events received and \acrshort{rpc} injected in the system}
   \label{fig:graph-pulsarcast-latency-rpc}
 \end{figure}
 
 Just as it happened for all of our past experiments, figure
-\ref{fig:graph-pulsarcast-latency-rpc} shows us that the RPC messages injected
+\ref{fig:graph-pulsarcast-latency-rpc} shows us that the \acrshort{rpc} messages injected
 in the system grow linearly with the number of events received.
 
 Table \ref{table:pulsarcast-latency} provides an overview of the Memory and
 Network utilisation by node. Similar to the previous experiments, these grew
 linearly throughout the test execution. As such, we are only presenting the
-final values. We also provide an RPC message analysis by node. Through this
+final values. We also provide an \acrshort{rpc} message analysis by node. Through this
 table we can see how the duration of our test run impacted our resource
 consumption, starting with the Memory usage and the Network bytes transmitted,
 which were quite high in total compared to the same latency injected execution
 with order guarantee. More than twice for our network transmission rate and
 almost twice the memory usage.
 
-Contrary to the other experiments we present the CPU usage in a table format
-\ref{table:pulsarcast-latency-cpu} using ranges for both time and CPU number.
-This is both for the sake of simplicity and readability, given the CPU usage
+Contrary to the other experiments we present the \acrshort{cpu} usage in a table format
+\ref{table:pulsarcast-latency-cpu} using ranges for both time and \acrshort{cpu} number.
+This is both for the sake of simplicity and readability, given the \acrshort{cpu} usage
 followed a similar pattern as the one we have seen in
 \ref{subsec:pulsarcast-with-order-guarantee-and-latency}. Just as in that
 execution, we encounter a spiky behaviour, consequence of the latency induced
@@ -637,20 +637,20 @@ nodes publishing messages at the time.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Memory (GiB) & 0.41 & 0.43 & 0.36 & 35.8 \\
+   Memory (\acrshort{gib}) & 0.41 & 0.43 & 0.36 & 35.8 \\
    \hline
-   Network (MiB) & 91.01 & 214.51 & 34.23 & 3423 \\
+   Network (\acrshort{mib}) & 91.01 & 214.51 & 34.23 & 3423 \\
    \hline
-   RPC Messages Received & 19624.35 & 19838.92 & 18773.3 & [NA] \\
+   \acrshort{rpc} Messages Received & 19624.35 & 19838.92 & 18773.3 & [NA] \\
    \hline
-   RPC Messages Sent & 113367.75 & 412396.32 & 21756.75 & [NA] \\ [1ex] 
+   \acrshort{rpc} Messages Sent & 113367.75 & 412396.32 & 21756.75 & [NA] \\ [1ex] 
    \hline
   \end{tabular}
   \end{center}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Pulsarcast without order guarantee and latency - CPU utilisation across time, using ranges}
+\caption{Pulsarcast without order guarantee and latency - \acrshort{cpu} utilisation across time, using ranges}
 \label{table:pulsarcast-latency-cpu}
   \begin{center}
    \begin{tabular}{|c| c c c c|} 
@@ -713,7 +713,7 @@ latency we see a drop of 10\% in subscription fulfilment.
    \hline
    / & P95 & P99 & Average & Total \\ [0.5ex] 
    \hline\hline
-   Network (MiB) & 117.56 & 122.42 & 64.75 & 6474.79 \\
+   Network (\acrshort{mib}) & 117.56 & 122.42 & 64.75 & 6474.79 \\
    \hline
   \end{tabular}
   \end{center}
@@ -731,22 +731,83 @@ utilisation by node. As expected, it grew linearly during the test execution ,
 and as such, we are only presenting the final values. Memory wise, it
 fluctuated during the test (a consequence of the node failures) as such we are
 presenting these values in the form of a graph in
-\ref{fig:graph-floodsub-latency-memory}.  The CPU usage can be seen in
-\ref{fig:graph-floodsub-latency-cpu}. Starting by analysing the network usage,
-we see a total value of 6475 MiB transmitted, averaging at 65 MiB by node.
-Comparing with the latency-free execution, we again see little to no difference
-at all. As expected, looking at memory and CPU usages, we see that the node
-crashes impacted these. Compared to the latency-free execution, we do not see
-much changes other than a slight drop in CPU usage overall, probably a cause of
-the increased network latency, which increased the CPU idle time.
+\ref{fig:graph-floodsub-latency-memory}.  The \acrshort{cpu} usage can be seen
+in \ref{fig:graph-floodsub-latency-cpu}. Starting by analysing the network
+usage, we see a total value of 6475 \acrshort{mib} transmitted, averaging at 65
+\acrshort{mib} by node.  Comparing with the latency-free execution, we again
+see little to no difference at all. As expected, looking at memory and
+\acrshort{cpu} usages, we see that the node crashes impacted these. Compared to
+the latency-free execution, we do not see much changes other than a slight drop
+in \acrshort{cpu} usage overall, probably a cause of the increased network
+latency, which increased the \acrshort{cpu} idle time.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{img/graph-floodsub-cpu.png}
-  \caption{Floodsub with latency - CPU usage across time}
+  \caption{Floodsub with latency - \acrshort{cpu} usage across time}
   \label{fig:graph-floodsub-latency-cpu}
 \end{figure}
 
 \subsection{Comparison and Discussion}\label{subsec:comparison}
 
-TODO
+In order to make our comparison easier, we have put into a tabular format a
+summary of our test results for our multiple test runs
+\ref{table:evaluation-comparison}. We list:
+
+\begin{itemize}
+  \item Our coverage based on the total number of events we injected in the
+    system
+  \item Our coverage based on the total number of actually published
+  \item Percentage of events effectively published
+  \item Maximum total memory consumption in all of the system
+  \item Network bytes transmitted in all of the system
+  \item Maximum \acrshort{cpu} usage in all of the system
+\end{itemize}
+
+It is important to note though that the percentage of events actually published
+is not at all a useful metric for Floodsub, given no acknowledgement whatsoever
+is made by the network when publishing an event, making it mostly irrelevant.
+
+Looking at Floodsub as our baseline of comparison it is safe to say that
+Pulsarcast surpassed Floodsub in every aspect, providing a better
+\acrshort{qos} with a smaller resource footprint.  The only exception being the
+total subscription coverage for Pulsarcast with order guarantee compared to
+Floodsub, but then again, we are aiming at a different \acrshort{qos} level so
+it makes this comparison quite unfair.  Resource wise, Floodsub is far more
+network-intensive than Pulsarcast (with six times more usage in some cases) and
+generally requires more \acrshort{cpu} power, even when compared to our order
+guarantee scenarios. As expected though, Pulsarcast consumes more memory (when
+comparing the latency induced executions, twice as much), a consequence  of the
+\acrshort{qos} we want to offer and not persisting state into disk for our
+executions.
+
+One crucial property of Pulsarcast that we have not covered so far is that, for
+every event published, we store it in the \acrshort{dht}. This is the
+cornerstone of Pulsarcast's eventual delivery guarantees, giving applications
+the ability to fetch events missing from their event tree, hence why it is
+essential to look at the percentage of events effectively published as well as
+the subscription coverage for these same events. Taking those same numbers into
+consideration we can see a considerably high coverage percentage, with the
+lowest being 62\% for the order guarantee test with latency injected.
+
+\begin{sidewaystable}
+\caption{Comparison table between our test executions}
+\label{table:evaluation-comparison}
+  \begin{center}
+   \begin{tabular}{|l| c c c c c c|} 
+    % \label{tab:pulsarcast-order}
+   \hline
+   / & Sub. Coverage &  Sub. Coverage for Published & Effectively Published &
+   Memory(\acrshort{gib})* & Transmitted(\acrshort{mib})* & \acrshort{cpu}(\acrshort{vcpu})* \\ [0.5ex] 
+   \hline\hline
+   Floodsub & 41\% & 41\% & 100\% & 21.15 & 6552.4 & 5.53 \\
+   Floodsub w/ Lat. & 31\% & 31\% & 100\% & 15.95 & 6474.79 & 4.74 \\
+   Pulsarcast Order G. & 37\% & 82\% & 46\% & 17.84 & 1050.4 & 4.35 \\
+   Pulsarcast Order G. w/ Lat. & 32\% & 62\% & 53\% & 19.99 & 1595.6 & 4.33 \\
+   Pulsarcast & 99.99\% & 99.99\% &  100\% & 31.92 & 2237.74 & 3.77 \\
+   Pulsarcast w/ Lat. & 52\% & 86\% & 60\% & 35.8 & 3423 & 1.26\\
+   \hline
+  \end{tabular}
+  \footnotesize{*max values for the total system (sum of all the resources per node)}
+  \end{center}
+\end{sidewaystable}

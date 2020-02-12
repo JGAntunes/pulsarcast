@@ -10,7 +10,7 @@ dealing with connection multiplexing, NAT traversal, discovery mechanisms and
 others.  All of which libp2p, a community-focused project with implementations
 in multiple languages already solves. We can also take advantage of the utility
 modules it has and the advantage of having an already working implementation of
-the Kadmelia DHT. Our focus is then to build a module, implementing the
+the Kadmelia \acrshort{dht}. Our focus is then to build a module, implementing the
 Pulsarcast specification that clients and apps can take advantage of. Section
 \ref{pulsarcast-javascript-module} provides a detailed description of it.
 
@@ -103,12 +103,12 @@ that is exported and listed as the main component to import when applications
 according to its functionality. The classes for our event and topic
 descriptors, as well as its trees, are under the \emph{dag} directory. The
 \emph{messages} directory keeps all the important pieces of functionality
-relative to our RPC messages, including its Protocol buffers, validators and
-marshalling logic. Our RPC handlers, containing Pulsarcast's core algorithms
-and logic, are kept under \emph{rpc}. Finally, on the root of our source
-directory, we keep our default node configuration, our peer class and an
-\emph{utils} directory, where we store a series of utility functions used
-across our codebase.
+relative to our \acrshort{rpc} messages, including its Protocol buffers,
+validators and marshalling logic. Our \acrshort{rpc} handlers, containing
+Pulsarcast's core algorithms and logic, are kept under \emph{rpc}. Finally, on
+the root of our source directory, we keep our default node configuration, our
+peer class and an \emph{utils} directory, where we store a series of utility
+functions used across our codebase.
 
 Apart from our source directory, we have a series of unit and integration
 tests, currently kept under \emph{test}. These tests exercise the critical
@@ -186,14 +186,14 @@ Pulsarcast has five classes. These are:
     EventTree
 \end{itemize}
 
-Figure \ref{fig:pulsarcast-uml} shows the Unified Modelling Language  (UML)
-class diagram of our system, but we will run through those classes which we
-consider more relevant for a thorough look into its functioning.
+Figure \ref{fig:pulsarcast-uml} shows the \acrfull{uml} class diagram of our
+system, but we will run through those classes which we consider more relevant
+for a thorough look into its functioning.
 
 \begin{figure}[hb!]
   \center
   \includegraphics[width=1\textwidth]{img/uml-pulsarcast.png}
-  \caption{UML representation of the classes in our Pulsarcast system}
+  \caption{\acrshort{uml} representation of the classes in our Pulsarcast system}
   \label{fig:pulsarcast-uml}
 \end{figure}
 
@@ -264,16 +264,16 @@ class Pulsarcast extends EventEmitter {
 
 Pulscarcast's topic creation, subscribe/unsubscribe and publish methods are
 relatively simple, given our separation of concerns. All of them consist of a
-set of input sanity checks with control, in the end, being handover to our RPC
-handlers, responsible for storing any relevant information in the DHT and
-forwarding/creating any RPC request that we might need. Listing
-\ref{pulsarcast-subscribe} shows us an example of the logic above, the
-subscribe method. New subscription calls in Pulsarcast are done using the
-topic's base58 \acrshort{cid}. The Pulscarcast node keeps all the state relative to the
-topics we are subscribed. As such, before performing any action, we always
-check to see if we are subscribed to the topic given. If all the input checks
-are right, we hand over to our RPC handlers to create the appropriate RPC
-messages and forward our request.
+set of input sanity checks with control, in the end, being handover to our
+\acrshort{rpc} handlers, responsible for storing any relevant information in
+the \acrshort{dht} and forwarding/creating any \acrshort{rpc} request that we
+might need. Listing \ref{pulsarcast-subscribe} shows us an example of the logic
+above, the subscribe method. New subscription calls in Pulsarcast are done
+using the topic's base58 \acrshort{cid}. The Pulscarcast node keeps all the
+state relative to the topics we are subscribed. As such, before performing any
+action, we always check to see if we are subscribed to the topic given. If all
+the input checks are right, we hand over to our \acrshort{rpc} handlers to
+create the appropriate \acrshort{rpc} messages and forward our request.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
@@ -541,15 +541,15 @@ Both of the classes have a series of methods which we feel like are worth descri
 \end{itemize}
 
 
-\subsection{RPC Handlers}\label{subsec:rpc-handlers}
+\subsection{\acrshort{rpc} Handlers}\label{subsec:rpc-handlers}
 
-Pulsarcast's RPC handlers are responsible for containing the implementation of
-the critical algorithms mentioned in chapter \ref{chapter:pulsarcast}. These
-functions are not only used by the Pulsarcast class when a new command is
-invoked but are also registered to handle incoming messages from other nodes.
-A generic handler is responsible for receiving every incoming message and,
-depending on the type of operation (see \ref{proto-rpc-message}), forward it to
-the correct handler.
+Pulsarcast's \acrshort{rpc} handlers are responsible for containing the
+implementation of the critical algorithms mentioned in chapter
+\ref{chapter:pulsarcast}. These functions are not only used by the Pulsarcast
+class when a new command is invoked but are also registered to handle incoming
+messages from other nodes.  A generic handler is responsible for receiving
+every incoming message and, depending on the type of operation (see
+\ref{proto-rpc-message}), forward it to the correct handler.
 
 It is also the generic handler responsibility to validate incoming and outgoing
 messages, making sure they obey our pre-defined schemas. This is important
@@ -582,35 +582,36 @@ const eventDescriptor = Joi.object().keys({
 })
 \end{lstlisting}
 
-We have split our RPC handlers into outgoing and incoming and tried to reuse as
-much logic as possible. Hence why when the client invokes a new command through
-the Pulsarcat \acrshort{api}, control is handed over to the respective RPC handler as if
-we had just received an RPC message from another node. Consequently, some of
-the logic described in the algorithms in chapter \ref{chapter:pulsarcast} is
-split between incoming/outgoing RPC handlers. The following list provides an
+We have split our \acrshort{rpc} handlers into outgoing and incoming and tried
+to reuse as much logic as possible. Hence why when the client invokes a new
+command through the Pulsarcat \acrshort{api}, control is handed over to the
+respective \acrshort{rpc} handler as if we had just received an \acrshort{rpc}
+message from another node. Consequently, some of the logic described in the
+algorithms in chapter \ref{chapter:pulsarcast} is split between
+incoming/outgoing \acrshort{rpc} handlers. The following list provides an
 overview of the functions we have created:
 
 \begin{itemize}
   \item
-    \verb|rpc.receive.genericHandler()| - The generic handle responsible for receiving all the incoming RPC messages, validating these and forwarding it accordingly.
+    \verb|rpc.receive.genericHandler()| - The generic handle responsible for receiving all the incoming \acrshort{rpc} messages, validating these and forwarding it accordingly.
   \item
-    \verb|rpc.receive.publish()| - The receiving RPC handler for publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|), it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
+    \verb|rpc.receive.publish()| - The receiving \acrshort{rpc} handler for publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|), it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
   \item
-    \verb|rpc.receive.requestToPublish()| - The receiving RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
+    \verb|rpc.receive.requestToPublish()| - The receiving \acrshort{rpc} handler for request to publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
   \item
-    \verb|rpc.receive.join()| - The receiving RPC handler for a new subscription, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the id of the peer sending, it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from another node, as such, we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
+    \verb|rpc.receive.join()| - The receiving \acrshort{rpc} handler for a new subscription, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the id of the peer sending, it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from another node, as such, we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
   \item
-    \verb|rpc.receive.leave()| - The receiving RPC handler for unscribe requests. This function is similar to its counterpart responsible for subscribing to a topic.
+    \verb|rpc.receive.leave()| - The receiving \acrshort{rpc} handler for unscribe requests. This function is similar to its counterpart responsible for subscribing to a topic.
   \item
-    \verb|rpc.send.publish()| - The outgoing RPC handler for event publishing, responsible for partially implementing algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node if it is, it links it to its parent event accordingly and stores it in the DHT. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
+    \verb|rpc.send.publish()| - The outgoing \acrshort{rpc} handler for event publishing, responsible for partially implementing algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node if it is, it links it to its parent event accordingly and stores it in the \acrshort{dht}. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
   \item
-    \verb|rpc.send.requestToPublish()| - The outgoing RPC handler for request to publish events, responsible for partially implementing algorithm \ref{alg:send-event}, mainly consisting of forwarding the requests to the appropriate dissemination tree branches.
+    \verb|rpc.send.requestToPublish()| - The outgoing \acrshort{rpc} handler for request to publish events, responsible for partially implementing algorithm \ref{alg:send-event}, mainly consisting of forwarding the requests to the appropriate dissemination tree branches.
   \item
-    \verb|rpc.send.join()| - The outgoing RPC handler for subscription requests, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon being called, it looks up for the closest known peer to the topic author, locally stored in DHT. With the closest peer id, we update our node's dissemination tree parent for this topic and send our join RPC request.
+    \verb|rpc.send.join()| - The outgoing \acrshort{rpc} handler for subscription requests, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon being called, it looks up for the closest known peer to the topic author, locally stored in \acrshort{dht}. With the closest peer id, we update our node's dissemination tree parent for this topic and send our join \acrshort{rpc} request.
   \item
-    \verb|rpc.send.leave()| - The outgoing RPC handler for unsubscribe requests. Mostly the same logic as its counterpart \verb|join| but for leaving a topic.
+    \verb|rpc.send.leave()| - The outgoing \acrshort{rpc} handler for unsubscribe requests. Mostly the same logic as its counterpart \verb|join| but for leaving a topic.
   \item
-    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the DHT and finally propagating the new topic through the meta-topic.
+    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the \acrshort{dht} and finally propagating the new topic through the meta-topic.
 \end{itemize}
 
 \subsection{Usage}\label{subsec:usage}

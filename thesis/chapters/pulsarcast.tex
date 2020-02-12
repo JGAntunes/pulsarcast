@@ -27,7 +27,7 @@ critical parts of our architecture in section
 \ref{subscription-management-event-dissemination} where, based on the covered
 related work and the taxonomy we defined, we present the algorithms and
 mechanisms used for managing the subscriptions and event dissemination. We
-finish this chapter by looking into the RPC messages that power Pulsarcast in
+finish this chapter by looking into the \acrshort{rpc} messages that power Pulsarcast in
 section \ref{rpc-message}
 
 \section{Use Case}\label{use-case}
@@ -38,7 +38,7 @@ its dissemination. Conceptually speaking, Pulsarcast provides four methods for
 clients and applications to interact with the system, create a topic, subscribe
 to a topic, unsubscribe from a topic and publish an event in a topic. From a
 broader perspective, Pulsarcast relies on two overlays to fulfil its needs.
-Kadmelia DHT, used for a range of purposes from peer discovery, content
+Kadmelia \acrshort{dht}, used for a range of purposes from peer discovery, content
 discovery and to bootstrap our other overlay, the Pulsarcast overlay. The
 Pulsarcast overlay is actually a set of different overlays or, as we call it,
 dissemination trees.  These trees are on a per topic basis and are the critical
@@ -81,10 +81,10 @@ Pulsarcast's goal is to give users and any applications built on top of it the
 reassurance that events reach their destination and that they can rebuild as
 much of the event or topic history as they see fit. As such, we double down on
 our efforts to persist and propagate data. Every topic and event is stored in
-the Kadmelia DHT before being forwarded through the topic dissemination trees.
+the Kadmelia \acrshort{dht} before being forwarded through the topic dissemination trees.
 This ensures the data is persisted by a set of nodes (that might even be
 extraneous to the topic at hand) and anyone is later able to fetch the data
-using only the DHT if they want to. Afterwards, we forward the data through the
+using only the \acrshort{dht} if they want to. Afterwards, we forward the data through the
 appropriate dissemination trees previously built (we will cover this process in
 section \ref{subscription-management-event-dissemination}). Currently, every node participating in the data transmission
 through the dissemination tree stores it indefinitely, although it is something
@@ -92,7 +92,7 @@ due to being changed in a later revision of our protocol. On the other hand,
 when someone wants to fetch a piece of data (a topic or an event) it starts by
 performing a local search in the system, it might have been something that the
 node as ran through when forwarding events across their dissemination trees. If
-this fails, though, a query to the DHT is in order.
+this fails, though, a query to the \acrshort{dht} is in order.
 
 \section{Data Structures}\label{data-structures}
 
@@ -266,7 +266,7 @@ with an extra layer of complexity in our system. We again tackle this with the
 way we represent our data, the Merkle \acrshort{dag}. The fact that all data is addressed
 based on its content means that the representation and indexing done at each
 node is the same we do system-wide. Descriptors are persisted using the
-Kadmelia DHT and disseminated through the Pulsarcast overlay, with each node
+Kadmelia \acrshort{dht} and disseminated through the Pulsarcast overlay, with each node
 then keeping this state locally. This allows us to abstract state at each node
 in a manner where clients can refer to the same piece of data in the same way
 and expect the same representation and result, weather looking locally or
@@ -300,9 +300,9 @@ Before we can speak about a new subscription, a topic must already exist. In
 order for this to happen a node starts by creating the meta topic descriptor.
 This meta topic descriptor is to be used to disseminate any changes relative to
 the topic descriptor at hand and is linked as a sub-topic of it. Only after it
-has been created and stored in the Kadmelia DHT does the node proceed to create
+has been created and stored in the Kadmelia \acrshort{dht} does the node proceed to create
 the actual topic descriptor (with the meta topic linked as a sub-topic), which
-is then also persisted in the DHT. When any change to the original topic
+is then also persisted in the \acrshort{dht}. When any change to the original topic
 descriptor is in order, the node creates a new topic descriptor (remember the
 immutability of our data structures) but with the original topic descriptor
 linked as a parent and with the same meta topic linked as sub-topic. When these
@@ -343,11 +343,11 @@ to create a new topic.
 With the topic descriptor stored and available to the whole network, its
 creator will act as the root node in this newly created topic dissemination
 tree. When a node wants to subscribe to this topic, it starts by fetching its
-descriptor from the Kademlia DHT. After some sanity checks, such as checking if
-the node is already part of the dissemination tree, we use the Kadmelia DHT to
+descriptor from the Kademlia \acrshort{dht}. After some sanity checks, such as checking if
+the node is already part of the dissemination tree, we use the Kadmelia \acrshort{dht} to
 find the closest known peer to the author of the topic. Keep in mind that we
 are not hitting the network and performing a Kadmelia lookup operation, we are
-resorting to information previously stored locally by the DHT in its K buckets.
+resorting to information previously stored locally by the \acrshort{dht} in its K buckets.
 The node stores the closest known peer as its parent in this topic
 dissemination tree. The join request is then forwarded to it where the sender
 peer id is extracted and used as its children in this topic dissemination tree,
@@ -446,7 +446,7 @@ come together for event dissemination.
 
 When a node wants to publish an event in a topic, it starts by fetching the
 topic descriptor, first locally and then, if it is not present, from the
-Kadmelia DHT.  This way, we have access to the topic data as well as its
+Kadmelia \acrshort{dht}.  This way, we have access to the topic data as well as its
 configurations. The node then checks if it is allowed to publish through the
 topic configuration whitelist mechanism. This option, \emph{allowedPublishers},
 can either be enabled and, if so, a list of nodes is provided that is checked
@@ -470,7 +470,7 @@ either be \emph{CUSTOM} or \emph{LAST\_SEEN}. When the topic allows for custom
 linking, the client application can set a custom parent event, as long as it
 exists. With the last seen option, however, the Pulsarcast node takes care of
 linking the given event to the event last seen by it. After the linking is
-done, the node can safely store the event descriptor in the Kademlia DHT,
+done, the node can safely store the event descriptor in the Kademlia \acrshort{dht},
 followed by disseminating it through its children and parent nodes in this
 topic dissemination tree. From this point forward, nodes along the
 dissemination tree will forward the event across branches of the tree where
@@ -552,7 +552,7 @@ realisation that it did not make sense to limit Pulsarcast's uses out of the
 box, especially taking account that through simple configuration we could cater
 for a broader set of use cases and applications.
 
-\section{RPC message protocol}\label{rpc-message}
+\section{\acrshort{rpc} message protocol}\label{rpc-message}
 
 We have run through the overall architecture of Pulsarcast. However, we still
 have not detailed how the nodes communicate with each other. The fact is,
@@ -567,10 +567,10 @@ allows us to define common lightweight interfaces that, through source code
 generation, work across platforms. Plus, it is fast and quite small once
 encoded to the protocol buffer binary format (what actually runs in the wire),
 while also supporting a text-based representation, similar to JSON, for
-readability purposes. With protobuf's, we have defined a set of Remote
-Procedure Call (RPC) schemas used by our system to communicate between nodes.
+readability purposes. With protobuf's, we have defined a set of \acrfull{rpc}
+schemas used by our system to communicate between nodes.
 
-We started by defining a common interface for all of our RPC messages as showed
+We started by defining a common interface for all of our \acrshort{rpc} messages as showed
 in the listing \ref{proto-rpc-message}. In protobufs, every field is associated
 with a number. These are used to identify a field in the protobuf binary
 format~\footnote{https://developers.google.com/protocol-buffers/docs/encoding}
@@ -582,12 +582,13 @@ essentially translate all the actions a node might undertake, which are
 publishing an event, joining a topic, leaving a topic, creating a topic and
 requesting to publish. The payload is an abstraction, and it can hold a topic
 descriptor, an event descriptor or a topic id depending on the operation field
-of this message. Finally, the RPC schema itself is an array of the messages, so
+of this message. Finally, the \acrshort{rpc} schema itself is an array of the messages, so
 that if needed a node can forward multiple operations in one go.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
-\begin{lstlisting}[float, language=protobuf3,caption={Protobuf schema for our RPC messages},label={proto-rpc-message}]
+\begin{lstlisting}[float, language=protobuf3,caption={Protobuf schema for our
+\acrshort{rpc} messages},label={proto-rpc-message}]
 message RPC {
   enum Operation {
     PUBLISH_EVENT = 2;
@@ -698,7 +699,7 @@ Pulsarcast. We started by introducing the use case for our decentralised
 topic-based system in section \ref{use-case}, with a brief overview of what we
 are seeking to accomplish as well as our broader architectural decisions. We
 looked at how clients can interact with our system (create a topic, publish,
-subscribe and unsubscribe) and how the Kadmelia DHT powers our underlying
+subscribe and unsubscribe) and how the Kadmelia \acrshort{dht} powers our underlying
 system and its dissemination trees.
 
 In \ref{data-structures}, we introduced our immutable, content-addressable data
@@ -712,6 +713,6 @@ events are disseminated in section
 responsible for topic creation, subscription handling and event handling.
 
 Finally, we focused on how Pulsarcast works under the hood in
-\ref{rpc-message}, taking a closer look at how our RPC messages, built using
+\ref{rpc-message}, taking a closer look at how our \acrshort{rpc} messages, built using
 Protocol Buffer, drive all the functionality we described previously.
 
