@@ -128,10 +128,10 @@ Given we are discussing addressability and linking between content, the
 representation used for our identifiers is an important part of our system
 specification. That was one of the main reasons for us to borrow inspiration
 from systems like \acrshort{ipfs} and decided to use \emph{CIDs} (Content
-Identifiers)~\footnote{https://github.com/multiformats/cid}.  A CID is a
+Identifiers)~\footnote{\url{https://github.com/multiformats/cid}}.  A CID is a
 self-describing content-addressed identifier. It uses cryptographic hashes to
 achieve content addressing and is powered by
-\emph{multihash}~\footnote{https://github.com/multiformats/multihash}.
+\emph{multihash}~\footnote{\url{https://github.com/multiformats/multihash}}.
 Multihash is a convention for representing the output of many different
 cryptographic hash functions in a compact, deterministic encoding that is
 accommodating of future change. This is because multihash encodes the type of
@@ -241,7 +241,7 @@ dissemination trees (publisher) might not be the same peer.
 
 Metadata for the event descriptor is quite simple. It includes a creation
 timestamp in
-ISO8601~\footnote{https://www.iso.org/iso-8601-date-and-time-format.html}
+ISO8601~\footnote{\url{https://www.iso.org/iso-8601-date-and-time-format.html}}
 format and the version of the protocol at the time the event was published.
 Remember, these are content-addressable immutable data structures, as such the
 info we provide in these metadata fields will be persistent and verifiable,
@@ -560,7 +560,7 @@ Pulsarcast does not favour or define the usage of a specific wire protocol. In
 our view Pulsarcast can and should work independently of what we use in the
 transport layer. It does, however, specify a well-defined communication
 protocol built using Protocol
-Buffers~\footnote{https://developers.google.com/protocol-buffers/}. Protocol
+Buffers~\footnote{\url{https://developers.google.com/protocol-buffers/}}. Protocol
 Buffers (or protobuf for short) are Google's open-source, language-neutral,
 platform-neutral, extensible mechanism for serializing structured data. It
 allows us to define common lightweight interfaces that, through source code
@@ -573,7 +573,7 @@ schemas used by our system to communicate between nodes.
 We started by defining a common interface for all of our \acrshort{rpc} messages as showed
 in the listing \ref{proto-rpc-message}. In protobufs, every field is associated
 with a number. These are used to identify a field in the protobuf binary
-format~\footnote{https://developers.google.com/protocol-buffers/docs/encoding}
+format~\footnote{\url{https://developers.google.com/protocol-buffers/docs/encoding}}
 uniquely.  Our message format is quite straight forward, with three fields,
 \emph{op} (for operation), \emph{payload} representing a generic payload and
 finally \emph{metadata} containing relevant metadata such as the creation date

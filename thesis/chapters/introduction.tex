@@ -35,23 +35,24 @@ in an efficient way.
 
 Due to the properties described above, a lot of applications rely on the
 publish-subscribe paradigm and a lot of work has been done by companies like
-Twitter~\footnote{https://www.infoq.com/presentations/Twitter-Timeline-Scalability}
+Twitter~\footnote{\url{https://www.infoq.com/presentations/Twitter-Timeline-Scalability}}
 and LinkedIn into making these systems capable of scaling to a large number of
 participants, with the creation of tools like
-Kafka~\footnote{http://kafka.apache.org/documentation/\#design}, which aim at
-guaranteeing low latency and high event throughput. Other examples are the
-multiple message queue systems like Apache Active
-MQ~\footnote{http://activemq.apache.org/},
-RabbitMQ~\footnote{https://www.rabbitmq.com/},
-Redis~\footnote{https://redis.io/topics/pubsub}, etc.  These solutions are, of
-course, centralised and as such suffer from all the common issues that affect
-centralised solutions: it is quite hard to maintain and scale these systems to
-a large number of clients. \acrfull{p2p} networks, on the other hand, have
-proven numerous times, that this is where they shine, with examples such as
-Gnutella, Skype and most recently \acrshort{ipfs}~\footnote{https://ipfs.io/}.
-All of these systems are a living proof of the high scalability \acrshort{p2p} can offer,
-with pub-sub systems over \acrshort{p2p} networks being an active research topic with a
-lot of attention.
+Kafka~\footnote{\url{http://kafka.apache.org/documentation/\#design}}, which
+aim at guaranteeing low latency and high event throughput. Other examples are
+the multiple message queue systems like Apache Active
+MQ~\footnote{\url{http://activemq.apache.org}},
+RabbitMQ~\footnote{\url{https://www.rabbitmq.com/}},
+Redis~\footnote{\url{https://redis.io/topics/pubsub}}, etc.  These solutions
+are, of course, centralised and as such suffer from all the common issues that
+affect centralised solutions: it is quite hard to maintain and scale these
+systems to a large number of clients. \acrfull{p2p} networks, on the other
+hand, have proven numerous times, that this is where they shine, with examples
+such as Gnutella, Skype and most recently
+\acrshort{ipfs}~\footnote{\url{https://ipfs.io/}}.  All of these systems are a
+living proof of the high scalability \acrshort{p2p} can offer, with pub-sub
+systems over \acrshort{p2p} networks being an active research topic with a lot
+of attention.
 
 \section{Goals}
 
@@ -71,4 +72,12 @@ with such a strong focus on persistence, which is something our solution does.
 
 \section{Document Roadmap}
 
-TODO
+This document is structured as follows: Chapter \ref{chapter:related-work}
+presents and analyses our related work. Chapter \ref{chapter:pulsarcast}
+introduces and describes Pulsarcast, its architecture, data structures and
+algorithms. Chapter \ref{chapter:implementation} covers the implementation of
+our solution, with code snippets and \acrshort{uml} class diagrams. Next,
+chapter \ref{chapter:evaluation} explains our evaluation methodology and
+presents those results. Finally, chapter \ref{chapter:conclusion} provides a
+set of closing remarks and a set of improvements and future work.
+

@@ -46,7 +46,7 @@ relevant content. These topics are identified by keywords and can be
 naturally viewed as a group or a channel to which participants can send
 messages (publish) and receive messages (subscribe). This approach was
 one of the earliest models in the pub-sub paradigm, with references
-such as TIBCO~\footnote{https://www.tibco.com/}, mainly due to its similarity with the group
+such as TIBCO~\footnote{\url{https://www.tibco.com/}}, mainly due to its similarity with the group
 communication systems already in place at the time. Some examples of the
 topic based approach allow building a topic hierarchy. A specific one is
 using a UNIX path like approach, which allows a topic hierarchy
@@ -71,7 +71,7 @@ approach that sought to use the content of the event message itself as a
 way for subscribers to specify the messages they were interested in \cite{Banavar1999}.
 Essentially, subscribers could define fields, or conditions on those same fields that would make an event
 match a subscription or not. Consider the following example of a simple
-message and subscription, represented using JSON~\footnote{https://www.json.org/}.
+message and subscription, represented using JSON~\footnote{\url{https://www.json.org/}}.
 \bigskip
 
 \textbf{Message}
@@ -218,9 +218,9 @@ physical topology (presence and connectivity of hosts), but by logical
 relationships between peers. This way we have the potential to
 manipulate the logical network at the application level, without needing
 to change the network backbone that connects the nodes. This approach
-was key to deploy \acrshort{p2p} applications such as Gnutella~\footnote{https://web.archive.org/web/20000620113133/http://gnutella.wego.com},
-Kazaa~\footnote{https://web.archive.org/web/20040701062605/http://www.kazaa.com:80/us/index.htm}
-or Skype~\footnote{https://www.skype.com} on top of the existing Internet infrastructure.
+was key to deploy \acrshort{p2p} applications such as Gnutella~\footnote{\url{https://web.archive.org/web/20000620113133/http://gnutella.wego.com}},
+Kazaa~\footnote{\url{https://web.archive.org/web/20040701062605/http://www.kazaa.com:80/us/index.htm}}
+or Skype~\footnote{\url{https://www.skype.com}} on top of the existing Internet infrastructure.
 
 \begin{figure}[hb!]
   \centering
@@ -297,7 +297,7 @@ since the key space is distributed across multiple nodes. For example,
 \textbf{Chord} \cite{Stoica2001}, one of the first examples of a
 \acrshort{dht}, organises the nodes in a ring like structure based on their ID
 (which results from the SHA-1
-hash~\footnote{https://tools.ietf.org/html/rfc3174} of its IP address). The
+hash~\footnote{\url{https://tools.ietf.org/html/rfc3174}} of its IP address). The
 content is then distributed in this key space, using the same hashing function
 to produce the content key that was used to produce the node ID.
 
@@ -567,7 +567,7 @@ the edge with label $*$ (do not care).
 
 Gryphon has been successfully deployed over the Internet for real-time
 sports score distribution at the Grand Slam Tennis events, Ryder Cup,
-and for monitoring and statistics reporting at the Sydney Olympics~\footnote{https://www.research.ibm.com/distributedmessaging/gryphon.html}.
+and for monitoring and statistics reporting at the Sydney Olympics~\footnote{\url{https://www.research.ibm.com/distributedmessaging/gryphon.html}}.
 
 \subsection{Siena}\label{siena}
 
@@ -776,12 +776,12 @@ only on the desktops and servers we are used, but also in browsers running in
 multiple platforms.
 
 It is indisputable that one cannot think of modern web development
-without speaking of \textbf{Javascript}~\footnote{https://www.ecma-international.org/publications/standards/Ecma-262.htm}.
+without speaking of \textbf{Javascript}~\footnote{\url{https://www.ecma-international.org/publications/standards/Ecma-262.htm}}.
 Javascript is a lightweight, interpreted, programming language, known as
 the scripting language for the web. Initially created with the purpose
 of allowing the creation of simple interactions and animations in web
 pages it is now one of the main programming languages for the web
-~\footnote{https://insights.stackoverflow.com/survey/2017}. It is used, not
+~\footnote{\url{https://insights.stackoverflow.com/survey/2017}}. It is used, not
 only for client side programming but also to power server side
 applications. Since Javascript has different runtimes, it became
 necessary to create a standardised base from which the multiple browser
@@ -789,28 +789,28 @@ vendors and runtime maintainers could work from. Hence ECMAScript, the standard
 for the Javascript implementation.
 
 As it was previously said, nowadays, Javascript is not restricted to
-browsers only. \textbf{NodeJS}~\footnote{https://nodejs.org} was the first
+browsers only. \textbf{NodeJS}~\footnote{\url{https://nodejs.org}} was the first
 successful implementation of a Javascript runtime for the server, built
-on top of Chrome's V8 JavaScript engine~\footnote{https://developers.google.com/v8/}. This
+on top of Chrome's V8 JavaScript engine~\footnote{\url{https://developers.google.com/v8/}}. This
 allowed developers to write and run Javascript programs in multiple
 architectures and operating systems, with access to a set of common
 native libraries that allow to interact with relevant parts of the
-system~\footnote{https://nodejs.org/api/} such as network, filesystem and
+system~\footnote{\url{https://nodejs.org/api/}} such as network, filesystem and
 others. A key aspect in NodeJS was the way it chose to deal with the
 lack of support from Javascript for multithreading: the use of an event
 loop that powers an event-driven architecture capable of asynchronous
 I/O.
 
 Yet another key element in the NodeJS and Javascript ecosystem is
-\textbf{NPM}~\footnote{https://www.npmjs.com/}, its package manager. NPM was one
+\textbf{NPM}~\footnote{\url{https://www.npmjs.com/}}, its package manager. NPM was one
 of the main drivers of a philosophy that is deeply ingrained in the JS
 ecosystem which focuses on building small reusable packages that
 everyone can use and build on top of. This is heavily inspired by the
-UNIX philosophy summarised by Doug McIlroy~\footnote{https://archive.org/details/bstj57-6-1899} - "Write
+UNIX philosophy summarised by Doug McIlroy~\footnote{\url{https://archive.org/details/bstj57-6-1899}} - "Write
 programs that do one thing and do it well. Write programs that work
 together". This approach ended up being a major differentiator on how
 modern web applications are developed. Currently, NPM is one of the
-largest package registries in the world~\footnote{http://blog.npmjs.org/post/143451680695/how-many-npm-users-are-there}.
+largest package registries in the world~\footnote{\url{http://blog.npmjs.org/post/143451680695/how-many-npm-users-are-there}}.
 This mindset though is really important, for it allows applications to
 be built on top of previously published packages, making modularity and
 code reusability core values of the ecosystem. Even more interesting is
@@ -819,33 +819,36 @@ supporting different environments (browsers, servers, desktops, etc.),
 all of this powered by a common way of publishing and sharing code.
 
 When focusing specifically on \acrshort{p2p} apps, the past years have brought
-together a set of new network protocols that empower communication
-between browsers in a real-time fashion and also provide alternatives to
-TCP~\footnote{https://tools.ietf.org/html/rfc793}. \textbf{WebSockets}~\footnote{https://tools.ietf.org/html/rfc6455}
-aimed at providing a real-time, full-duplex communication
-between clients and servers over TCP, but it was \textbf{WebRTC}~\footnote{https://www.w3.org/TR/webrtc/}
-that paved the way for new \acrshort{p2p} applications that could
-run in the browser. WebRTC focuses on powering real-time communications,
-like audio/video stream or just arbitrary data, between browsers,
-without the need of an intermediary. This, of course, is a real
-breakthrough in the \acrshort{p2p} field as it allows browsers to receive incoming
-connections. On other hand, alternatives to the TCP transport, such as
-\textbf{uTP}~\footnote{http://www.bittorrent.org/beps/bep\_0029.html} and
-\textbf{QUIC}~\footnote{https://datatracker.ietf.org/wg/quic/about/}
-, came through, seeking to bring reliability and order delivery
-without the poor latency and congestion control issues of TCP. This
-provided new suitable alternatives to communication between peers on top
-of UDP, a transport that has been vital in \acrshort{p2p} applications that need an
-affordable way to perform NAT~\footnote{https://tools.ietf.org/html/rfc2663} traversal.
+together a set of new network protocols that empower communication between
+browsers in a real-time fashion and also provide alternatives to
+\acrshort{tcp}~\footnote{\url{https://tools.ietf.org/html/rfc793}}.
+\textbf{WebSockets}~\footnote{\url{https://tools.ietf.org/html/rfc6455}} aimed at
+providing a real-time, full-duplex communication between clients and servers
+over \acrshort{tcp}, but it was
+\textbf{WebRTC}~\footnote{\url{https://www.w3.org/TR/webrtc/}} that paved the way for
+new \acrshort{p2p} applications that could run in the browser. WebRTC focuses
+on powering real-time communications, like audio/video stream or just arbitrary
+data, between browsers, without the need of an intermediary. This, of course,
+is a real breakthrough in the \acrshort{p2p} field as it allows browsers to
+receive incoming connections. On other hand, alternatives to the \acrshort{tcp}
+transport, such as
+\textbf{uTP}~\footnote{\url{http://www.bittorrent.org/beps/bep\_0029.html}} and
+\textbf{QUIC}~\footnote{\url{https://datatracker.ietf.org/wg/quic/about/}} , came
+through, seeking to bring reliability and order delivery without the poor
+latency and congestion control issues of \acrshort{tcp}. This provided new
+suitable alternatives to communication between peers on top of UDP, a transport
+that has been vital in \acrshort{p2p} applications that need an affordable way
+to perform \acrshort{nat}~\footnote{\url{https://tools.ietf.org/html/rfc2663}}
+traversal.
 
 In the application realm, there have been quite a few in the past years
 that seek to leverage all these new technologies and breakthroughs. One
-of the examples most worth mentioning is the \textbf{\acrfull{ipfs}}~\footnote{https://ipfs.io}, a \acrshort{p2p} hypermedia protocol designed
+of the examples most worth mentioning is the \textbf{\acrfull{ipfs}}~\footnote{\url{https://ipfs.io}}, a \acrshort{p2p} hypermedia protocol designed
 to create a persistent, content-addressable network on top of the
 distributed web.
 
 At the core of \acrshort{ipfs} is what they refer to as the \textbf{Merkle
-\acrshort{dag}}~\footnote{https://github.com/ipld/specs/blob/95df205ca5fdb961ec2c2265a169989fef595db1/FOUNDATIONS.md}.
+\acrshort{dag}}~\footnote{\url{https://github.com/ipld/specs/blob/95df205ca5fdb961ec2c2265a169989fef595db1/FOUNDATIONS.md}}.
 The Merkle \acrshort{dag} is a graph structure used to store and represent data, where
 each node can be linked to based on the hash of its content. Figure
 \ref{fig:merkle-node} provides an example of this. 
@@ -883,7 +886,7 @@ different heterogeneous clients, that have different needs and resources. As
 such, not everyone can rely on the same set of transports, storage management
 and discovery mechanisms. These small modules that constitute \acrshort{ipfs}
 have recently been brought together under the same umbrella, as
-\textbf{libp2p}~\footnote{https://libp2p.io}, a set of packages that seek to
+\textbf{libp2p}~\footnote{\url{https://libp2p.io}}, a set of packages that seek to
 solve common challenges in \acrshort{p2p} applications. 
 
 \begin{figure}[hb!]

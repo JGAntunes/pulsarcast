@@ -50,8 +50,8 @@ execution moves on.
 
 To test our system accordingly, we wanted a dataset that could simulate a
 real-life scenario as much as possible. We chose to use a dataset of
-Reddit's~\footnote{https://www.reddit.com/} comments from
-2007~\footnote{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}}
+Reddit's~\footnote{\url{https://www.reddit.com/}} comments from
+2007~\footnote{\url{http://academictorrents.com/details/7690f71ea949b868080401c749e878f98de34d3d}}~\footnote{\url{https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/}}
 consisting of a sample of approximately 25000 comments in a total of 23 topics
 (known as subreddits in the platform). For our test runs, the comments
 represent events and the topics subreddits.
@@ -65,10 +65,10 @@ users (users that had deleted the account at the time when the comments were
 scrapped). Next, we had to normalise our user number (reduce the number of
 publishers in the dataset to the number of active nodes in our Pulsarcast
 system). A final step of data correlation had to take place as well. We ended
-up creating a CLI tool that consumed data from this dataset and generated a
-document of multiple JSON objects separated by
-newlines~\footnote{https://github.com/JGAntunes/pulsarcast-test-harness}, ready
-to be used by our ipfs-testbed-cli, described in chapter
+up creating a \acrshort{cli} tool that consumed data from this dataset and
+generated a document of multiple JSON objects separated by
+newlines~\footnote{\url{https://github.com/JGAntunes/pulsarcast-test-harness}},
+ready to be used by our ipfs-testbed-cli, described in chapter
 \ref{subsec:testbed-usage}. Examples of the output produced can be seen in
 \ref{dataset-output}
 
@@ -197,7 +197,7 @@ Floodsub was used as it is, as no configuration is required.
 For each of the executions described above, we performed two tests, one without
 any network disturbances, and another using Toxiproxy's features, adding a
 latency of 500 milliseconds and 300 milliseconds of jitter to every incoming
-TCP packet. 
+\acrshort{tcp} packet. 
 
 \section{Results}\label{results}
 

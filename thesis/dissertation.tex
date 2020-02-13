@@ -113,6 +113,14 @@
 
 \cleardoublepage
 \phantomsection
+% List of algorithms
+\addcontentsline{toc}{chapter}{List of Algorithms}
+\listofalgorithms
+% A new page is necessary only if list of tables has an odd number of pages
+\NewPage
+
+\cleardoublepage
+\phantomsection
 % List of acronyms
 \printglossary[type=\acronymtype]
 \NewPage
@@ -128,8 +136,8 @@
 \bibliography{bibliography/dissertation}
 
 % Appendix
-\appendix
-\input{appendix/main.tex}
+% \appendix
+% \input{appendix/main.tex}
 
 % Glossary and Acronym List
 \if\includeGlossary 1

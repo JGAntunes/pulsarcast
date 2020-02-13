@@ -2,4 +2,134 @@
 
 \chapter{Conclusion}
 \label{chapter:conclusion}
-TODO
+
+In this work, we introduced Pulsarcast, a decentralised pub-sub solution that
+seeks to bring reliability and eventual delivery guarantees (commonly
+associated with centralised solutions) to the \acrshort{p2p} realm.
+
+\section{Concluding Remarks}\label{remarks}
+
+We started our work by first analysing the pub-sub paradigm and what defines
+it. First, built a foundation with our taxonomy which we have split into:
+
+\begin{itemize}
+  \item
+    Subscription model - topic-based, content-based or type-based models
+  \item
+    Network architecture - centralised vs decentralised
+  \item
+    Overlay structure - for decentralised approaches we could have structure,
+    unstructured of hybrid overlays
+  \item
+    Subscription management and event dissemination - how it is managed the state that ensures subscription requirements are met. Some examples are \emph{rendezvous} nodes or multidimensional spaces
+\end{itemize}
+
+Ready to deep-dive into a series of practical systems, we analysed systems like
+Gryphon, Siena, Mehdoot and Poldercast. We intended to compare them using our
+newly built taxonomy.
+
+While still looking at relevant and related work, we studied the web
+technologies that power today's applications. We looked into technologies like
+Javascript, which has been at the forefront of the web. Not only due to its
+recently acquired ubiquity with NodeJS, but also through tools like NPM. We
+also addressed new network protocols that came up, especially those powering
+\acrshort{p2p} applications, like WebRTC, or transport protocols that offer new
+and exciting opportunities such as uTP and QUIC. Lastly, we briefly analysed
+applications like \acrshort{ipfs} and its underlying libp2p, seeking to solve
+some of the problems of the decentralised web.
+
+We have followed our related work with the architecture of our purposed
+solution, Pulsarcast. We introduced the use case for our decentralised
+topic-based system, with a brief overview of what we are seeking to accomplish
+as well as our broader architectural decisions. We looked at how clients can
+interact with our system (create a topic, publish, subscribe and unsubscribe)
+and how the Kadmelia \acrshort{dht} powers our underlying system and its
+dissemination trees. We covered our immutable, content-addressable data
+structures, based on the Merkle \acrshort{dag}, representing events and topics
+and how these are distributed across the network. Applying the taxonomy we had
+previously defined, we looked into how subscriptions are managed and events are
+disseminated, focusing on the algorithms responsible for topic creation,
+subscription handling and event handling. Finally, we focused on how Pulsarcast
+works under the hood, taking a closer look at how our \acrshort{rpc} messages,
+built using Protocol Buffer, drive all the functionality we described
+previously.
+
+Our next step was to cover the actual implementation of the architecture we
+detailed. We started by briefly describing our Javascript module, its libp2p
+dependencies and the way it fits together with the libp2p ecosystem. With the
+intent of fully covering our implementation, we deep-dived into our module. Its
+code organisation, structure, as well as the classes that constitute the
+backbone of it. Next in our list, we looked into the \acrshort{rpc} handlers,
+responsible for implementing Pulsarcast's core logic of subscription management
+and event dissemination.  Finally, we provided a simple usage example of our
+module.
+
+Given our need to test our system reliably, we set out to find a tool that
+fulfilled our requirements for reproducibility, scale, data extraction and
+automation capabilities. Unfortunately, nothing seems fit for our specific
+needs, so we set out to create our solution. We created a reproducible
+deployment of IPFS containing our Pulsarcast implementation with Toxiproxy
+acting as an inbound \acrshort{tcp} proxy. This artefact is then deployed and
+scaled as needed in a Kubernetes cluster, which collects metrics and logs using
+a stack of Elasticsearch, Beats, Logstash and finally Kibana for visualisation.
+
+Finally, it was time to test our system. To do so, we relied on a Reddit
+dataset of comments from 2007, of approximately 25000 messages and a total of
+23 topics (subreddits). We built a custom set of \acrshort{cli} tools to help
+us not only process the data but also to coordinate our test executions from a
+centralised point, given the deployments were running in a managed Kubernetes
+cluster under Microsoft Azure. The metrics we wanted to collect were
+\acrshort{cpu}, memory and network usages, as well as a collection of
+\acrshort{qos} metrics, such as percentage of events published and subscription
+coverage values. We tested not only our system but also libp2p current solution
+entitled Floodsub.
+
+We observed that Pulsarcast surpassed Floodsub in every aspect, providing a
+better \acrshort{qos} with a smaller resource footprint. The only exception
+being the total subscription coverage for Pulsarcast with order guarantee
+compared to Floodsub.  Resource wise, Floodsub is far more network-intensive
+than Pulsarcast (with six times more usage in some cases) and generally
+requires more \acrshort{cpu} power. Looking at Pulsarcast only though, there
+are still limitations in the way node failures are managed, specifically in
+unfair scenarios such as the order guarantee one. It is also essential to
+consider Pulsarcast's high publish rates, given that for each event published
+we store it in the \acrshort{dht}. This is the cornerstone of its eventual
+delivery guarantees, giving applications the ability to fetch missing events
+from their event tree.
+
+We concluded that our system provides a very nice alternative to applications
+that seek a better \acrshort{qos} level as well as a feature-rich topology
+setting, that allows to restrict publishers and configure topics to one's
+needs. Despite being heavily reliant on a structured overlay, Pulsarcast did
+not underperform under adverse network conditions, making it suitable for
+multiple scenarios. 
+
+\section{Improvements and Future Work}\label{improvements-future-work}
+
+There is, of course, room to do a lot more, not only features but also
+technical improvements. Starting with our tests, which could have benefited
+from a larger resource pool, given these ended up being a limitation to the
+size of the network we could test with. We also could have benefited from
+further metrics like the number of hops each event went through in our system.
+
+Looking at Pulsarcast only we have a set of improvements that could be made:
+
+\begin{itemize}
+  \item Better and smarter retry mechanisms
+  \item Improve the delivery guarantees of the order guarantee scenario by providing some kind of backup mechanism for requests to publish
+  \item Tolerance to node failures (especially root nodes for an order guarantee
+  scenario)
+\end{itemize}
+
+Furthermore, there is an infinite set of features and applications that could
+be made for Pulsarcast. Especially given its modularity and support for
+different configuration scenarios. To name a few, we see the logical next steps
+being:
+
+\begin{itemize}
+  \item Event and topic signatures in the metadata field
+  \item Support for end-to-end encryption
+  \item Improved message filtering and tolerance to misbehaving nodes (e.g. blacklists)
+  \item Discovery capabilities for topics
+  \item Mutable pointers for descriptors
+\end{itemize}

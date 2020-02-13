@@ -6,13 +6,14 @@
 For our Pulsarcast implementation, we decided to take advantage of the
 \emph{libp2p} ecosystem as it solves a lot of the underlying issues of building
 a peer to peer system, not specific to our pub-sub scenario. This includes
-dealing with connection multiplexing, NAT traversal, discovery mechanisms and
-others.  All of which libp2p, a community-focused project with implementations
-in multiple languages already solves. We can also take advantage of the utility
-modules it has and the advantage of having an already working implementation of
-the Kadmelia \acrshort{dht}. Our focus is then to build a module, implementing the
-Pulsarcast specification that clients and apps can take advantage of. Section
-\ref{pulsarcast-javascript-module} provides a detailed description of it.
+dealing with connection multiplexing, \acrshort{nat} traversal, discovery
+mechanisms and others.  All of which libp2p, a community-focused project with
+implementations in multiple languages already solves. We can also take
+advantage of the utility modules it has and the advantage of having an already
+working implementation of the Kadmelia \acrshort{dht}. Our focus is then to
+build a module, implementing the Pulsarcast specification that clients and apps
+can take advantage of. Section \ref{pulsarcast-javascript-module} provides a
+detailed description of it.
 
 Besides our module, we also needed to find a suitable way to test our system as
 a whole. Given our specific needs, we opted to build a custom testbed, detailed
@@ -32,7 +33,7 @@ languages, that is, in fact, one of the reasons for the clear separation
 between the Pulcarcast specification and its actual implementation.  However,
 we had to choose, and in our view, Javascript is the clear winner. It is worth
 noting that, much like the work we built on top of, this module is open
-source~\footnote{https://github.com/JGAntunes/js-pulsarcast}.
+source~\footnote{\url{https://github.com/JGAntunes/js-pulsarcast}}.
 
 \subsection{Dependencies}\label{subsec:dependencies}
 
@@ -41,11 +42,11 @@ fits in the libp2p ecosystem. libp2p defines interfaces responsible for routing
 content (peer routing), discovering other peers in the network (peer
 discovery), network transports and leveraging multiple network connections
 (switch). These all come bundled in the libp2p javascript
-module~\footnote{https://github.com/libp2p/js-libp2} which we use in
+module~\footnote{\url{https://github.com/libp2p/js-libp2}} which we use in
 Pulsarcast. Besides the main libp2p module we also use some other utility
 modules such as the \acrshort{cid}
-module~\footnote{https://github.com/multiformats/js-cid} and the Peer-id
-module~\footnote{https://github.com/libp2p/js-peer-id}, both designed to reason
+module~\footnote{\url{https://github.com/multiformats/js-cid}} and the Peer-id
+module~\footnote{\url{https://github.com/libp2p/js-peer-id}}, both designed to reason
 with content identifiers (peer identifiers are also content identifiers). 
 
 \begin{figure}[hb!]
@@ -57,11 +58,11 @@ with content identifiers (peer identifiers are also content identifiers).
 
 Other than the libp2p dependencies, we have used other open source community
 modules. The listing \ref{dependencies} shows our dependency list, pulled from our \emph{package.json} (our module manifest). We have used a couple of helpers
-for handling data streams~\footnote{https://github.com/pull-stream/pull-stream}
+for handling data streams~\footnote{\url{https://github.com/pull-stream/pull-stream}}
 as well as a library to help us with the asynchronous control
-flow~\footnote{https://github.com/caolan/async}. To help us with protocol
-buffers, we use protons~\footnote{https://github.com/ipfs/protons} and finally,
-joi~\footnote{https://github.com/hapijs/joi} is our validation library of
+flow~\footnote{\url{https://github.com/caolan/async}}. To help us with protocol
+buffers, we use protons~\footnote{\url{https://github.com/ipfs/protons}} and finally,
+joi~\footnote{\url{https://github.com/hapijs/joi}} is our validation library of
 choice.
 
 % \noindent\begin{minipage}{\textwidth}
@@ -115,7 +116,7 @@ tests, currently kept under \emph{test}. These tests exercise the critical
 components of our system, running a series of nodes locally, making sure it is
 functionally sound. Besides being able to run locally, these tests are what we
 currently run on our
-\emph{CI}~\footnote{https://www.thoughtworks.com/continuous-integration}~\footnote{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}
+\emph{CI}~\footnote{\url{https://www.thoughtworks.com/continuous-integration}}~\footnote{\url{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}}
 environment on every code submission we perform.
 
 % \noindent\begin{minipage}{\textwidth}
@@ -203,9 +204,9 @@ Pulsarcast is our main class and essentially what makes a Pulsarcast node. It
 contains the state of subscriptions, topics, connections and event
 dissemination trees relevant to this node as well as the needed methods to
 interact with the Pulsarcast underlying system. It extends the built-in
-\verb|EventEmitter| class~\footnote{https://nodejs.org/api/events.html}, making
+\verb|EventEmitter| class~\footnote{\url{https://nodejs.org/api/events.html}}, making
 our class capable of reproducing the event emitter
-pattern~\footnote{https://nodejs.dev/the-nodejs-event-emitter}, the mechanism
+pattern~\footnote{\url{https://nodejs.dev/the-nodejs-event-emitter}}, the mechanism
 we use to bubble up new Pulsarcast events to the application level. It has a
 fairly simple constructor as one can see in the listing
 \ref{pulsarcast-constructor}. The class has seven key methods exposed:
@@ -680,32 +681,32 @@ that allow a certain workload to behave and act the same, whether we are
 running it locally in our workstation or in a machine with different
 specifications in the other end of the world. Nowadays this is most commonly
 done through containerisation
-techniques~\footnote{https://www.freebsd.org/doc/handbook/jails.html}~\footnote{https://blog.jessfraz.com/post/containers-zones-jails-vms}
+techniques~\footnote{\url{https://www.freebsd.org/doc/handbook/jails.html}}~\footnote{\url{https://blog.jessfraz.com/post/containers-zones-jails-vms}}
 with tools such as
-Docker~\footnote{https://www.docker.com/products/container-runtime}, which we
+Docker~\footnote{\url{https://www.docker.com/products/container-runtime}}, which we
 used to create a containerised version of our module. To orchestrate our
-containerised application we used Kubernetes~\footnote{https://kubernetes.io/},
+containerised application we used Kubernetes~\footnote{\url{https://kubernetes.io/}},
 an open source orchestration platform based on Google's learnings on running
 containerised workloads at
-scale~\footnote{https://research.google/pubs/pub43438/}, and one of the most
+scale~\footnote{\url{https://research.google/pubs/pub43438/}}, and one of the most
 popular solutions in the field.
 
 Kubernetes exposes a set of relevant usage
-metrics~\footnote{https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/}~\footnote{https://github.com/kubernetes/kube-state-metrics}
+metrics~\footnote{\url{https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/}}~\footnote{\url{https://github.com/kubernetes/kube-state-metrics}}
 however we still need to process, aggregate and correlate these with the data
 from our test runs. In order to do this we rely on
-Elasticsearch~\footnote{https://www.elastic.co/products/elasticsearch} to store
+Elasticsearch~\footnote{\url{https://www.elastic.co/products/elasticsearch}} to store
 metrics and test result data. Prior to consumption by the Elasticsearch, the
 data is piped through
-Logstash~\footnote{https://www.elastic.co/products/logstash} for adequate
+Logstash~\footnote{\url{https://www.elastic.co/products/logstash}} for adequate
 processing. At each Kubernetes node, a couple of agents entitled
-Beats~\footnote{https://www.elastic.co/products/beats} are responsible for
+Beats~\footnote{\url{https://www.elastic.co/products/beats}} are responsible for
 forwarding metrics and test data acquired through logs (events published,
 messages sent, etc.). The final piece of the puzzle is
-Kibana~\footnote{https://www.elastic.co/products/kibana}, used to query data
+Kibana~\footnote{\url{https://www.elastic.co/products/kibana}}, used to query data
 and build useful visualisations. Together, all these tools are commonly
 referred to as the Elastic
-Stack~\footnote{https://www.elastic.co/products/elastic-stack} and are the key
+Stack~\footnote{\url{https://www.elastic.co/products/elastic-stack}} and are the key
 to how we gather results from our test runs. Figure
 \ref{fig:ipfs-testbed-and-metrics} provides an overview of this pipeline in
 practice.
@@ -722,11 +723,11 @@ avoid having extraneous logic disturb our test results and/or increase resource
 consumption. This way we got an application which exposed an \acrshort{http}
 \acrshort{api} that allowed us to interact with both systems (Pulsarcast and
 \acrshort{ipfs}' pub-sub). The source code for this fork is available and open
-source~\footnote{https://github.com/jgantunes/js-ipfs}.
+source~\footnote{\url{https://github.com/jgantunes/js-ipfs}}.
 
 In order to accurately test our solution we needed a way to simulate abnormal
-network conditions. Toxiproxy~\footnote{http://toxiproxy.io} ended up being our
-tool of choice. Toxiproxy worked by acting as a TCP proxy that,
+network conditions. Toxiproxy~\footnote{\url{http://toxiproxy.io}} ended up being our
+tool of choice. Toxiproxy worked by acting as a \acrshort{tcp} proxy that,
 programmatically through an \acrshort{http} \acrshort{api}, allowed us to
 inject multiple kinds of faults (known as toxics in the project). By putting it
 in front of our \acrshort{ipfs} nodes we were able to simulate different
@@ -744,15 +745,15 @@ together.
 
 Our \acrshort{ipfs} deployment together with Toxiproxy makes up a configurable deployment
 to which we call \acrshort{ipfs} Testbed. The template for this deployment (built using
-Helm~\footnote{https://helm.sh/}) can be seen in our Helm Charts
-repository~\footnote{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}.
+Helm~\footnote{\url{https://helm.sh/}}) can be seen in our Helm Charts
+repository~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}}.
 
 This whole setup has been coded so that we can run it an automated fashion,
 being able to bootstrap the Kubernetes cluster, deploy the Elastic Stack and
 deploy any amount of \acrshort{ipfs} Testbed nodes. Figure
 \ref{fig:ipfs-testbed-kubernetes-overview} gives us an idea of what this would
 look like. As usual, the logic for this is open source and
-accessible~\footnote{https://github.com/JGAntunes/ipfs-testbed}.
+accessible~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed}}.
 
 \begin{figure}[!htb]
   \centering
@@ -767,8 +768,8 @@ After our testbed is built and running, we still need to come up with a way to
 easily interact with it. Our goal was to able to orchestrate everything from a
 single machine and, of course, make it in a way that can easily be automated so
 that human intervention is barely required. For this purpose, we have built a
-CLI tool that allows us to interact with our testbed nodes, named
-ipfs-testbed-cli~\footnote{https://github.com/JGAntunes/ipfs-testbed-cli}. 
+\acrshort{cli} tool that allows us to interact with our testbed nodes, named
+ipfs-testbed-cli~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed-cli}}. 
 
 Under the hood our tool interacts with the Kubernetes \acrshort{api} Server,
 using the credentials locally stored in the machine, to extract the addresses
@@ -783,7 +784,7 @@ of one-line commands from our machine.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
-\begin{lstlisting}[language=bash, float, caption={\acrshort{ipfs} Testbed CLI example
+\begin{lstlisting}[language=bash, float, caption={\acrshort{ipfs} Testbed \acrshort{cli} example
 usages},label={ipfs-testbed-cli-examples}]
 # Create latency toxics of 500 ms with 300 ms jitter on all of the nodes (bulk=1)
  >$ ipt create toxic latency --latency=500 --jitter=300 --bulk=1
@@ -809,4 +810,21 @@ usages},label={ipfs-testbed-cli-examples}]
 
 \section{Summary}\label{summary}
 
-TODO
+Throughout this chapter, we covered the implementation of our Pulsacast
+architecture and specification in section \ref{pulsarcast-javascript-module}.
+We started by briefly describing our Javascript module, its libp2p dependencies
+and the way it fits together with the libp2p ecosystem. Afterwards, we
+deep-dived into our module. Its code organisation, structure, as well as the
+classes that constitute the backbone of it. Next in our list, we looked into
+our \acrshort{rpc} handlers, responsible for implementing Pulsarcast's core
+logic of subscription management and event dissemination.  Finally, we provided
+a simple usage example of our module.
+
+However, as we pointed out, we needed a way to test our system reliably. Given
+we could not find anything that supported our requirements, we had to build it
+ourselves. Section \ref{sec:testbed} details our chosen solution. We created a
+reproducible deployment of IPFS containing our Pulsarcast implementation with
+Toxiproxy acting as an inbound \acrshort{tcp} proxy. This artefact is then
+deployed and scaled as needed in a Kubernetes cluster, who collects metrics and
+logs using a stack of Elasticsearch, Beats, Logstash and finally Kibana for
+visualisation.
