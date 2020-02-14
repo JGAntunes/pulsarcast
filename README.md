@@ -3,7 +3,7 @@
 
 - João Antunes M.Sc Thesis
 - Universidade de Lisboa, Instituto Superior Técnico
-- 2017-2018/2019
+- 2017-2020
 - Advisors: 
   - [Luís Veiga](http://www.gsd.inesc-id.pt/~lveiga/)
   - [David Dias](http://daviddias.me/)
