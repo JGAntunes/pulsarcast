@@ -26,7 +26,7 @@ and the subscriber can be notified of an event whose publisher is disconnected.
 Space decoupling gives both parties the benefit of not needing to know each
 other in order to communicate, given that consumers and producers are focused
 on their specific roles (consuming/producing) and do not care for who is doing
-what, or how many producers are for example. Synchronization decoupling is a
+what, or how many producers are there, for example. Synchronization decoupling is a
 consequence of the asynchronous nature of the pub-sub pattern, as publishers do
 not need to be blocked while producing events and subscribers can be
 asynchronously notified.  The decoupling that this kind of system offers makes
@@ -54,21 +54,34 @@ living proof of the high scalability \acrshort{p2p} can offer, with pub-sub
 systems over \acrshort{p2p} networks being an active research topic with a lot
 of attention.
 
-\section{Goals}
+\section{Contributions}
 
-As we are going to cover in the next sections, lots of different
-solutions exist. However, most of them either rely on a
-centralised or hierarchic network to have a reliable system, with
-stronger delivery and persistence guarantees, or end up sacrificing
-these same properties in order to have a decentralised system with the
-potential to scale to a much larger network.
+As we are going to cover in the next sections, lots of different solutions
+exist. However, most of them either rely on a centralised or hierarchic network
+to have a reliable system, with stronger delivery and persistence guarantees,
+or end up sacrificing these same properties in order to have a decentralised
+system with the potential to scale to a much larger network.
 
-The solution we propose is Pulsarcast, a pub-sub module with a strong focus on
-reliability, eventual delivery guarantees and data persistence, while
-maintaining the ability to scale to a vast number of users. Our solution takes
-advantage of the network infrastructure and network protocols we have in place
-today. There is also, to the best of our knowledge, a lack of pub-sub systems
-with such a strong focus on persistence, which is something our solution does.
+Our contribution to address these issues is Pulsarcast, a pub-sub solution with
+the following properties:
+
+\begin{itemize}
+  \item
+    Strong focus on reliability;
+  \item
+    Eventual delivery guarantees;
+  \item
+    Data persistence;
+  \item
+    Ability to scale to a vast number of users;
+  \item
+    Takes advantage of the network infrastructure and network protocols we have in place today;
+\end{itemize}
+
+To validate the solution we purpose we have created a Javascript implementation
+module of Pulsarcast, as well as a test-suite and a distributed test runner for
+it. There is also, to the best of our knowledge, a lack of pub-sub systems with
+such a strong focus on persistence, which is something our solution does.
 
 \section{Document Roadmap}
 

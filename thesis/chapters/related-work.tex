@@ -25,7 +25,7 @@ address the \emph{Subscription Management and Event Dissemination}.
 When considering pub-sub systems, there is a set of different options that will
 lay ground for the behaviour of the whole system. We call these options, design
 dimensions. Specifically, in our case, one of the biggest decisions when
-designing a pub-sub system is what kind of subscription model to use.The
+designing a pub-sub system is what kind of subscription model to use. The
 subscription model determines how subscribers will define which events they are
 interested in. There are three major approaches covered by relevant literature
 \cite{Kermarrec2013} \cite{Eugster2003} and that implementations usually
@@ -158,23 +158,23 @@ can generally be categorised as centralised or decentralised.
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[max height=4cm,max width=0.95\textwidth]{img/network-archs.png}
+  \includegraphics[max height=8cm,max width=0.95\textwidth]{img/network-archs.png}
   \caption{Example of a Centralised and a Decentralised network, extracted from \cite{Baran1964}}
   \label{fig:network-archs}
 \end{figure}
 
-Note that the goal of a pub-sub system is to enable the exchange of
-events in an asynchronous manner, with the decoupling of producers from
-consumers as previously discussed. This can be easily achieved using an
-entity which is responsible for receiving the messages from the
-producers, storing them and distributing them across all the consumers. This is
-what we refer to as a \textbf{centralised architecture}, motivated by the need of
-this central entity. This is the approach adopted by a lot of the
-message queue systems like Apache Active MQ, RabbitMQ and Redis. The
-usual focus for applications relying on this kind of systems is on
-reliability and data consistency but with a low data throughput. Typically expected
-to operate in a more stable environment, such as datacenters. Figure \ref{fig:centralised-topology}
-is an example to illustrate how would a centralised pub-sub system work.
+Note that the goal of a pub-sub system is to enable the exchange of events in
+an asynchronous manner, with the decoupling of producers from consumers as
+previously discussed. This can be easily achieved using an entity which is
+responsible for receiving the messages from the producers, storing them and
+distributing them across all the consumers. This is what we refer to as a
+\textbf{centralised architecture}, motivated by the need of this central
+entity. This is the approach adopted by many of the message queue systems like
+Apache Active MQ, RabbitMQ and Redis. The usual focus for applications relying
+on this kind of systems is on reliability and data consistency but with a low
+data throughput. Typically expected to operate in a more stable environment,
+such as datacenters. Figure \ref{fig:centralised-topology} is an example to
+illustrate how would a centralised pub-sub system work.
 
 \begin{figure}[hb!]
   \centering
@@ -207,20 +207,22 @@ consequently, on efficient message delivery.
 
 \subsection{Overlay structure}\label{overlay-structure}
 
-Working with a \acrshort{p2p} architecture has its own set of challenges. When we
-rely on the communication between peers we need a way to create and
-maintain links between multiple nodes in a network. Hence the overlay
-networks. The idea is to have a structure of logical links and nodes,
-independent of the physical network beneath them that actually powers
-the communications through. Unlike traditional layer-3 networks, the
-structure of these overlays is not dictated by the fairly statical
-physical topology (presence and connectivity of hosts), but by logical
-relationships between peers. This way we have the potential to
-manipulate the logical network at the application level, without needing
-to change the network backbone that connects the nodes. This approach
-was key to deploy \acrshort{p2p} applications such as Gnutella~\footnote{\url{https://web.archive.org/web/20000620113133/http://gnutella.wego.com}},
+Working with a \acrshort{p2p} architecture has its own set of challenges. When
+we rely on the communication between peers we need a way to create and maintain
+links between multiple nodes in a network. Hence the overlay networks. The idea
+is to have a structure of logical links and nodes, independent of the physical
+network beneath them that actually powers the communications through. Figure
+\ref{fig:overlay-vs-physical} provides a practical illustration of this
+scenario. Unlike traditional layer-3 networks, the structure of these overlays
+is not dictated by the fairly statical physical topology (presence and
+connectivity of hosts), but by logical relationships between peers. This way we
+have the potential to manipulate the logical network at the application level,
+without needing to change the network backbone that connects the nodes. This
+approach was key to deploy \acrshort{p2p} applications such as
+Gnutella~\footnote{\url{https://web.archive.org/web/20000620113133/http://gnutella.wego.com}},
 Kazaa~\footnote{\url{https://web.archive.org/web/20040701062605/http://www.kazaa.com:80/us/index.htm}}
-or Skype~\footnote{\url{https://www.skype.com}} on top of the existing Internet infrastructure.
+or Skype~\footnote{\url{https://arxiv.org/abs/cs/0412017v1}} on top of the
+existing Internet infrastructure.
 
 \begin{figure}[hb!]
   \centering
@@ -308,19 +310,17 @@ to produce the content key that was used to produce the node ID.
   \label{fig:chord}
 \end{figure}
 
-It is common for Distributed Hash Tables to have a cost of O(log{}N)
-in terms of the number of nodes
-contacted, on average, to search for a given key (where N is the number
-of nodes in the network). Chord base structure per se only gives us
-O(N), as such, Chord uses a mechanism to allow for a speedier search. At
-each node, an additional routing table is kept with m entries, where m
-is the number of bits in the key space. Each $ith$ entry in this table
-will be this node's successor (next node in the ring in a clockwise
-direction) with an ID, at least, bigger than $2^{i-1}$ (modulo $2^{m}$)
-in the key space. For example, for
-a node with ID 8, the 4th entry will be the first node in the ring with
-an ID larger than 16. This table, also referred to as finger table, will
-allow for a logarithmic search as demonstrated in Chord's specification.
+It is common for Distributed Hash Tables to have a cost of O(log{}N) in terms
+of the number of nodes contacted, on average, to search for a given key (where
+N is the number of nodes in the network). Chord base structure per se only
+gives us O(N), as such, Chord uses a mechanism to allow for a speedier search.
+At each node, an additional routing table is kept with m entries, where m is
+the number of bits in the key space. Each $ith$ entry in this table will be
+this node's successor (next node in the ring in a clockwise direction) with an
+ID, at least, larger or equal than $2^{i-1}$ (modulo $2^{m}$) in the key space.
+For example, for a node with ID 8, the 4th entry will be the first node in the
+ring with an ID larger than 16. This table, also referred to as finger table,
+will allow for a logarithmic search as demonstrated in Chord's specification.
 
 Another approach is followed by \textbf{Kademlia \acrshort{dht}} \cite{Maymounkov2002}.
 Just as in Chord, nodes have 160 bit identifiers and content is
@@ -513,16 +513,16 @@ nodes to have visibility on the whole set of topics. In this scenario,
 subscriptions are simply represented as being part of a specific network of
 peers, that could take any form or shape, or even be unstructured. For an
 unstructured network, the propagation of events could be a simple flooding
-algorithm, as it happens in Tera. Tera, a topic based pub-sub system, follows
-an approach close to this one. It keeps two distinct gossip based overlays, one
-responsible for keeping state on entrypoints for each topic (peers which are
-subscribed to a given topic and that can act as dissemination points for it)
-and another used to keep the subscribers of each topic. This clustering
-approach, where subscribers of a given topic are kept in a topic specific
-overlay, helps out in the dissemination step after an event has been published
-and reached the cluster. Another example following this approach is Poldercast,
-which uses a set of three different overlays to keep the pub-sub network
-running. We will cover Poldercast more thoroughly later on.
+algorithm, as it happens in Tera \cite{Baldoni2007}. Tera, a topic based
+pub-sub system, follows an approach close to this one. It keeps two distinct
+gossip based overlays, one responsible for keeping state on entrypoints for
+each topic (peers which are subscribed to a given topic and that can act as
+dissemination points for it) and another used to keep the subscribers of each
+topic. This clustering approach, where subscribers of a given topic are kept in
+a topic specific overlay, helps out in the dissemination step after an event
+has been published and reached the cluster. Another example following this
+approach is Poldercast, which uses a set of three different overlays to keep
+the pub-sub network running. We will cover Poldercast more thoroughly later on.
 
 \section{Relevant Pub-Sub
 Systems}\label{relevant-pub-sub-systems}
@@ -632,7 +632,7 @@ routes from each group member to the \emph{rendezvous}. This dynamic
 process happens whenever a new node decides to join a group. In order to
 do that, it asks Pastry to route a \emph{JOIN} message with the
 \emph{groupId} as the key. At each node along the path, the Scribe
-forward method is invoked to check this node is already part of this
+forward method is invoked to check whether this node is already part of this
 group (also called a \emph{forwarder}). If it is, it accepts the
 \emph{JOIN} request and sets the node as its child, else this node will
 become a \emph{forwarder} for the group, sets the requesting node as its
@@ -749,17 +749,17 @@ addressed in the previous sections.
   \center
     \begin{tabular}{|P{3cm}|P{2cm}P{2cm}P{2cm}P{2.5cm}P{2cm}P{2cm}P{2cm}P{2cm}|}\hline
     Systems / Properties & Subscription Model & Architecture & Overlay Structure & Subscription Management & Event dissemination & Relay Free Routing & Delivery Guarantees & Fault Tolerance \\\hline
-    Gryphon & Content based & Centralised broker hierarchy & N/A & Each broker responsible for a subscription scheme & Tree hierarchy & N/A & Yes & Best effort \\\hline
-    Siena & Content based & Centralised broker mesh & N/A & Keep state at each node & Flood with cached state & N/A & Yes & Best effort \\\hline
-    Jedi & Content based & Centralised broker hierarchy & N/A & Keep state at each node & Tree hierarchy & N/A & Yes & Best effort \\\hline
-    Bayeux & Topic based & Decentralised & Tapestry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
-    Scribe & Topic based & Decentralised & Pastry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
-    Medhdoot & Content based & Decentralised & CAN \acrshort{dht} & Points in CAN \acrshort{dht} & CAN routing  & No & Yes & replicated subscriptions \\\hline
-    Hermes & Type based & Decentralised & Pastry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort \\\hline
-    Tera & Topic based & Decentralised & Gossip based overlay & Unstructured overlay per topic & Random walks and flooding & No & no & Best effort \\\hline
-    Mercury & Content based & Decentralised & Ring based \acrshort{dht}s & Overlay per attribute in schema & Route through ring overlays & No & Yes & Best effort \\\hline
-    Sub-2-Sub & Content based & Decentralised & Ring based \acrshort{dht} and gossip based overlay & Clustering of similar subscriptions & Gossip and ring overlay routing & No & No & Best effort \\\hline
-    Poldercast & Topic based & Decentralised & Ring based \acrshort{dht}/ Vicinity / Cyclon & Ring overlay per topic & Ring overlay routing & Yes & Yes (every publisher is a subscriber) & High resilience to churn, no subscription persistence \\\hline
+    Gryphon \cite{Strom1998} & Content based & Centralised broker hierarchy & N/A & Each broker responsible for a subscription scheme & Tree hierarchy & N/A & Yes & Best effort \\\hline
+    Siena \cite{Carzaniga2003} & Content based & Centralised broker mesh & N/A & Keep state at each node & Flood with cached state & N/A & Yes & Best effort \\\hline
+    Jedi \cite{Cugola2001} & Content based & Centralised broker hierarchy & N/A & Keep state at each node & Tree hierarchy & N/A & Yes & Best effort \\\hline
+    Bayeux \cite{Zhuang2001} & Topic based & Decentralised & Tapestry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
+    Scribe \cite{Castro2002} & Topic based & Decentralised & Pastry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort, no subscription persistence \\\hline
+    Meghdoot \cite{Gupta2004} & Content based & Decentralised & CAN \acrshort{dht} & Points in CAN \acrshort{dht} & CAN routing  & No & Yes & replicated subscriptions \\\hline
+    Hermes \cite{Pietzuch2002} & Type based & Decentralised & Pastry \acrshort{dht} & Rendezvous node & Multicast tree & No & Yes & Best effort \\\hline
+    Tera \cite{Baldoni2007} & Topic based & Decentralised & Gossip based overlay & Unstructured overlay per topic & Random walks and flooding & No & no & Best effort \\\hline
+    Mercury \cite{Bharambe2002} & Content based & Decentralised & Ring based \acrshort{dht}s & Overlay per attribute in schema & Route through ring overlays & No & Yes & Best effort \\\hline
+    Sub-2-Sub \cite{Voulgaris2005} & Content based & Decentralised & Ring based \acrshort{dht} and gossip based overlay & Clustering of similar subscriptions & Gossip and ring overlay routing & No & No & Best effort \\\hline
+    Poldercast \cite{Setty2012} & Topic based & Decentralised & Ring based \acrshort{dht}/ Vicinity / Cyclon & Ring overlay per topic & Ring overlay routing & Yes & Yes (every publisher is a subscriber) & High resilience to churn, no subscription persistence \\\hline
     \end{tabular}
   \caption{Comparison table for the relevant system}
   \label{table:relevant-systems}
