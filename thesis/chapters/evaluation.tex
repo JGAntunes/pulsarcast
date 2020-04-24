@@ -7,17 +7,18 @@
 In order to evaluate our system, we want to look at its core focus, its
 eventual delivery guarantees and overall performance. We not only test our
 system by itself, but we also compare it with the current solution tied to
-libp2p, entitled Floodsub. To do this, we rely on the tools previously
-described in \ref{sec:testbed}.
+libp2p, entitled Floodsub (currently the default pub-sub implementation within
+IPFS). To do this, we rely on the tools previously described in Section
+\ref{sec:testbed}.
 
 We start our evaluation by looking into how our testbed is configured in
-section \ref{testbed-configuration}. In section \ref{dataset}, we document the
+Section \ref{testbed-configuration}. In Section \ref{dataset}, we document the
 dataset we used as well as the transformations necessary to make this data
 viable. We then move on to an analysis of the metrics we intended to gather in
-\ref{metrics}. We are now ready to look into our executions in \ref{executions}
-as well as its results \ref{results}, where we not only compare Pulsarcast's
-performance but also address its new functionalities, such as the ability to
-rebuild our topic stream.
+Section \ref{metrics}. We are now ready to look into our executions in Section
+\ref{executions} as well as its results in Section \ref{results}, where we not
+only compare Pulsarcast's performance but also address its new functionalities,
+such as the ability to rebuild our topic stream.
 
 \section{Testbed configuration}\label{testbed-configuration}
 
@@ -25,17 +26,18 @@ We designed our test runs to be executed in managed infrastructure (commonly
 known as cloud services). For the initial runs and general fine-tuning of the
 platform, we relied on Google Cloud's managed Kubernetes solution. Later on,
 and for our actual test executions, we ran all of our tests in Microsoft's
-Azure Kubernetes solution, thanks to Microsoft and the Azure team, we were kind
+Azure Kubernetes solution, thanks to Microsoft and the Azure team, who were kind
 enough to support our efforts and offer us free credits.
 
 Our whole setup consisted of a total of 5 VMs acting as Kubernetes Worker
-nodes, each with two \acrshort{vcpu}s, 16 \acrshort{gib} of \acrshort{ram} and 32 \acrshort{gib} of storage. In our
-cluster, besides other operational bits, we ran 3 Elasticsearch instances, 1
-Logstash instance, 1 Kibana and a total of 100 \acrshort{ipfs} Testbed
-deployments (as described in \ref{subsec:testbed-architecture}). Because we
-wanted to avoid resource starvation and to better take advantage of the
-Kubernetes scheduler, our testbed deployments allocate 440 \acrshort{mib} per deployment,
-each burstable to a maximum of 500 \acrshort{mib}. During our whole test execution,
+nodes, each with two \acrshort{vcpu}s, 16 \acrshort{gib} of \acrshort{ram} and
+32 \acrshort{gib} of storage. In our cluster, besides other operational bits,
+we ran 3 Elasticsearch instances, 1 Logstash instance, 1 Kibana and a total of
+100 \acrshort{ipfs} Testbed deployments (as described in Section
+\ref{subsec:testbed-architecture}). Because we wanted to avoid resource
+starvation and to better take advantage of the Kubernetes scheduler, our
+testbed deployments allocate 440 \acrshort{mib} of memory per deployment, each
+burstable to a maximum of 500 \acrshort{mib}. During our whole test execution,
 periodic \acrshort{http} health checks (part of the Kubernetes platform) make
 sure our deployments are working accordingly.
 
@@ -68,9 +70,9 @@ system). A final step of data correlation had to take place as well. We ended
 up creating a \acrshort{cli} tool that consumed data from this dataset and
 generated a document of multiple JSON objects separated by
 newlines~\footnote{\url{https://github.com/JGAntunes/pulsarcast-test-harness}},
-ready to be used by our ipfs-testbed-cli, described in chapter
+ready to be used by our ipfs-testbed-cli, described in Section
 \ref{subsec:testbed-usage}. Examples of the output produced can be seen in
-\ref{dataset-output}
+Section \ref{dataset-output}
 
 
 \begin{lstlisting}[language=JSON, float, caption={Data example to be used in testbed},label={dataset-output}]
@@ -117,12 +119,12 @@ ready to be used by our ipfs-testbed-cli, described in chapter
 \subsection{Data distribution}\label{subsec:data-distribution}
 
 The following graphs give us a distribution analysis of events published per
-topic \ref{fig:events-to-be-publisher-per-topic}, subscriptions per topic
-\ref{fig:subscriptions-per-topic} and subscription distribution per nodes
-\ref{fig:subscription-distribution-per-node}. Given our dataset choice, we
-aimed for a non-uniform subscription distribution per topic and, as it would be
-expected in a real-world scenario, the distribution of events follows a power
-law based on its popularity. 
+topic (Figure \ref{fig:events-to-be-publisher-per-topic}), subscriptions per
+topic (Figure \ref{fig:subscriptions-per-topic}) and subscription distribution
+per nodes (Figure \ref{fig:subscription-distribution-per-node}). Given our
+dataset choice, we aimed for a non-uniform subscription distribution per topic
+and, as it would be expected in a real-world scenario, the distribution of
+events follows a power law based on their popularity. 
 
 \begin{figure}[!htb]
   \centering
@@ -147,7 +149,7 @@ law based on its popularity.
 
 \section{Metrics}\label{metrics}
 
-For each execution, we look to extract two key groups of data. Resource usage
+For each execution, we look to extract two key groups of data: resource usage
 data and \acrshort{qos} data. The following list describes these in more detail:
 
 \begin{itemize}

@@ -4,10 +4,10 @@
 \label{chapter:related-work}
 
 In this section, we will cover the research work and industry references that
-can be considered relevant to our initial objective. The following section
+can be considered relevant to our initial objective. The following Section
 \ref{distributed-publish-subscribe-paradigm} will lay the ground to define how
-pub-sub systems are structured. In section \ref{relevant-pub-sub-systems} we
-will cover a set of systems defined as relevant. Finally, section
+pub-sub systems are structured. In Section \ref{relevant-pub-sub-systems} we
+will cover a set of systems defined as relevant. Finally, Section
 \ref{web-technologies} will address some of the web technologies of interest in
 this area.
 
@@ -231,15 +231,14 @@ existing Internet infrastructure.
   \label{fig:overlay-vs-physical}
 \end{figure}
 
-In practical terms, each node maintains a view of its neighbours in the
-overlay network, which translates into the communication links between
-them. There are different approaches to the way this state is stored and
-maintained, with two main categories dominating the \acrshort{p2p} ecosystem. At
-one end of the spectrum we have the \textbf{unstructured overlay}
-networks, where peers form a network with no clear structure or
-hierarchy (commonly referred to as a network mesh) with each peer
-connected to a subset of other nodes independent of their ID,
-localisation, network IP address, etc.
+In practical terms, each node maintains a view of its neighbours in the overlay
+network, which translates into the communication links between them. There are
+different approaches to the way this state is stored and maintained, with two
+main categories dominating the \acrshort{p2p} ecosystem. At one end of the
+spectrum we have the \textbf{unstructured overlay} networks, where peers form a
+network with no clear structure or hierarchy (commonly referred to as a network
+mesh) with each peer connected to a subset of other nodes independent of their
+\acrfull{id}, localisation, network IP address, etc.
 \bigskip
 
 \textbf{Unstructured overlays}: These rely on membership protocols that
@@ -291,17 +290,18 @@ networks we have the \textbf{structured overlay}, where peers are organised
 according to a specific structure, like a ring, a tree or a multi-dimensional
 space. This is usually achieved by imposing constraints on how the nodes should
 be organised based on their identifiers. In order to do this, a common approach
-is to think of the ID space as a hash table to where the content should then be
-distributed. The distribution of content is then done based the value of the
-keys generated for each piece of information, keys with values close to a node
-ID will be stored in that node. This is commonly referred to as a \acrfull{dht}
-since the key space is distributed across multiple nodes. For example,
-\textbf{Chord} \cite{Stoica2001}, one of the first examples of a
-\acrshort{dht}, organises the nodes in a ring like structure based on their ID
-(which results from the SHA-1
-hash~\footnote{\url{https://tools.ietf.org/html/rfc3174}} of its IP address). The
-content is then distributed in this key space, using the same hashing function
-to produce the content key that was used to produce the node ID.
+is to think of the \acrshort{id} space as a hash table to where the content
+should then be distributed. The distribution of content is then done based the
+value of the keys generated for each piece of information, keys with values
+close to a node \acrshort{id} will be stored in that node. This is commonly
+referred to as a \acrfull{dht} since the key space is distributed across
+multiple nodes. For example, \textbf{Chord} \cite{Stoica2001}, one of the first
+examples of a \acrshort{dht}, organises the nodes in a ring like structure
+based on their \acrshort{id} (which results from the SHA-1
+hash~\footnote{\url{https://tools.ietf.org/html/rfc3174}} of its IP address).
+The content is then distributed in this key space, using the same hashing
+function to produce the content key that was used to produce the node
+\acrshort{id}.
 
 \begin{figure}[hb!]
   \centering
@@ -317,14 +317,15 @@ gives us O(N), as such, Chord uses a mechanism to allow for a speedier search.
 At each node, an additional routing table is kept with m entries, where m is
 the number of bits in the key space. Each $ith$ entry in this table will be
 this node's successor (next node in the ring in a clockwise direction) with an
-ID, at least, larger or equal than $2^{i-1}$ (modulo $2^{m}$) in the key space.
-For example, for a node with ID 8, the 4th entry will be the first node in the
-ring with an ID larger than 16. This table, also referred to as finger table,
-will allow for a logarithmic search as demonstrated in Chord's specification.
+\acrshort{id}, at least, larger or equal than $2^{i-1}$ (modulo $2^{m}$) in the
+key space.  For example, for a node with \acrshort{id} 8, the 4th entry will be
+the first node in the ring with an \acrshort{id} larger than 16. This table,
+also referred to as finger table, will allow for a logarithmic search as
+demonstrated in Chord's specification.
 
 Another approach is followed by \textbf{Kademlia \acrshort{dht}} \cite{Maymounkov2002}.
 Just as in Chord, nodes have 160 bit identifiers and content is
-stored in the nodes whose IDs are close to the content key (160 bit
+stored in the nodes whose \acrshort{id}s are close to the content key (160 bit
 identifiers too), but the way the routing tables are structured and
 maintained is quite different. For starters, Kademlia relies on a XOR
 based distance metric between 2 keys, where the distance between 2 keys
@@ -337,25 +338,22 @@ the distance between $y$ and $x$. This symmetry allows Kademlia queries to
 give valuable insights along every node they go through, helping out in
 populating each node's routing table.
 
-Kademlia nodes keep contact information about each other in a list, size
-m where m is the number of bits used for the keys in the system, and
-where each entry is a list itself of maximum size k (a system wide
-parameter) containing all the known nodes of distance between $2^{i}$ and
-$2^{i+1}$ of itself. These lists
-are appropriately called k-buckets and are kept sorted by time last seen
-(least recently seen node at the head). Whenever a node receives a
-message, it updates the appropriate k-bucket for the sender's node ID,
-inserting it in the respective k-bucket or moving it to the tail of the
-list if it is already there. K-buckets aim at implementing a
-least-recently seen eviction policy, where live nodes are never removed.
-This stems from a careful analysis of Gnutella trace data \cite{Saroiu2002}
-where the longer a node has been up, the more likely
-it is to remain up for another hour. Whenever a node wants to retrieve
-or store content it uses a recursive node lookup procedure in order to
-find the k closest nodes to a given key. This lookup can be run with
-multiple queries in parallel, because nodes have the flexibility to
-forward messages to any of the k nodes in a bucket, aiming for lower
-latency.
+Kademlia nodes keep contact information about each other in a list, size m
+where m is the number of bits used for the keys in the system, and where each
+entry is a list itself of maximum size k (a system wide parameter) containing
+all the known nodes of distance between $2^{i}$ and $2^{i+1}$ of itself. These
+lists are appropriately called k-buckets and are kept sorted by time last seen
+(least recently seen node at the head). Whenever a node receives a message, it
+updates the appropriate k-bucket for the sender's node \acrshort{id}, inserting
+it in the respective k-bucket or moving it to the tail of the list if it is
+already there. K-buckets aim at implementing a least-recently seen eviction
+policy, where live nodes are never removed.  This stems from a careful analysis
+of Gnutella trace data \cite{Saroiu2002} where the longer a node has been up,
+the more likely it is to remain up for another hour. Whenever a node wants to
+retrieve or store content it uses a recursive node lookup procedure in order to
+find the k closest nodes to a given key. This lookup can be run with multiple
+queries in parallel, because nodes have the flexibility to forward messages to
+any of the k nodes in a bucket, aiming for lower latency.
 
 A completely different method is used in the \textbf{Content Addressable
 Network \acrshort{dht}}\cite{Ratnasamy2001a}. In CAN, the key space used to
@@ -626,7 +624,7 @@ Scribe subscriptions are represented by a multicast tree, with each
 different tree representing a specific topic (or \emph{group} as it is
 referred in Scribe). The root of this tree acts as the \emph{rendezvous}
 node for the group. Each group has a \emph{groupId} assigned to it, as
-such, the \emph{rendezvous} node will be the one with the closest ID in
+such, the \emph{rendezvous} node will be the one with the closest \acrshort{id} in
 the network. This multicast tree is built by joining the multiple Pastry
 routes from each group member to the \emph{rendezvous}. This dynamic
 process happens whenever a new node decides to join a group. In order to

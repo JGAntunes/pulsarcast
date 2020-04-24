@@ -17,7 +17,7 @@ detailed description of it.
 
 Besides our module, we also needed to find a suitable way to test our system as
 a whole. Given our specific needs, we opted to build a custom testbed, detailed
-in section \ref{sec:testbed} and the basis of the evaluation detailed in chapter
+in Section \ref{sec:testbed} and the basis of the evaluation detailed in Chapter
 \ref{chapter:evaluation}. 
 
 \section{Pulscarcast Javascript module}\label{pulsarcast-javascript-module}
@@ -57,7 +57,7 @@ with content identifiers (peer identifiers are also content identifiers).
 \end{figure}
 
 Other than the libp2p dependencies, we have used other open source community
-modules. The listing \ref{dependencies} shows our dependency list, pulled from our \emph{package.json} (our module manifest). We have used a couple of helpers
+modules. Listing \ref{dependencies} shows our dependency list, pulled from our \emph{package.json} (our module manifest). We have used a couple of helpers
 for handling data streams~\footnote{\url{https://github.com/pull-stream/pull-stream}}
 as well as a library to help us with the asynchronous control
 flow~\footnote{\url{https://github.com/caolan/async}}. To help us with protocol
@@ -116,7 +116,7 @@ tests, currently kept under \emph{test}. These tests exercise the critical
 components of our system, running a series of nodes locally, making sure it is
 functionally sound. Besides being able to run locally, these tests are what we
 currently run on our
-\emph{CI}~\footnote{\url{https://www.thoughtworks.com/continuous-integration}}~\footnote{\url{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}}
+\acrfull{ci}~\footnote{\url{https://www.thoughtworks.com/continuous-integration}}~\footnote{\url{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}}
 environment on every code submission we perform.
 
 % \noindent\begin{minipage}{\textwidth}
@@ -204,11 +204,11 @@ Pulsarcast is our main class and essentially what makes a Pulsarcast node. It
 contains the state of subscriptions, topics, connections and event
 dissemination trees relevant to this node as well as the needed methods to
 interact with the Pulsarcast underlying system. It extends the built-in
-\verb|EventEmitter| class~\footnote{\url{https://nodejs.org/api/events.html}}, making
-our class capable of reproducing the event emitter
-pattern~\footnote{\url{https://nodejs.dev/the-nodejs-event-emitter}}, the mechanism
-we use to bubble up new Pulsarcast events to the application level. It has a
-fairly simple constructor as one can see in the listing
+\verb|EventEmitter| class~\footnote{\url{https://nodejs.org/api/events.html}},
+making our class capable of reproducing the event emitter
+pattern~\footnote{\url{https://nodejs.dev/the-nodejs-event-emitter}}, the
+mechanism we use to bubble up new Pulsarcast events to the application level.
+It has a fairly simple constructor as one can see in Listing
 \ref{pulsarcast-constructor}. The class has seven key methods exposed:
 
 \begin{itemize}
@@ -217,7 +217,7 @@ fairly simple constructor as one can see in the listing
   \item
     \verb|stop(callback)| - Stop the Pulsarcast node, gracefully close connections we might have to any peer and de-register our protocol from the \emph{libp2p} protocol connection handler.
   \item
-  \verb|createTopic(topicName, [options], callback)| - Create a Pulsarcast topic with the specified name. An optional object can be provided through which one can add \verb|subTopics}, \verb|parent| link and topic metadata configuration with \verb|allowedPublishers|, \verb|requestToPublish| and \verb|eventLinking|. By default, no \verb|parent| link is added and only the topic author is allowed to publish (essentially creating an event dissemination tree with order guarantee).
+  \verb|createTopic(topicName, [options], callback)| - Create a Pulsarcast topic with the specified name. An optional object can be provided through which we can add \verb|subTopics|, \verb|parent| link and topic metadata configuration with \verb|allowedPublishers|, \verb|requestToPublish| and \verb|eventLinking|. By default, no \verb|parent| link is added and only the topic author is allowed to publish (essentially creating an event dissemination tree with order guarantee).
   \item
     \verb|subscribe(topicB58Str, [options], callback)| - Subscribe to a topic with the given base58 \acrshort{cid}. An option \verb|subscribeToMeta| can be provided which will determine if this node will subscribe to this topic's meta-topic also (defaults to true).
   \item
@@ -385,13 +385,13 @@ look of all of the methods used for this purpose.
 \subsubsection{Peer}\label{subsubsec:peer}
 
 The Peer class provides an abstraction for the state of each peer, including
-connections, information such its id and address and the dissemination trees it
-is part of. Listing \ref{peer-constructor} shows us the constructor of our
-class. Its \verb|trees| property is a \verb|Map| indexed by topic identifier,
-that keeps the peer's current dissemination trees neighbours.  Listing
-\ref{peer-methods} shows the methods that interact with this property as well
-as the connection and message forwarding handlers that help our node forward
-messages to the necessary peers.
+connections, information such its \acrshort{id} and address and the
+dissemination trees it is part of. Listing \ref{peer-constructor} shows us the
+constructor of our class. Its \verb|trees| property is a \verb|Map| indexed by
+topic identifier, that keeps the peer's current dissemination trees neighbours.
+Listing \ref{peer-methods} shows the methods that interact with this property
+as well as the connection and message forwarding handlers that help our node
+forward messages to the necessary peers.
 
 \begin{lstlisting}[language=JavaScript, float=p, caption={Peer class constructor},label={peer-constructor}]
 class Peer extends EventEmitter {
@@ -528,15 +528,15 @@ function createMetadata({
 
 \end{lstlisting}
 
-Both of the classes have a series of methods which we feel like are worth describing:
+Both of the classes have a series of methods which we consider worth describing:
 
 \begin{itemize}
   \item
     \verb|getCID(callback)| - Given our descriptors are content-addressable, their identifiers are ever-changing depending on the values of their properties. This method returns, through the callback function, the \acrshort{cid} for this descriptor.
   \item
-    \verb|getReadableFormat()| - Return an object whose properties are human-readable representations of the values of this object in the canonical format described in chapter \ref{chapter:pulsarcast}. Consists mostly of returning all the \acrshort{cid}s as base 58 strings.
+    \verb|getReadableFormat()| - Return an object whose properties are human-readable representations of the values of this object in the canonical format described in Chapter \ref{chapter:pulsarcast}. It consists mostly of returning all the \acrshort{cid}s as base 58 strings.
   \item
-    \verb|serialize()| - Return an object in the canonical format described in chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the \acrshort{cid}s in binary format (buffers). Mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
+    \verb|serialize()| - Return an object in the canonical format described in Chapter \ref{chapter:pulsarcast} of the descriptor in question, with all the \acrshort{cid}s in binary format (buffers). Mostly useful for when we are about to convert this descriptor to a protocol buffer and forward it.
   \item
     \verb|deserialize(node)| - Convert a descriptor in a serialized format to an instance of its class, returning that same instance. A static method for each class.
 \end{itemize}
@@ -545,7 +545,7 @@ Both of the classes have a series of methods which we feel like are worth descri
 \subsection{\acrshort{rpc} Handlers}\label{subsec:rpc-handlers}
 
 Pulsarcast's \acrshort{rpc} handlers are responsible for containing the
-implementation of the critical algorithms mentioned in chapter
+implementation of the critical algorithms mentioned in Chapter
 \ref{chapter:pulsarcast}. These functions are not only used by the Pulsarcast
 class when a new command is invoked but are also registered to handle incoming
 messages from other nodes.  A generic handler is responsible for receiving
@@ -588,7 +588,7 @@ to reuse as much logic as possible. Hence why when the client invokes a new
 command through the Pulsarcat \acrshort{api}, control is handed over to the
 respective \acrshort{rpc} handler as if we had just received an \acrshort{rpc}
 message from another node. Consequently, some of the logic described in the
-algorithms in chapter \ref{chapter:pulsarcast} is split between
+algorithms in Chapter \ref{chapter:pulsarcast} is split between
 incoming/outgoing \acrshort{rpc} handlers. The following list provides an
 overview of the functions we have created:
 
@@ -596,23 +596,23 @@ overview of the functions we have created:
   \item
     \verb|rpc.receive.genericHandler()| - The generic handle responsible for receiving all the incoming \acrshort{rpc} messages, validating these and forwarding it accordingly.
   \item
-    \verb|rpc.receive.publish()| - The receiving \acrshort{rpc} handler for publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|), it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
+    \verb|rpc.receive.publish()| - The receiving \acrshort{rpc} handler for publish events, responsible for partially implementing Algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|), it starts by checking if the publish originated in that same node. Checks for the existence of the topic descriptor the event refers to and checks this node's permission to publish. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or \verb|rpc.receive.requestToPublish|. 
   \item
-    \verb|rpc.receive.requestToPublish()| - The receiving \acrshort{rpc} handler for request to publish events, responsible for partially implementing algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
+    \verb|rpc.receive.requestToPublish()| - The receiving \acrshort{rpc} handler for request to publish events, responsible for partially implementing Algorithm \ref{alg:receive-event}. Upon receiving the \verb|eventNode| and the id of the peer sending it (\verb|idB58Str|) checks for the existence of the topic descriptor the event refers to and checks this node's permission to request to publish. It then checks this node's permission to publish the event. Depending on the result, the function hands control over to the \verb|rpc.send.publish| function or the \verb|rpc.send.requestToPublish|. 
   \item
-    \verb|rpc.receive.join()| - The receiving \acrshort{rpc} handler for a new subscription, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the id of the peer sending, it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from another node, as such, we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
+    \verb|rpc.receive.join()| - The receiving \acrshort{rpc} handler for a new subscription, responsible for partially implementing Algorithm \ref{alg:subscribe}. Upon receiving the \verb|topicCID| and the \acrshort{id} of the peer sending, it (\verb|idB58Str|) checks for the existence of the topic descriptor we want to join to and if the join command originated at this node. If not, it means we have received this join request from another node, as such, we need to add it to our event dissemination tree for this topic. With the new state appropriately set, we check if we are already part of this dissemination tree, if not we need to generate a join request ourselves and forward it, handing over control to \verb|rpc.send.publish|. 
   \item
     \verb|rpc.receive.leave()| - The receiving \acrshort{rpc} handler for unscribe requests. This function is similar to its counterpart responsible for subscribing to a topic.
   \item
-    \verb|rpc.send.publish()| - The outgoing \acrshort{rpc} handler for event publishing, responsible for partially implementing algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node if it is, it links it to its parent event accordingly and stores it in the \acrshort{dht}. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
+    \verb|rpc.send.publish()| - The outgoing \acrshort{rpc} handler for event publishing, responsible for partially implementing Algorithm \ref{alg:send-event}. It starts by checking if the event is being created at this node. If it is, it links it to its parent event accordingly and stores it in the \acrshort{dht}. If the node is subscribed to this topic, the event is emitted to the application level. Finally, the event is forwarded to the branches of the dissemination tree who have not received it yet.
   \item
-    \verb|rpc.send.requestToPublish()| - The outgoing \acrshort{rpc} handler for request to publish events, responsible for partially implementing algorithm \ref{alg:send-event}, mainly consisting of forwarding the requests to the appropriate dissemination tree branches.
+    \verb|rpc.send.requestToPublish()| - The outgoing \acrshort{rpc} handler for request to publish events, responsible for partially implementing Algorithm \ref{alg:send-event}, mainly consisting of forwarding the requests to the appropriate dissemination tree branches.
   \item
-    \verb|rpc.send.join()| - The outgoing \acrshort{rpc} handler for subscription requests, responsible for partially implementing algorithm \ref{alg:subscribe}. Upon being called, it looks up for the closest known peer to the topic author, locally stored in \acrshort{dht}. With the closest peer id, we update our node's dissemination tree parent for this topic and send our join \acrshort{rpc} request.
+    \verb|rpc.send.join()| - The outgoing \acrshort{rpc} handler for subscription requests, responsible for partially implementing Algorithm \ref{alg:subscribe}. Upon being called, it looks up for the closest known peer to the topic author, locally stored in \acrshort{dht}. With the closest peer id, we update our node's dissemination tree parent for this topic and send our join \acrshort{rpc} request.
   \item
     \verb|rpc.send.leave()| - The outgoing \acrshort{rpc} handler for unsubscribe requests. Mostly the same logic as its counterpart \verb|join| but for leaving a topic.
   \item
-    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the \acrshort{dht} and finally propagating the new topic through the meta-topic.
+    \verb|rpc.send.newTopic()| - This function handles the topic creation logic, responsible for implementing the Algorithm \ref{alg:new-topic}.  When called, it starts by validating the new topic, checking if its sub-topics and parent are valid and exist, creating a meta topic if one has not been provided already, storing these in the \acrshort{dht} and finally propagating the new topic through the meta-topic.
 \end{itemize}
 
 \subsection{Usage}\label{subsec:usage}
@@ -748,7 +748,7 @@ to which we call \acrshort{ipfs} Testbed. The template for this deployment (buil
 Helm~\footnote{\url{https://helm.sh/}}) can be seen in our Helm Charts
 repository~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}}.
 
-This whole setup has been coded so that we can run it an automated fashion,
+This whole setup has been coded so that we can run it in an automated fashion,
 being able to bootstrap the Kubernetes cluster, deploy the Elastic Stack and
 deploy any amount of \acrshort{ipfs} Testbed nodes. Figure
 \ref{fig:ipfs-testbed-kubernetes-overview} gives us an idea of what this would
@@ -811,7 +811,7 @@ usages},label={ipfs-testbed-cli-examples}]
 \section{Summary}\label{summary}
 
 Throughout this chapter, we covered the implementation of our Pulsacast
-architecture and specification in section \ref{pulsarcast-javascript-module}.
+architecture and specification in Section \ref{pulsarcast-javascript-module}.
 We started by briefly describing our Javascript module, its libp2p dependencies
 and the way it fits together with the libp2p ecosystem. Afterwards, we
 deep-dived into our module. Its code organisation, structure, as well as the
@@ -821,10 +821,10 @@ logic of subscription management and event dissemination.  Finally, we provided
 a simple usage example of our module.
 
 However, as we pointed out, we needed a way to test our system reliably. Given
-we could not find anything that supported our requirements, we had to build it
-ourselves. Section \ref{sec:testbed} details our chosen solution. We created a
-reproducible deployment of IPFS containing our Pulsarcast implementation with
-Toxiproxy acting as an inbound \acrshort{tcp} proxy. This artefact is then
-deployed and scaled as needed in a Kubernetes cluster, who collects metrics and
-logs using a stack of Elasticsearch, Beats, Logstash and finally Kibana for
-visualisation.
+we could not find anything that supported our requirements for flexibility of
+deployment, control, and reproducibility, we had to build it ourselves. Section
+\ref{sec:testbed} details our chosen solution. We created a reproducible
+deployment of IPFS containing our Pulsarcast implementation with Toxiproxy
+acting as an inbound \acrshort{tcp} proxy. This artefact is then deployed and
+scaled as needed in a Kubernetes cluster, who collects metrics and logs using a
+stack of Elasticsearch, Beats, Logstash and finally Kibana for visualisation.
