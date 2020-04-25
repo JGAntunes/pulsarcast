@@ -319,30 +319,11 @@ connection handlers so that when/if the connection drops we clear all the
 relevant state. The same goes for when the node needs to contact another peer.
 If a connection needs to be established, it is up to the Pulsarcast class to do
 it properly. Listing \ref{pulsarcast-connection-handlers} gives us a thorough
-look of all of the methods used for this purpose.
+look into the connection handling methods.
 
 % \noindent\begin{minipage}{\textwidth}
 % \vspace{8pt}
 \begin{lstlisting}[language=JavaScript, float=p, caption={Pulsarcast internal peer and connection handlers. These methods abstract the logic of connection handling to all the other parts of the Pulsarcast system.},label={pulsarcast-connection-handlers}]
-  _addPeer(peerInfo, conn) {
-    const idB58Str = peerInfo.id.toB58String()
-    // Check to see if we already have the peer registered
-    let peer = this.peers.get(idB58Str)
-    if (peer) {
-      peer.attachConnection(conn)
-      // Attach peer conn to our rpc handlers
-      this._listenToPeerConn(idB58Str, conn, peer)
-      return peer
-    }
-    peer = new Peer(peerInfo, conn)
-    // If connection closes, remove peer from list
-    peer.once('close', () => { this.peers.delete(idB58Str) })
-    // Insert peer in list
-    this.peers.set(idB58Str, peer)
-    this._listenToPeerConn(idB58Str, conn, peer)
-    return peer
-  }
-
   _getPeer(peerId, callback) {
     const idB58Str = peerId.toB58String()
     const peer = this.peers.get(idB58Str)
@@ -389,9 +370,6 @@ connections, information such its \acrshort{id} and address and the
 dissemination trees it is part of. Listing \ref{peer-constructor} shows us the
 constructor of our class. Its \verb|trees| property is a \verb|Map| indexed by
 topic identifier, that keeps the peer's current dissemination trees neighbours.
-Listing \ref{peer-methods} shows the methods that interact with this property
-as well as the connection and message forwarding handlers that help our node
-forward messages to the necessary peers.
 
 \begin{lstlisting}[language=JavaScript, float=p, caption={Peer class constructor},label={peer-constructor}]
 class Peer extends EventEmitter {
@@ -411,47 +389,6 @@ class Peer extends EventEmitter {
   }
   (...)
 }
-\end{lstlisting}
-
-\begin{lstlisting}[language=JavaScript, float=p, caption={Peer class relevant methods},label={peer-methods}]
-  attachConnection(conn) {
-    this.stream = new Pushable()
-    this.conn = conn
-    pull(this.stream, lp.encode(), conn)
-    this.emit('connection')
-  }
-
-  sendMessages(messages) {
-    this.stream.push(messages)
-  }
-
-  addChildren(topic, children) {
-    const tree = this.trees.get(topic)
-    if (!tree) {
-      this.trees.set(topic, { children, parents: [] })
-      return
-    }
-    children.forEach(child => {
-      const exists = tree.children.find(peer => {
-        return peer.info.id.isEqual(child.info.id)
-      })
-      if (!exists)tree.children.push(child)
-    })
-  }
-
-  addParents(topic, parents) {
-    const tree = this.trees.get(topic)
-    if (!tree) {
-      this.trees.set(topic, { parents, children: [] })
-      return
-    }
-    parents.forEach(parent => {
-      const exists = tree.parents.find(peer => {
-        return peer.info.id.isEqual(parent.info.id)
-      })
-      if (!exists) tree.parents.push(parent)
-    })
-  }
 \end{lstlisting}
 
 \subsubsection{TopicNode and EventNode}\label{subsubsec:topic-node}
@@ -481,22 +418,6 @@ class TopicNode {
   }
   (...)
 }
-
-function createMetadata({
-  allowedPublishers = false,
-  requestToPublish = true,
-  eventLinking = 'LAST_SEEN',
-  created = new Date(),
-  protocolVersion = config.protocol
-} = {}) {
-  return {
-    protocolVersion,
-    created: new Date(created),
-    allowedPublishers,
-    requestToPublish,
-    eventLinking
-  }
-}
 \end{lstlisting}
 
 \begin{lstlisting}[language=JavaScript, float=p, caption={EventNode class constructor},label={event-node-constructor}]
@@ -518,14 +439,6 @@ class EventNode {
   }
   (...)
 }
-
-function createMetadata({
-  created = new Date(),
-  protocolVersion = config.protocol
-} = {}) {
-  return { protocolVersion, created: new Date(created) }
-}
-
 \end{lstlisting}
 
 Both of the classes have a series of methods which we consider worth describing:
