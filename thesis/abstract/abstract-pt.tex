@@ -6,17 +6,33 @@
 \abstractPortuguesePageNumber
 
 O paradigma de produtor-consumidor é uma das mais populares formas de
-comunicação em sistemas distribuídos complexos. Existe bastante investigação
-sobre o mesmo, com soluções desde \emph{brokers} de mensagens centralizados,
-até sistemas completamente descentralizados (\emph{peer to peer}). Soluções
-descentralizadas apresentam, por norma, a melhor opção quando o foco é
-escalabilidade. Contudo, existe uma clara lacuna em sistemas descentralizados
-que tenham em conta confiabilidade, garantis de entrega de mensagens e, acima
-de tudo, persistência. É com esse mesmo fim que apresentamos o Pulsarcast, um
-sistema de comunicação produtor-consumidor, descentralizado, escalável, que
-procura dar o tipo de garantias normalmente associadas a arquitecturas
-centralizadas tais como persistência e garantia de entrega eventual de
-mensagens.
+comunicação em sistemas distribuídos complexos. As propriedades que este
+oferece, tornam-o numa solução ideal para as mais diversas aplicações, desde
+redes sociais a distribuição de conteúdo em tempo real até plataformas de
+compra e venda de acções. Consequentemente, existe bastante investigação sobre
+o mesmo, com soluções desde \emph{brokers} de mensagens centralizados, até
+sistemas completamente descentralizados (\emph{peer to peer}).
+
+Dentro da vertente de produtor-consumidor nem todas as soluções são iguais e,
+por consequência, compromissos têm que ser feitos entre a capacidade de
+distribuir conteúdo o mais rápido possível e a garantia que todos os membros da
+rede receberão o conteúdo a que estão subscritos. Garantias de entrega são
+bastante comuns para soluções centralizadas, existe contudo uma clara lacuna em
+sistemas descentralizados que tenham em conta confiabilidade, garantias de
+entrega de mensagens e, acima de tudo, persistência. É com esse mesmo fim que
+apresentamos o Pulsarcast, um sistema de comunicação produtor-consumidor,
+descentralizado, escalável, que procura dar o tipo de garantias normalmente
+associadas a arquitecturas centralizadas tais como persistência e garantia da
+eventual entrega de mensagens.
+
+O Pulsarcast tem como objectivo tirar partido da infraestrutura e protocolos de
+rede já existentes. Tendo por base um \emph{overlay} estruturado e uma
+estrutura de dados em formato de grafo, construímos árvores de disseminação
+através das quais os nossos eventos serão distribuídos. O nosso trabalho também
+englobou a criação de um módulo de \emph{software} que implementa o nosso
+sistema, sendo que os resultados experimentais recolhidos mostram o Pulsarcast
+como uma solução promissora dentro do campo de sistemas pub-sub
+descentralizados.
 
 % Keywords
 \begin{flushleft}

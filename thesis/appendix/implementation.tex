@@ -1,0 +1,57 @@
+%!TEX root = ../dissertation.tex
+
+\chapter{Implementation Details}
+\label{appendix:implementation}
+
+% \noindent\begin{minipage}{\textwidth}
+% \vspace{8pt}
+\begin{lstlisting}[float, caption={File tree for our Pulsarcast implementation},label={file-tree}]
+.
+|-- docs
+|   `-- api.md
+|-- LICENSE
+|-- package.json
+|-- package-lock.json
+|-- README.md
+|-- src
+|   |-- config.js
+|   |-- dag
+|   |   |-- event-node.js
+|   |   |-- event-tree.js
+|   |   |-- topic-node.js
+|   |   |-- topic-tree.js
+|   |   `-- utils.js
+|   |-- index.js
+|   |-- messages
+|   |   |-- create-rpc.js
+|   |   |-- index.js
+|   |   |-- marshalling.js
+|   |   |-- protobuffers
+|   |   |   |-- index.js
+|   |   |   `-- messages.proto.js
+|   |   `-- schemas
+|   |       |-- event-descriptor.js
+|   |       |-- index.js
+|   |       |-- peer-tree.js
+|   |       |-- rpc.js
+|   |       `-- topic-descriptor.js
+|   |-- peer.js
+|   |-- rpc
+|   |   |-- index.js
+|   |   |-- receive.js
+|   |   `-- send.js
+|   `-- utils
+|       |-- dht-helpers.js
+|       `-- logger.js
+`-- test
+    |-- integration
+    |   |-- 2-nodes.js
+    |   `-- multiple-nodes.js
+    |-- test-node.js
+    |-- unit
+    |   `-- topic-node.js
+    `-- utils.js
+\end{lstlisting}
+% \vspace{8pt}
+% \end{minipage}
+
