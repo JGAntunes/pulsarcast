@@ -166,12 +166,23 @@ data and \acrshort{qos} data. The following list describes these in more detail:
     \item Events received by topic and in total
     \item Percentage of subscriptions fulfilled based on the number of events
     successfully published
-    \item Percentage of subscriptions fulfilled based on the number of events
-    initially injected in the system
+    \item Percentage of subscriptions fulfilled based on the total number of events
+    injected in the system
     \item Number of \acrshort{rpc} messages sent per topic and in total
-    \item Average, standard deviation and percentiles (99/95) of \acrshort{rpc} messages received and sent by node
+    \item Average, standard deviation and percentiles (99/95) of the number of \acrshort{rpc} messages received and sent by each node
   \end{itemize}
 \end{itemize}
+
+We measure the subscription coverage (number of subscriptions fulfilled)
+through two distinct metrics. The percentage of fulfillment having the number
+of events affectively published as a reference and the percentage of
+fulfillment having the total number of events injected into the system as
+reference. Given Pulsarcast's nature, when an event is injected into the
+system, depending on the topic configuration, it may need to be propagated
+through the dissemination trees before being effectively published
+(\emph{request to publish}). It also needs to be persisted in the
+\acrshort{dht}. Having two different metrics allow us to better analyse and
+distinguish the different behaviours of the system.
 
 It is essential to keep in mind that some of the metrics under the \acrshort{qos} group
 only make sense in Pulsarcast test runs, hence will be ignored when running the
@@ -236,10 +247,15 @@ Looking at Figures
 \ref{fig:graph-pulsarcast-order-event-fulfillment-comparison} and
 \ref{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison} we can
 see that, of the total of events injected into the system, Pulsarcast fulfilled
-37\% of its subscriptions. For the events published, Pulsarcast fulfilled 80\%
-of its subscriptions. The biggest contributors for these lower percentages were
-the \emph{reddit.com} and the \emph{politics} topics, effectively due to the
-drop-out node.
+37\% of its subscriptions. Having the number of events effectively published as
+reference (the \emph{requests to publish} that reach the topic root node and
+single publisher), Pulsarcast fulfilled 80\% of its subscriptions. The
+disparity between both values clearly highlights that we suffered from the
+early drop-out node. Given that this same node was the root node for the most
+popular topic (\emph{reddit.com}), once it became unresponsive and restarted,
+all further requests to publish failed. However, it is important to notice
+that from the all the events published, our system successfully covered 80\% of
+its subscribers, which is a fairly high success rate.
 
 \begin{figure}[!htb]
   \centering
@@ -315,8 +331,9 @@ is subscribed to. For this scenario, the execution took a total of 85 minutes.
 Looking at Figures \ref{fig:graph-pulsarcast-event-fulfillment-comparison} and
 \ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} we can see
 that, of the total of events injected into the system, Pulsarcast fulfilled
-99\% of its subscriptions. As for the events published, Pulsarcast fulfilled
-99\% of its subscriptions. A clear difference to the order guarantee execution.
+99\% of its subscriptions. Taking the events effectively published as
+reference, Pulsarcast fulfilled 99\% of its subscriptions. A clear difference
+to the previous execution.
 
 \begin{figure}[!htb]
   \centering
@@ -410,7 +427,7 @@ guarantee. However, a way lower fulfilment percentage comparing with the
 execution of Pulsarcast without order guarantee (which is the QoS level offered
 by Floodsub). Another thing to take into account is the way Floodsub performed
 on a per topic basis, failing to fulfil a  whole range of low popularity
-topics, a clear consequence of the way the whole network crashed.
+topics.
 
 Table \ref{table:floodsub} provides an overview of the Network utilisation by
 node. It grew linearly throw the test execution, and as such, we are only
@@ -490,17 +507,20 @@ Analysing Figures
 \ref{fig:graph-pulsarcast-order-latency-event-fulfillment-comparison} and
 \ref{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
 we can see that, of the total of events injected into the system, Pulsarcast
-fulfilled 32\% of its subscriptions. For the events published, Pulsarcast
-fulfilled 62\% of its subscriptions. The biggest contributors for these lower
-percentages were the reddit.com and politics topics, effectively due to the
-drop-out nodes. One interesting fact from this experiment is that, even though
-we increased the latency of the underlying network, the \acrshort{qos} did not
-suffer a clear impact.  However, the whole experiment took a long time to
-fulfil. This is because the Pulsarcast implementation, when running the
-commands we discussed, waits on the initial propagation of events/topics before
-returning control to the caller (and consequently replying to the clients of
-our \acrshort{http} \acrshort{api}). This ended up working as a backpressure
-system for our test suite.
+fulfilled 32\% of its subscriptions. Having the events effectively published
+into the system as a reference, Pulsarcast fulfilled 62\% of its subscriptions.
+Similar to what was described in Section
+\ref{subsec:pulsarcast-with-order-guarantee}, the nodes that restarted are the
+key reason for these lower percentages, given both were the root nodes for our
+most popular topics \emph{reddit.com} and \emph{politics}. All the requests to
+publish sent after the restart ended up rendering no effect. One interesting
+fact from this experiment is that, even though we increased the latency of the
+underlying network, the \acrshort{qos} did not suffer a clear impact.  However,
+the whole experiment took a long time to fulfil. This is because the Pulsarcast
+implementation, when running the commands we discussed, waits on the initial
+propagation of events/topics before returning control to the caller (and
+consequently replying to the clients of our \acrshort{http} \acrshort{api}).
+This ended up working as a backpressure system for our test suite.
 
 \begin{figure}[!htb]
   \centering
@@ -570,12 +590,13 @@ the initial events/topics to be injected in the network before returning
 control to the client. For topics where everyone is allowed to publish (this
 execution exactly), this will mean that for each event published, Pulsarcast
 will also wait for the event to be persisted in the \acrshort{dht}. Similar to
-what happened in \ref{subsec:pulsarcast-with-order-guarantee-and-latency}, this
-behaviour created a natural backpressure mechanism. Unfortunately for us, we
-are running on a tight set of specifications, and currently all the state is
-kept in memory. This meant that, when the execution ended up running longer
-than what we originally predicted, two nodes ended up being killed by our
-Kubernetes scheduler due to shortage of memory resources at the 9-hour mark.
+what happened in Section
+\ref{subsec:pulsarcast-with-order-guarantee-and-latency}, this behaviour
+created a natural backpressure mechanism. Unfortunately for us, we are running
+on a tight set of specifications, and currently all the state is kept in
+memory. This meant that, when the execution ended up running longer than what
+we originally predicted, two nodes were terminated by our Kubernetes scheduler
+due to shortage of memory resources at the 9-hour mark.
 
 \begin{figure}[!htb]
   \centering
@@ -595,17 +616,21 @@ Looking at Figures
 \ref{fig:graph-pulsarcast-latency-event-fulfillment-comparison} and
 \ref{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison} we
 can see that, of the total of events injected into the system, Pulsarcast
-fulfilled 51\% of its subscriptions. For the  events published, Pulsarcast
-fulfilled 86\% of its subscriptions. Although somewhat low for the total of
-events expected to be published, our fulfilment rate for events actually
-published was quite high (86\%). Our high number of retries for our test run
-gives us a clear hint into what happened. The low percentage can be explained
-by the fact that most of the times, the events did not even get published to
-begin with. The key difference for why this was noticeable here but not in the
-execution with order guarantee is because given every node publishes in this
-execution, all the initial publish commands originate a publish event, to begin
-with, which is a more network intensive operation than a request to publish one
-(as we persist events in the \acrshort{dht}).
+fulfilled 51\% of its subscriptions. Having the events effectively published
+into the system as a reference, Pulsarcast fulfilled 86\% of its subscriptions.
+Although somewhat low for the total of events expected to be published, our
+fulfilment rate for events actually published was quite high (86\%). The
+discrepancy between these two values can, of course, be explained.  The two
+nodes that restarted have had some impact in the results obtained but that is
+not the only explanation, as in this scenario every node is capable of
+publishing events. As it has been previously covered, Pulsarcast has a natural
+backpressuring system consequence of the way we wait for an initial response
+when disseminating events/topics or persisting state in the \acrshort{dht}.
+With the system running on top of a debilitated network, this meant that not
+even the retries in our test suite could cover for network timeouts and
+failures.  This negatively impacted some events, given we were effectively
+unable to publish them as the nodes failed to meet the necessary pre-requisites
+(persist it in the \acrshort{dht} and disseminate it).
 
 \begin{figure}[!htb]
   \centering
@@ -769,16 +794,23 @@ summary of our test results for our multiple test runs in Table
 \begin{itemize}
   \item Our coverage based on the total number of events we injected in the
     system
-  \item Our coverage based on the total number of actually published
+  \item Our coverage based on the total number of events effectively published
   \item Percentage of events effectively published
   \item Maximum total memory consumption in all of the system
   \item Network bytes transmitted in all of the system
   \item Maximum \acrshort{cpu} usage in all of the system
 \end{itemize}
 
-It is important to note though that the percentage of events actually published
-is not at all a useful metric for Floodsub, given no acknowledgement whatsoever
-is made by the network when publishing an event, making it mostly irrelevant.
+One aspect that we would like to highlight is the fact that we are not only
+comprising months of data into a largerly shorter timepsan, we are also
+simulating interactions made by thousands of users into a much smaller set of
+nodes (one hundred). All of this of course in an environment based on
+virtualisation technics and with a limited set of resources. This experiment is
+essentially pushing the boundries of what both systems would handle on a real
+world scenario. It is also important to note that the percentage of events
+actually published is not at all a useful metric for Floodsub, given no
+acknowledgement whatsoever is made by the network when publishing an event,
+making it irrelevant.
 
 Looking at Floodsub as our baseline of comparison it is safe to say that
 Pulsarcast surpassed Floodsub in every aspect, providing a better
@@ -793,14 +825,15 @@ comparing the latency induced executions, twice as much), a consequence  of the
 \acrshort{qos} we want to offer and not persisting state into disk for our
 executions.
 
-One crucial property of Pulsarcast that we have not covered so far is that, for
-every event published, we store it in the \acrshort{dht}. This is the
-cornerstone of Pulsarcast's eventual delivery guarantees, giving applications
-the ability to fetch events missing from their event tree, hence why it is
-essential to look at the percentage of events effectively published as well as
-the subscription coverage for these same events. Taking those same numbers into
-consideration we can see a considerably high coverage percentage, with the
-lowest being 62\% for the order guarantee test with latency injected.
+Finally, one crucial property of Pulsarcast that is important to remember is
+that, for every event effectively published, we store it in the \acrshort{dht}.
+So, it is possible for any application using Pulsarcast to resolve past or
+missing events from the event tree. This is the cornerstone of Pulsarcast's
+eventual delivery guarantees, hence why it is essential to look at the
+percentage of events effectively published as well as the subscription coverage
+for these same events. Taking those same numbers into consideration we can see
+a considerably high coverage percentage, with the lowest being 62\% for the
+order guarantee test with latency injected.
 
 \begin{sidewaystable}
 \caption{Comparison table between our test executions}

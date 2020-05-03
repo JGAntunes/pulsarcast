@@ -94,8 +94,8 @@ choice.
 
 When it comes to code organisation, and despite not existing a clear standard
 for modules in Javascript, we follow what is most generally conceived as best
-practices. Listing \ref{file-tree} gives us an overview of the file structure
-of our project. 
+practices. A more thorough overview of our file tree structure can be seen in
+Appendix \ref{appendix:implementation}.
 
 Our \emph{src} (source) directory has all the components that constitute our
 Pulsarcast node. \emph{src/index.js} holds our top-level class, Pulsarcast,
@@ -118,58 +118,6 @@ functionally sound. Besides being able to run locally, these tests are what we
 currently run on our
 \acrfull{ci}~\footnote{\url{https://www.thoughtworks.com/continuous-integration}}~\footnote{\url{https://gitlab.com/jgantunes/js-pulsarcast/pipelines}}
 environment on every code submission we perform.
-
-% \noindent\begin{minipage}{\textwidth}
-% \vspace{8pt}
-\begin{lstlisting}[float, caption={File tree for our Pulsarcast implementation},label={file-tree}]
-.
-|-- docs
-|   `-- api.md
-|-- LICENSE
-|-- package.json
-|-- package-lock.json
-|-- README.md
-|-- src
-|   |-- config.js
-|   |-- dag
-|   |   |-- event-node.js
-|   |   |-- event-tree.js
-|   |   |-- topic-node.js
-|   |   |-- topic-tree.js
-|   |   `-- utils.js
-|   |-- index.js
-|   |-- messages
-|   |   |-- create-rpc.js
-|   |   |-- index.js
-|   |   |-- marshalling.js
-|   |   |-- protobuffers
-|   |   |   |-- index.js
-|   |   |   `-- messages.proto.js
-|   |   `-- schemas
-|   |       |-- event-descriptor.js
-|   |       |-- index.js
-|   |       |-- peer-tree.js
-|   |       |-- rpc.js
-|   |       `-- topic-descriptor.js
-|   |-- peer.js
-|   |-- rpc
-|   |   |-- index.js
-|   |   |-- receive.js
-|   |   `-- send.js
-|   `-- utils
-|       |-- dht-helpers.js
-|       `-- logger.js
-`-- test
-    |-- integration
-    |   |-- 2-nodes.js
-    |   `-- multiple-nodes.js
-    |-- test-node.js
-    |-- unit
-    |   `-- topic-node.js
-    `-- utils.js
-\end{lstlisting}
-% \vspace{8pt}
-% \end{minipage}
 
 \subsection{Classes}\label{subsec:classes}
 
