@@ -11,7 +11,6 @@ Taking a closer look at this definition one can see that this comes hand in
 hand with the way information is consumed nowadays, with the exponential growth
 of social networks like Twitter and the usage of feeds such as RSS.
 
-
 \section{Motivation}
 First, we should define what the publish-subscribe pattern is.  In this
 interaction paradigm, subscribers (or consumers) sign up for events, or classes
@@ -35,24 +34,25 @@ in an efficient way.
 
 Due to the properties described above, a lot of applications rely on the
 publish-subscribe paradigm and a lot of work has been done by companies like
-Twitter~\footnote{\url{https://www.infoq.com/presentations/Twitter-Timeline-Scalability}}
-and LinkedIn into making these systems capable of scaling to a large number of
-participants, with the creation of tools like
+Twitter~\footnote{\url{https://www.infoq.com/presentations/Twitter-Timeline-Scalability}},
+Spotify~\cite{Setty2013} and LinkedIn into making these systems capable of
+scaling to a large number of participants, with the creation of tools like
 Kafka~\footnote{\url{http://kafka.apache.org/documentation/\#design}}, which
 aim at guaranteeing low latency and high event throughput. Other examples are
 the multiple message queue systems like Apache Active
 MQ~\footnote{\url{http://activemq.apache.org}},
 RabbitMQ~\footnote{\url{https://www.rabbitmq.com/}},
-Redis~\footnote{\url{https://redis.io/topics/pubsub}}, etc.  These solutions
-are, of course, centralised and as such suffer from all the common issues that
-affect centralised solutions: it is quite hard to maintain and scale these
-systems to a large number of clients. \acrfull{p2p} networks, on the other
-hand, have proven numerous times, that this is where they shine, with examples
-such as Gnutella, Skype and most recently
-\acrshort{ipfs}~\footnote{\url{https://ipfs.io/}}.  All of these systems are a
-living proof of the high scalability \acrshort{p2p} can offer, with pub-sub
-systems over \acrshort{p2p} networks being an active research topic with a lot
-of attention.
+Redis~\footnote{\url{https://redis.io/topics/pubsub}}, etc. Most of these
+solutions are, of course, centralised and as such suffer from all the common
+issues that affect centralised solutions: it is quite hard to maintain and
+scale these systems to a large number of clients. \acrfull{p2p} networks, on
+the other hand, have proven numerous times, that this is where they shine, with
+examples such as Gnutella, Skype and most recently
+\acrshort{ipfs}~\footnote{\url{https://ipfs.io/}}. Or through hybrid solutions
+such as the one employed at Spotify to manage social
+interactions~\cite{Setty2013}. All of these systems are a living proof of the
+high scalability \acrshort{p2p} can offer, with pub-sub systems over
+\acrshort{p2p} networks being an active research topic with a lot of attention.
 
 \section{Contributions}
 
@@ -60,10 +60,12 @@ As we are going to cover in the next sections, lots of different solutions
 exist. However, most of them either rely on a centralised or hierarchic network
 to have a reliable system, with stronger delivery and persistence guarantees,
 or end up sacrificing these same properties in order to have a decentralised
-system with the potential to scale to a much larger network.
+system with the potential to scale to a much larger network. There is also, to
+the best of our knowledge, a lack of pub-sub systems with a strong focus on
+persistence.
 
-Our contribution to address these issues is Pulsarcast, a pub-sub solution with
-the following properties:
+We intend to address this in Pulsarcast by focusing in the following
+properties:
 
 \begin{itemize}
   \item
@@ -78,10 +80,18 @@ the following properties:
     Takes advantage of the network infrastructure and network protocols we have in place today;
 \end{itemize}
 
-To validate the solution we purpose we have created a Javascript implementation
-module of Pulsarcast, as well as a test-suite and a distributed test runner for
-it. There is also, to the best of our knowledge, a lack of pub-sub systems with
-such a strong focus on persistence, which is something our solution does.
+Besides the specification and architectural model of our system we also provide
+a concrete implementation of it. So, in order to validate the solution we
+purpose we have created the following:
+
+\begin{itemize}
+  \item
+    A Javascript implementation module of Pulsarcast with a clearly defined \acrshort{api} through which applications can integrate with;
+  \item
+    A distributed test runner capable of running large scale test scenarios and simulate abnormal network conditions;
+  \item
+    An easy to automate test-suite based on a real world application;
+\end{itemize}
 
 \section{Document Roadmap}
 

@@ -183,15 +183,19 @@ illustrate how would a centralised pub-sub system work.
   \label{fig:centralised-topology}
 \end{figure}
 
-Being the broad term that it is, centralised encompasses a lot of different solutions.
-One can have centralised solutions that employ a distribution of load through
-different nodes in order to improve the overall scalability of the system. In the pub-sub field, these networks
-of servers are commonly referred to as brokers. There are multiple pub-sub systems
-that follow this approach. More precisely Gryphon \cite{Strom1998}, Siena \cite{Carzaniga2003}
-and Jedi \cite{Cugola2001}. But, even between them, there are some clear differences
-on how these broker networks organise. In both Gryphon and Jedi, these nodes organise in
-a hierarchical fashion, or define what we call a \textbf{broker hierarchy}. As for Siena,
-the nodes resort to not following a specific structure, making it effectively a \textbf{broker mesh}.
+Being the broad term that it is, centralised encompasses a lot of different
+solutions.  One can have centralised solutions that employ a distribution of
+load through different nodes in order to improve the overall scalability of the
+system. In the pub-sub field, these networks of servers are commonly referred
+to as brokers. There are multiple pub-sub systems that follow this approach.
+More precisely Gryphon \cite{Strom1998}, Siena \cite{Carzaniga2003} and Jedi
+\cite{Cugola2001}. But, even between them, there are some clear differences on
+how these broker networks organise. In both Gryphon and Jedi, these nodes
+organise in a hierarchical fashion, or define what we call a \textbf{broker
+hierarchy}. As for Siena, the nodes resort to not following a specific
+structure, making it effectively a \textbf{broker mesh}. Another solution worth mentioning is HyperPubSub \cite{Zupan2017} which while still relying on a
+broker based network architecture, brings verifiability and other forms of
+decentralised validation to pub-sub operations.
 
 The asynchronous nature of the pub-sub paradigm also allows for a different
 approach to message forwarding, with both producers and consumers being
@@ -269,6 +273,17 @@ the contacted node of its neighbour list, as the contacted node will
 inversely add the node that established contact to his. This way we end
 up with a uniform and organic way to disseminate node information across
 the network. This approach is based on a technique named shuffling \cite{Stavrou2002}.
+
+Huanyang Zheng and Jie Wu \cite{Zheng2016} work covers another approach. They
+detail the usage of an unstructured overlay to build a scalable pub-sub
+solution for \emph{Nested Scale-Free Architecture}, a subset of
+\emph{Scale-Free Architecture} (the degree distribution follows a power law).
+Nested indicates that the scale-free architecture is preserved, when low-degree
+peers and their associated connections are removed. The process of iteratively
+calculating and removing the low-degree peers allows the system to build an
+hierarchy, which is then used for dissemination purposes. By leveraging this
+hierarchy, the system achieves a competitive tradeoff between the event routing
+efficiency, system robustness and overhead.
 
 The unstructured overlay has an interesting set of properties, such as
 its ability to accommodate a highly dynamic network with a high
@@ -474,6 +489,11 @@ A more detailed description of how this is done in Gryphon and Scribe
 will be made further along since they have different approaches
 motivated by their different options in network architecture and
 subscription model.
+
+An alternative to \emph{rendezvous} nodes for multicast trees is presented in
+VCube-PS \cite{DeAraujo2017}. The clustering of subscribers still takes place,
+however, dissemination trees rooted at each producer are dynamically built on a
+per message basis.
 
 For content based systems though, a common approach is to use
 multidimensional spaces as a way to represent subscriptions. The idea is
@@ -724,13 +744,13 @@ is not the first time it has received it. These mechanisms, depending on
 the fanout parameter, guarantee average dissemination paths for each
 topic to be asymptotically logarithmic.
 
-Through the multiple mechanisms described above, Poldercast attempts to
-provide a set of guarantees. To start with, only nodes subscribed to a
-topic will receive events published to that topic. In other words, no
-relay nodes are used. It also focuses on handling churn through the use
-of a mixture of gossip mechanisms, ensuring a highly resilient network.
-Finally, it seeks to reduce message duplication factor (i.e. nodes receiving
-the same message more than once).
+Through the multiple mechanisms described above, Poldercast attempts to provide
+a set of guarantees. Similar to systems like VCube-PS
+\cite{DeAraujo2017}, only nodes subscribed to a topic will receive events
+published to that topic. In other words, no relay nodes are used. It also
+focuses on handling churn through the use of a mixture of gossip mechanisms,
+ensuring a highly resilient network.  Finally, it seeks to reduce message
+duplication factor (i.e. nodes receiving the same message more than once).
 
 \subsection{Systems Analysis}\label{systems-overview}
 
@@ -746,7 +766,7 @@ addressed in the previous sections.
 \begin{sidewaystable}
   \center
     \begin{tabular}{|P{3cm}|P{2cm}P{2cm}P{2cm}P{2.5cm}P{2cm}P{2cm}P{2cm}P{2cm}|}\hline
-    Systems / Properties & Subscription Model & Architecture & Overlay Structure & Subscription Management & Event dissemination & Relay Free Routing & Delivery Guarantees & Fault Tolerance \\\hline
+    Systems / Properties & Subscription Model & Architecture & Overlay Structure & Subscription Management & Event dissemination & Relay Free Routing & Delivery Guarantees & Fault Tolerance \\\hline\hline
     Gryphon \cite{Strom1998} & Content based & Centralised broker hierarchy & N/A & Each broker responsible for a subscription scheme & Tree hierarchy & N/A & Yes & Best effort \\\hline
     Siena \cite{Carzaniga2003} & Content based & Centralised broker mesh & N/A & Keep state at each node & Flood with cached state & N/A & Yes & Best effort \\\hline
     Jedi \cite{Cugola2001} & Content based & Centralised broker hierarchy & N/A & Keep state at each node & Tree hierarchy & N/A & Yes & Best effort \\\hline
@@ -841,10 +861,10 @@ traversal.
 
 In the application realm, there have been quite a few in the past years that
 seek to leverage all these new technologies and breakthroughs. An example of
-such is \textbf{browserCloud.js}\cite{10.1145/3167132.3167366}, a solution
-seeking to bring cloud computing to the Web platform, taking advantage of
-technologies such as WebRTC and Javascript. Another example worth mentioning is
-the \textbf{\acrfull{ipfs}}~\footnote{\url{https://ipfs.io}}, a \acrshort{p2p}
+such is \textbf{browserCloud.js}\cite{Dias2018}, a solution seeking to bring
+cloud computing to the Web platform, taking advantage of technologies such as
+WebRTC and Javascript. Another example worth mentioning is the
+\textbf{\acrfull{ipfs}}~\footnote{\url{https://ipfs.io}}, a \acrshort{p2p}
 hypermedia protocol designed to create a persistent, content-addressable
 network on top of the distributed web.
 
