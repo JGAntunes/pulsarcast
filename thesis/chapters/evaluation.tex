@@ -175,13 +175,13 @@ data and \acrshort{qos} data. The following list describes these in more detail:
 
 We measure the subscription coverage (number of subscriptions fulfilled)
 through two distinct metrics. The percentage of fulfillment having the number
-of events affectively published as a reference and the percentage of
+of events effectively published as a reference and the percentage of
 fulfillment having the total number of events injected into the system as
 reference. Given Pulsarcast's nature, when an event is injected into the
 system, depending on the topic configuration, it may need to be propagated
 through the dissemination trees before being effectively published
 (\emph{request to publish}). It also needs to be persisted in the
-\acrshort{dht}. Having two different metrics allow us to better analyse and
+\acrshort{dht}. Having two different metrics allows us to better analyse and
 distinguish the different behaviours of the system.
 
 It is essential to keep in mind that some of the metrics under the \acrshort{qos} group
@@ -802,12 +802,12 @@ summary of our test results for our multiple test runs in Table
 \end{itemize}
 
 One aspect that we would like to highlight is the fact that we are not only
-comprising months of data into a largerly shorter timepsan, we are also
+compressing months of data into a largely shorter timepsan, we are also
 simulating interactions made by thousands of users into a much smaller set of
 nodes (one hundred). All of this of course in an environment based on
-virtualisation technics and with a limited set of resources. This experiment is
-essentially pushing the boundries of what both systems would handle on a real
-world scenario. It is also important to note that the percentage of events
+virtualisation techniques and with a limited set of resources. This experiment
+is essentially pushing the boundaries of what both systems would handle on a
+real world scenario. It is also important to note that the percentage of events
 actually published is not at all a useful metric for Floodsub, given no
 acknowledgement whatsoever is made by the network when publishing an event,
 making it irrelevant.

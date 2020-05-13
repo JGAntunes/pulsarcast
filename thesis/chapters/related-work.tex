@@ -278,9 +278,9 @@ Huanyang Zheng and Jie Wu \cite{Zheng2016} work covers another approach. They
 detail the usage of an unstructured overlay to build a scalable pub-sub
 solution for \emph{Nested Scale-Free Architecture}, a subset of
 \emph{Scale-Free Architecture} (the degree distribution follows a power law).
-Nested indicates that the scale-free architecture is preserved, when low-degree
+Nested indicates that the scale-free architecture is preserved when low-degree
 peers and their associated connections are removed. The process of iteratively
-calculating and removing the low-degree peers allows the system to build an
+calculating and removing the low-degree peers allows the system to build a
 hierarchy, which is then used for dissemination purposes. By leveraging this
 hierarchy, the system achieves a competitive tradeoff between the event routing
 efficiency, system robustness and overhead.
@@ -461,7 +461,7 @@ dissemination can be easily implemented with an application level
 multicast system if we cluster subscribers of some topic/group in a
 single structure (e.g.~a multicast tree). For example, consider the
 topic \emph{/foobar} issued by a particular node in a pub-sub system.
-If, when new subscriptions are issued to this node, a tree like
+If, when new subscriptions are issued to this node, a tree-like
 structure is built that allows events related to this topic to flow
 accordingly, disseminating a new event in \emph{/foobar} is just a
 matter of sending the event to the root of the tree. From there,
@@ -480,46 +480,19 @@ dissemination. Ideally this would be implemented in a distributed
 fashion, keeping as much pressure out of the \emph{rendezvous} node as
 possible. This is the approach followed by Scribe and Bayeux.
 
-The usage of \emph{rendezvous} nodes and tree like structures to
-represent subscriptions is not something particular to topic based
-systems. There are examples of these techniques in content based systems
-also, specifically Gryphon and Jedi. Hermes, on the other hand, is
-an example of the same mechanisms with a type based subscription model.
-A more detailed description of how this is done in Gryphon and Scribe
-will be made further along since they have different approaches
-motivated by their different options in network architecture and
-subscription model.
+The usage of \emph{rendezvous} nodes and tree-like structures to represent
+subscriptions is not something particular to topic based systems. There are
+examples of these techniques in content based systems also, specifically
+Gryphon and Jedi. Hermes, on the other hand, is an example of the same
+mechanisms with a type based subscription model. A more detailed description of
+how this is done in Gryphon and Scribe will be made further along since they
+have different approaches motivated by their different options in network
+architecture and subscription model.
 
 An alternative to \emph{rendezvous} nodes for multicast trees is presented in
-VCube-PS \cite{DeAraujo2017}. The clustering of subscribers still takes place,
-however, dissemination trees rooted at each producer are dynamically built on a
-per message basis.
-
-For content based systems though, a common approach is to use
-multidimensional spaces as a way to represent subscriptions. The idea is
-to have each dimension refer to a specific attribute of the pub-sub
-schema.
-
-\begin{verbatim}
-{
-  exchange: String,
-  company: String,
-  order: String,
-  number: Integer,
-  price: Float,
-}
-\end{verbatim}
-
-Considering the example above, we could map each of the given attributes to a
-given dimension and end up with a 5 dimensional space that we could use to
-route events accordingly. Meghdoot is an example of a content based pub-sub
-system that follows an approach close to this one, using a CAN \acrshort{dht}
-with $2n$ dimensions, where $n$ is the number of attributes in the schema. We
-will cover Meghdoot further down, but it is worth mentioning that there are
-other alternatives to using a multidimensional space \acrshort{dht} to
-replicate this behaviour. Mercury for example relies on the usage of several
-ring-based \acrshort{dht}s to recreate this multidimensional space and support
-range queries, using one \acrshort{dht} per attribute.
+VCube-PS \cite{DeAraujo2017}. The clustering of subscribers still takes place.
+However, dissemination trees rooted at each producer are dynamically built on a
+per-message basis.
 
 A different approach to managing subscriptions and disseminating events in
 topic based systems is by having an overlay for each different topic.  The idea
@@ -541,6 +514,46 @@ a topic specific overlay, helps out in the dissemination step after an event
 has been published and reached the cluster. Another example following this
 approach is Poldercast, which uses a set of three different overlays to keep
 the pub-sub network running. We will cover Poldercast more thoroughly later on.
+
+More recently, the relevant literature has introduced an alternative to
+structuring multicast trees \cite{Hasimoto-Beltran2019} focused on making sure
+that each peer contributes with its redistribution capacity to the system.
+This, of course, is a problem hard to address for strictly hierarchical
+systems, where the leaf nodes will almost always be left out of the main
+redistribution paths. Using multiple overlays, as described previously, two
+approaches are brought together: Clustering of peers based on delay-proximity;
+Hierarchical tree-based distribution using these same clusters; The idea is
+that trees, rooted at the peer who is the source of content, are created
+containing at each level a cluster of multiple peers. Within the cluster, these
+peers form a fully connected graph, responsible for not only quickly
+distributing the content amongst themselves but also to relay it through the
+next levels of the tree hierarchy.
+
+For content based systems different approaches are commonly followed. Such
+example is the usage of multidimensional spaces as a way to represent
+subscriptions. The idea is to have each dimension refer to a specific attribute
+of the pub-sub schema.
+
+\begin{verbatim}
+{
+  exchange: String,
+  company: String,
+  order: String,
+  number: Integer,
+  price: Float,
+}
+\end{verbatim}
+
+Considering the example above, we could map each of the given attributes to a
+given dimension and end up with a 5 dimensional space that we could use to
+route events accordingly. Meghdoot is an example of a content based pub-sub
+system that follows an approach close to this one, using a CAN \acrshort{dht}
+with $2n$ dimensions, where $n$ is the number of attributes in the schema. We
+will cover Meghdoot further down, but it is worth mentioning that there are
+other alternatives to using a multidimensional space \acrshort{dht} to
+replicate this behaviour. Mercury for example relies on the usage of several
+ring-based \acrshort{dht}s to recreate this multidimensional space and support
+range queries, using one \acrshort{dht} per attribute.
 
 \section{Relevant Pub-Sub
 Systems}\label{relevant-pub-sub-systems}
