@@ -1,0 +1,20 @@
+%!TEX root = ../thesis-summary.tex
+
+\section{Conclusion}
+\label{section:conclusion}
+
+In this work, we introduced Pulsarcast, a decentralised, topic-based, pub-sub
+solution that seeks to bring reliability and eventual delivery guarantees
+(commonly associated with centralised solutions) to the P2P realm. We analysed
+how Pulsarcast provides a feature rich API on top of a system that leverages a
+Kadmelia structured overlay to build immutable and content-addressable data
+structures (Merkle DAG) representing both topics and events. These structures
+power Pulsarcast's eventual delivery guarantees.
+
+<TODO>
+
+We concluded that our system provides a very nice alternative to applications
+that seek a better QoS level as well as a feature-rich topology setting, that
+allows to restrict publishers and configure topics to one's needs. Despite
+being heavily reliant on a structured overlay, Pulsarcast did not underperform
+under adverse network conditions, making it suitable for multiple scenarios. 
