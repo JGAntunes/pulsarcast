@@ -10,25 +10,19 @@ Taking a closer look at this definition one can see that this comes hand in
 hand with the way information is consumed nowadays, with the exponential growth
 of social networks like Twitter and the usage of feeds such as RSS.
 
-First, we should define what the publish-subscribe pattern is.  In this
-interaction paradigm, subscribers (or consumers) sign up for events, or classes
-of events, from publishers (or producers) that are subsequently asynchronously
-delivered. This decoupling can be broken into three different parts. The
-decoupling in time, space and synchronisation.
+In the publish-subscribe communication paradigm, subscribers (or consumers)
+sign up for events, or classes of events, from publishers (or producers) that
+are subsequently asynchronously delivered. This decoupling can be broken into
+three different parts:
 
-The time decoupling comes from the fact that publishers and subscribers do not
-need to be actively interacting with each other at the same time; this means
-that the publisher can publish some events while the subscriber is disconnected
-and the subscriber can be notified of an event whose publisher is disconnected.
-Space decoupling gives both parties the benefit of not needing to know each
-other in order to communicate, given that consumers and producers are focused
-on their specific roles (consuming/producing) and do not care for who is doing
-what, or how many producers are there, for example. Synchronization decoupling
-is a consequence of the asynchronous nature of the pub-sub pattern, as
-publishers do not need to be blocked while producing events and subscribers can
-be asynchronously notified.  The decoupling that this kind of system offers
-makes it the ideal candidate for very large networks that need a way to
-communicate in an efficient way.
+\begin{itemize}
+  \item
+    Decoupling in time - publishers and subscribers do not need to be interacting with each other at the same time;
+  \item
+    Decoupling in space - both parties do not need to need to know each other or be in the same space in order to communicate;
+  \item
+    Synchronisation - publishers and subscribers do not need to be blocked by each other in order to produce or consume content:
+\end{itemize}
 
 Due to the properties described above, a lot of applications rely on the
 publish-subscribe paradigm and a lot of work has been done by companies like
@@ -46,9 +40,7 @@ issues that affect centralised solutions: it is quite hard to maintain and
 scale these systems to a large number of clients. Peer to peer (P2P) networks,
 on the other hand, have proven numerous times, that this is where they shine,
 with examples such as Gnutella, Skype and most recently
-ipfs~\footnote{\url{https://ipfs.io/}}. Alternatively, through
-hybrid solutions such as the one employed at Spotify to manage social
-interactions~\cite{Setty2013}. All of these systems are a
+ipfs~\footnote{\url{https://ipfs.io/}}. All of these systems are a
 living proof of the high scalability P2P can offer, with pub-sub
 systems over P2P networks being an active research topic with a lot
 of attention.
