@@ -58,12 +58,13 @@ just like paths in a file system. Consider as an example:
 /fruits/citrus/orange
 \end{verbatim}
 
-The list above is an example of 3 topics, that act as 3 different tiers
-on a hierarchy. This allows for specialisation and the possibility to
-extend the subscription structure already in place. There are numerous
-solutions that cover the topic based subscription scenario. Specifically,
-in the distributed/decentralised area, we have solutions like Scribe \cite{Castro2002},
-Bayeux \cite{Zhuang2001}, Tera \cite{Baldoni2007} and Poldercast \cite{Setty2012}.
+The list above is an example of 3 topics, that act as 3 different tiers on a
+hierarchy. This allows for specialisation and the possibility to extend the
+subscription structure already in place. There are numerous solutions that
+cover the topic based subscription scenario. Specifically, in the
+distributed/decentralised area, we have solutions like Scribe
+\cite{Castro2002}, Bayeux \cite{Zhuang2001}, Tera \cite{Baldoni2007}, SELECT
+\cite{Apolonia2018} and Poldercast \cite{Setty2012}.
 \bigskip
 
 \textbf{The content based subscription model} brought a different
@@ -414,17 +415,17 @@ can bare with.
 \textbf{Hybrid overlays}: As with everything discussed so far, not every
 solution lies at each end of the spectrum, and overlay structure is no
 different. Recent research has been pushing more and more towards hybrid
-solutions that take advantages of both sides. Such example is
-\textbf{Vicinity} \cite{Voulgaris2013} which employs Cyclon
-(discussed above) as a peer sampling service to help out in building an
-ideal structure that links nodes based on their proximity (for some
-notion of proximity, e.g.~latency, localisation, etc.). In the end, we
-get a structured overlay, generated from an unstructured, gossip based,
-overlay (hence the hybrid solution). More importantly, this overlay will
-have properties that guarantee that it is an almost ideal structure for
-a given proximity metric. The Vicinity system discusses that the usage
-of probabilistic mechanisms helps out in keeping a healthy and reliable
-structure.
+solutions that take advantages of both sides. Such example is \textbf{Vicinity}
+\cite{Voulgaris2013} which employs Cyclon (discussed above) as a peer sampling
+service to help out in building an ideal structure that links nodes based on
+their proximity (for some notion of proximity, e.g.~latency, localisation,
+etc.). In the end, we get a structured overlay, generated from an unstructured,
+gossip based, overlay (hence the hybrid solution). More importantly, this
+overlay will have properties that guarantee that it is an almost ideal
+structure for a given proximity metric. The Vicinity system discusses that the
+usage of probabilistic mechanisms helps out in keeping a healthy and reliable
+structure. Similar approaches have since been followed by other systems such as
+SELECT \cite{Apolonia2018}.
 
 \subsection{Subscription Management and Event
 Dissemination}\label{subscription-management-and-event-dissemination}
@@ -490,9 +491,9 @@ have different approaches motivated by their different options in network
 architecture and subscription model.
 
 An alternative to \emph{rendezvous} nodes for multicast trees is presented in
-VCube-PS \cite{DeAraujo2017}. The clustering of subscribers still takes place.
-However, dissemination trees rooted at each producer are dynamically built on a
-per-message basis.
+VCube-PS \cite{DeAraujo2017} and SELECT \cite{Apolonia2018}. The clustering of
+subscribers still takes place.  However, dissemination trees rooted at each
+producer are dynamically built on a per-message basis.
 
 A different approach to managing subscriptions and disseminating events in
 topic based systems is by having an overlay for each different topic.  The idea
@@ -558,8 +559,9 @@ range queries, using one \acrshort{dht} per attribute.
 \section{Relevant Pub-Sub
 Systems}\label{relevant-pub-sub-systems}
 
-We now describe in further detail the systems which most resemble the
-work we are going to do.
+We now describe in further detail the systems which, not only are the most
+relevant to us but also play a seminal role in the \acrshort{p2p} pub-sub
+field.
 
 \subsection{Gryphon}\label{gryphon}
 
@@ -765,16 +767,24 @@ focuses on handling churn through the use of a mixture of gossip mechanisms,
 ensuring a highly resilient network.  Finally, it seeks to reduce message
 duplication factor (i.e. nodes receiving the same message more than once).
 
+Architecturally speaking, one can see the similarities between Poldercast and
+SELECT \cite{Apolonia2018}, as it too relies on a set of 3 different overlays,
+working together to fulfil subscriptions. However, SELECT brings a different
+set of properties to the table, as it maps the social connection graph of the
+peers to the actual overlays operating underneath. This way, the system is able
+to exploit both the social graph and the online activity of each social user
+(each peer) to establish connections and disseminate messages accordingly.
+
 \subsection{Systems Analysis}\label{systems-overview}
 
-Let us now analyse all the relevant pub-sub systems we used as a basis for our
-work. Table \ref{table:relevant-systems} will serve as a useful comparison
-mechanism for this.  A couple of notes on the terminology used. We refer to
-\emph{delivery guarantees} as the ability to deliver a message under normal
-working conditions and \emph{fault tolerance} as the ability to keep such
-guarantees under churn. This, of course, depends on the persistence of
-subscriptions and mechanisms to replicate these. The rest of the criteria were
-addressed in the previous sections.
+Let us now analyse all the seminal pub-sub systems we have covered so far.
+Table \ref{table:relevant-systems} will serve as a useful comparison mechanism
+for this. A couple of notes on the terminology used. We refer to \emph{delivery
+guarantees} as the ability to deliver a message under normal working conditions
+and \emph{fault tolerance} as the ability to keep such guarantees under churn.
+This, of course, depends on the persistence of subscriptions and mechanisms to
+replicate these. The rest of the criteria were addressed in the previous
+sections.
 
 \begin{sidewaystable}
   \center
@@ -792,9 +802,11 @@ addressed in the previous sections.
     Sub-2-Sub \cite{Voulgaris2005} & Content based & Decentralised & Ring based \acrshort{dht} and gossip based overlay & Clustering of similar subscriptions & Gossip and ring overlay routing & No & No & Best effort \\\hline
     Poldercast \cite{Setty2012} & Topic based & Decentralised & Ring based \acrshort{dht}/ Vicinity / Cyclon & Ring overlay per topic & Ring overlay routing & Yes & Yes (every publisher is a subscriber) & High resilience to churn, no subscription persistence \\\hline
     \end{tabular}
-  \caption{Comparison table for the relevant system}
+    \caption{Comparison table for the seminal pub-sub systems covered\textsuperscript{*}}
+    \small\textsuperscript{*} To keep table size fit in one page with a clear comparative overview we only cover seminal work
   \label{table:relevant-systems}
 \end{sidewaystable}
+
 \section{Web Technologies}\label{web-technologies}
 
 When building any kind of network focused system nowadays, there is no question

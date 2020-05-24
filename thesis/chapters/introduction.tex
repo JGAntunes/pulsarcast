@@ -57,19 +57,17 @@ high scalability \acrshort{p2p} can offer, with pub-sub systems over
 \section{Contributions}
 
 As we are going to cover in the next sections, lots of different solutions
-exist. However, most of them either rely on a centralised or hierarchic network
-to have a reliable system, with stronger delivery and persistence guarantees,
-or end up sacrificing these same properties in order to have a decentralised
-system with the potential to scale to a much larger network. There is also, to
-the best of our knowledge, a lack of pub-sub systems with a strong focus on
-persistence.
+exist. However, most of them either rely on a centralised or semi-centralised
+network to have a reliable system, with stronger delivery and persistence
+guarantees, or end up sacrificing these same properties in order to have a
+decentralised system with the potential to scale to a much larger network.
+There is also, to the best of our knowledge, a lack of pub-sub systems with a
+strong focus on persistence.
 
 We intend to address this in Pulsarcast by focusing in the following
 properties:
 
 \begin{itemize}
-  \item
-    Strong focus on reliability;
   \item
     Eventual delivery guarantees;
   \item
@@ -77,7 +75,9 @@ properties:
   \item
     Ability to scale to a vast number of users;
   \item
-    Takes advantage of the network infrastructure and network protocols we have in place today;
+    Take advantage of the network infrastructure and network protocols we have in place today;
+  \item
+    Strong focus on reliability;
 \end{itemize}
 
 Besides the specification and architectural model of our system we also provide
