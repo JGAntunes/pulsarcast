@@ -768,12 +768,13 @@ ensuring a highly resilient network.  Finally, it seeks to reduce message
 duplication factor (i.e. nodes receiving the same message more than once).
 
 Architecturally speaking, one can see the similarities between Poldercast and
-SELECT \cite{Apolonia2018}, as it too relies on a set of 3 different overlays,
-working together to fulfil subscriptions. However, SELECT brings a different
-set of properties to the table, as it maps the social connection graph of the
-peers to the actual overlays operating underneath. This way, the system is able
-to exploit both the social graph and the online activity of each social user
-(each peer) to establish connections and disseminate messages accordingly.
+SELECT \cite{Apolonia2018}, as it too relies on a set of three different
+overlays, working together to fulfil subscriptions. However, SELECT brings a
+different set of properties to the table, as it maps the social connection
+graph of the peers to the actual overlays operating underneath. This way, the
+system can exploit both the social graph and the online activity of each social
+user (each peer) to establish connections and disseminate messages accordingly
+and avoid an unnecessary number of hops.
 
 \subsection{Systems Analysis}\label{systems-overview}
 
@@ -803,7 +804,7 @@ sections.
     Poldercast \cite{Setty2012} & Topic based & Decentralised & Ring based \acrshort{dht}/ Vicinity / Cyclon & Ring overlay per topic & Ring overlay routing & Yes & Yes (every publisher is a subscriber) & High resilience to churn, no subscription persistence \\\hline
     \end{tabular}
     \caption{Comparison table for the seminal pub-sub systems covered\textsuperscript{*}}
-    \small\textsuperscript{*} To keep table size fit in one page with a clear comparative overview we only cover seminal work
+    \small\textsuperscript{*} To keep table size fit in one page with a clear comparative overview, we only cover seminal work
   \label{table:relevant-systems}
 \end{sidewaystable}
 
