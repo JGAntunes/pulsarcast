@@ -2,27 +2,17 @@
 
 \section{Introduction}\label{section:introduction}
 
+
 The publish-subscribe (pub-sub) interaction paradigm is an approach that has
 received an increasing amount of attention over the course of the century
-\cite{Kermarrec2013} \cite{Eugster2003}.  This is mainly due to its special
-properties, that allow for full decoupling of all the communicating parties.
-Taking a closer look at this definition one can see that this comes hand in
-hand with the way information is consumed nowadays, with the exponential growth
-of social networks like Twitter and the usage of feeds such as RSS.
-
-In the publish-subscribe communication paradigm, subscribers (or consumers)
-sign up for events, or classes of events, from publishers (or producers) that
-are subsequently asynchronously delivered. This decoupling can be broken into
-three different parts:
-
-\begin{itemize}
-  \item
-    Decoupling in time - publishers and subscribers do not need to be interacting with each other at the same time;
-  \item
-    Decoupling in space - both parties do not need to need to know each other or be in the same space in order to communicate;
-  \item
-    Synchronisation - publishers and subscribers do not need to be blocked by each other in order to produce or consume content:
-\end{itemize}
+\cite{Kermarrec2013} \cite{Eugster2003}. This is mainly due to its special
+properties, that allow for full decoupling of time, space and synchronisation
+of all the communicating parties. In this interaction paradigm, subscribers (or
+consumers) sign up for events, or classes of events, from publishers (or
+producers) that are subsequently asynchronously delivered. Taking a closer look
+at this definition one can see that this comes hand in hand with the way
+information is consumed nowadays, with the exponential growth of social
+networks like Twitter and the usage of feeds such as RSS.
 
 Due to the properties described above, a lot of applications rely on the
 publish-subscribe paradigm and a lot of work has been done by companies like
@@ -58,15 +48,15 @@ properties:
 
 \begin{itemize}
   \item
-    Strong focus on reliability;
-  \item
     Eventual delivery guarantees;
   \item
     Data persistence;
   \item
     Ability to scale to a vast number of users;
   \item
-    Takes advantage of the network infrastructure and network protocols we have in place today;
+    Take advantage of the network infrastructure and network protocols we have in place today;
+  \item
+    Strong focus on reliability;
 \end{itemize}
 
 Besides the specification and architectural model of our system we also provide

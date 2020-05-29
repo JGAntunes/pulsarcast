@@ -22,15 +22,7 @@ a topic, \emph{subscribe} to a topic, \emph{unsubscribe} from a topic and
 relies on two overlays to fulfil its needs. Kadmelia DHT, used for peer
 discovery, content discovery and to bootstrap our other overlay, our per-topic
 dissemination trees. These trees are critical for us to disseminate information
-across our decentralised network.  Figure \ref{fig:pulsarcast-overlays}
-illustrates the multiple overlays in action.
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.48\textwidth]{img/pulsarcast-overlays.png}
-  \caption{Representation of the Pulsarcast overlays}
-  \label{fig:pulsarcast-overlays}
-\end{figure}
+across our decentralised network.
 
 When a peer publishes an event or creates a new topic a set of the overlays
 previously described is used accordingly. For Pulsarcast, both of these
