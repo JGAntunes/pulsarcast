@@ -1,0 +1,62 @@
+\documentclass[sigplan, screen, nonacm]{acmart}
+\usepackage{graphicx}
+\usepackage{fixltx2e}
+\usepackage[nolist,nohyperlinks]{acronym}
+\usepackage[utf8]{inputenc}
+
+% Extra configs
+\input{extra.tex}
+
+% \acmDOI{x.yyyyy.kkkkk}
+% \acmISBN{x-y-z}
+
+%Conference
+% \acmConference[Foobar]{Test}{Test}{Test} 
+% \acmYear{2018}
+% \copyrightyear{2018}
+
+% \acmArticle{4}
+% \acmPrice{15.00}
+
+
+% Title
+
+\begin{document}
+\title[Pulsarcast]{Pulsarcast - Scalable and reliable pub-sub over P2P networks}
+
+
+\renewcommand{\shorttitle}{Pulsarcast}
+
+
+\author{João Antunes}
+\affiliation{%
+  \institution{INESC-ID Lisboa\\ULisboa / Instituto Superior Técnico}
+}
+\email{me@jgantunes.com}
+
+\author{Luís Veiga}
+\affiliation{%
+  \institution{INESC-ID Lisboa\\ULisboa / Instituto Superior Técnico}
+}
+\email{luis.veiga@inesc-id.pt}
+
+\author{David Dias}
+\affiliation{%
+  \institution{Protocol Labs}
+}
+\email{david@protocol.ai }
+
+\input{sections/abstract.tex}
+\maketitle
+\input{sections/keywords.tex}
+\input{sections/introduction.tex}
+\input{sections/related-work.tex}
+\input{sections/pulsarcast.tex}
+\input{sections/implementation.tex}
+\input{sections/evaluation.tex}
+\input{sections/conclusion.tex}
+
+\bibliographystyle{plain}
+\bibliography{bibliography/dissertation}
+
+\end{document}
