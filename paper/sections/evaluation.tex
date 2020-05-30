@@ -146,3 +146,84 @@ behaviours of the system.
 It is essential to keep in mind that some of the metrics under the QoS group
 only make sense in Pulsarcast test runs, hence will be ignored when running the
 baseline Floodsub solution.
+
+We ran 3 different scenarios under 2 different sets of network conditions to an
+effective total of 6 different executions. For each of the 3 different
+scenarios we executed one under normal/undisturbed network conditions and
+another using Toxiproxy's features, adding a latency of 500 milliseconds and
+300 milliseconds of jitter to every incoming TCP packet. The scenarios we ran
+were the following:
+
+\begin{itemize}
+  \item Pulsarcast without order guarantee (basic usage, every node can publish to any topic)
+  \item Floodsub (IPFS' pub-sub implementation)
+  \item Pulsarcast with order guarantees (only one node per topic is allowed to publish and all nodes can request to publish)
+\end{itemize}
+
+For Pulsarcast without order guarantee our fultilment results were the following:
+\begin{itemize}
+\item Under normal network conditions
+\begin{itemize}
+  \item 99\% of subscription coverage, having all the events injected into the system as reference
+  \item 99\% of subscription coverage, having the events effectively published as reference
+\end{itemize}
+\item Under abnormal network conditions
+\begin{itemize}
+  \item 51\% of subscription coverage, having all the events injected into the system as reference
+  \item 86\% of subscription coverage, having the events effectively published as reference
+\end{itemize}
+\end{itemize}
+
+Figures \ref{fig:graph-pulsarcast-event-fulfillment-comparison},
+\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison},
+\ref{fig:graph-pulsarcast-latency-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison} show
+us a comparison of event fulfilment rates across topics. A couple of factors
+contributed to the discrepancy between the values of the first and the second
+executions. The first one is an implementation detail in our Javascript
+Pulsarcast module, where on each command it receives, it waits on the initial
+DHT persistence and propagation of events/topics before returning control to
+the caller (and consequently replying to the clients of our HTTP API). This
+creates a natural back pressuring system that ended up dragging the second
+execution for 13h versus the 85 minutes that took for the first execution. The
+long execution ended up putting a lot of pressure in our testbed which
+terminated two Pulsarcast nodes due to resource limitations. Nevertheless, our
+fulfilment rates are almost perfect for the first execution and still
+considerably high under abnormal network conditions. As for resource usage our
+first execution had a maximum memory consumption of 31.924 GiB across the
+cluster, with an average of 0.319 GiB per node and a P99 of 0.378 GiB. For the
+second execution our memory footprint was fairly higher (responsible for the
+node terminations), with a total consumption of 35.8 GiB, average of 0.36 per
+node and a P99 of 0.43 GiB. As expected, given our systems were mostly idle,
+CPU usage was much lower in the second execution, between 3 and 4 vCPUs in the
+first test run and 0.6 and 1.25 in the second one.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-event-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee - Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-event-percentage-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee - Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-event-percentage-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-latency-event-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of of events fulfilled by topic in a log scale}
+  \label{fig:graph-pulsarcast-latency-event-fulfillment-comparison}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
+  \caption{Pulsarcast without order guarantee and latency - Comparison of percentage of events fulfilled by topic}
+  \label{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison}
+\end{figure}
+
+For our second scenario, Pulsarcast with order guarantees, we obtained
