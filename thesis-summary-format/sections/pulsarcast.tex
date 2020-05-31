@@ -5,7 +5,7 @@
 
 Pulsarcast is a peer to peer, pub-sub, topic-based system focused on
 reliability, eventual delivery guarantees, and data persistence. Properties
-that usually associated with centralised pub-sub solutions. 
+usually associated with centralised pub-sub solutions. 
 
 We opted for the more straightforward topic-based subscription model given
 that, in our view, a well structured and implemented topic-based model is more
@@ -28,23 +28,7 @@ When a peer publishes an event or creates a new topic a set of the overlays
 previously described is used accordingly. For Pulsarcast, both of these
 actions, happen to take a similar course. That is because the system views
 these pieces of information (or descriptors as we call it) as fairly similar,
-given their importance. Figures \ref{fig:pulsarcast-descriptor-creation} and
-\ref{fig:pulsarcast-descriptor-query} provide an overview of how the flows for
-creating this information and for accessing it look like.
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.39\textwidth]{img/pulsarcast-descriptor-creation.png}
-  \caption{Flow for creating a new Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-creation}
-\end{figure}
-
-\begin{figure}[tb!]
-  \centering
-  \includegraphics[width=0.39\textwidth]{img/pulsarcast-descriptor-query.png}
-  \caption{Flow for querying a Topic/Event descriptor}
-  \label{fig:pulsarcast-descriptor-query}
-\end{figure}
+given their importance.
 
 Every topic and event is stored in the Kadmelia DHT before being forwarded
 through the topic dissemination trees. This ensures the data is persisted by a
@@ -210,7 +194,6 @@ procedure to create a new topic.
 
 \SetKwProg{Fn}{Function}{}{}
 
-\vspace{8pt}
 \begin{algorithm}
   \SetAlgoLined
   \Fn{CreateTopic(newTopic)}{
@@ -234,7 +217,6 @@ procedure to create a new topic.
   \caption{Create a new topic}
 	\label{alg:new-topic}
 \end{algorithm}
-\vspace{8pt}
 
 With the topic descriptor stored and available to the whole network, its
 creator will act as the root node in this newly created topic dissemination
@@ -261,7 +243,6 @@ neighbour, a retry mechanism is in place for a limited amount of retries (a
 configurable parameter). If the node is still unable to connect, then it goes
 through the subscription procedure again.
 
-\vspace{8pt}
 \begin{algorithm}
   \SetAlgoLined
   \Fn{ReceivedJoin(fromNodeId, topicId)}{
@@ -292,7 +273,6 @@ through the subscription procedure again.
   \caption{Join request handler for each node}
     \label{alg:subscribe}
 \end{algorithm}
-\vspace{8pt}
 
 \begin{figure}[hb!]
   \centering
@@ -370,7 +350,6 @@ this has not gone through. All of the logic we have covered around event
 dissemination is better detailed in the Algorithms \ref{alg:receive-event} and
 \ref{alg:send-event}.
 
-\vspace{8pt}
 \begin{algorithm}
   \SetAlgoLined
   \Fn{ReceivedEvent(fromNodeId, eventData)}{
@@ -392,9 +371,7 @@ dissemination is better detailed in the Algorithms \ref{alg:receive-event} and
   \caption{Event handler for each node}
     \label{alg:receive-event}
 \end{algorithm}
-\vspace{8pt}
 
-\vspace{8pt}
 \begin{algorithm}
   \SetAlgoLined
   \Fn{SendEvent(eventData)}{
@@ -422,25 +399,21 @@ dissemination is better detailed in the Algorithms \ref{alg:receive-event} and
   \caption{Event forwarding function}
     \label{alg:send-event}
 \end{algorithm}
-\vspace{8pt}
 
-It is essential to understand some of the properties that these multiple
-configuration options allow. The simplest example would be a scenario where
-only the author of a topic is allowed to publish, event linking is based on the
-last seen event and request to publish is allowed. In this example, despite
-every node being allowed to create content, we can achieve order guarantee,
-with a single stream of events all linked together. Another example would be a
-scenario where we have a whitelist of allowed publishers, no request to publish
-allowed and last seen event linking taking place. With this, we get a simple
-producer/consumer scenario, with a list of a few selected and vouched for
-producers that every node is aware of (that could even be expanded later on by
-the topic author). Finally, on the other end of the spectrum, we have a
-scenario where everyone is allowed to publish, and custom event linking is
-allowed. Here, we are essentially giving the ability for clients and
-applications to use event trees to represent data in however they see fit given
-that, with custom event linking, applications can shape the event trees however
-they like. Links can go as far as to imply event causality if applications are
-programmed and configured as such. All of these scenarios came from a
-realisation that it did not make sense to limit Pulsarcast's uses out of the
-box, especially taking account that through simple configuration we could cater
-for a broader set of use cases and applications.
+We will now highlight some of the properties these configuration options allow.
+The simplest example would be a scenario where only the author of a topic is
+allowed to publish, event linking is based on the last seen event and request
+to publish is allowed. In this example, despite every node being allowed to
+create content, we can achieve order guarantee, with a single stream of events
+all linked together. Another example would be a scenario where we have a
+whitelist of allowed publishers, no request to publish allowed and last seen
+event linking taking place. With this, we get a simple producer/consumer
+scenario, with a list of a few selected and vouched for producers that every
+node is aware of (that could even be expanded later on by the topic author).
+Finally, on the other end of the spectrum, we have a scenario where everyone is
+allowed to publish, and custom event linking is allowed. Here, we are
+essentially giving the ability for clients and applications to use event trees
+to represent data in however they see fit given that, with custom event
+linking, applications can shape the event trees however they like. Links can go
+as far as to imply event causality if applications are programmed and
+configured as such.
