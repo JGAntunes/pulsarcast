@@ -221,22 +221,22 @@ procedure to create a new topic.
 With the topic descriptor stored and available to the whole network, its
 creator will act as the root node in this newly created topic dissemination
 tree. When a node wants to subscribe to this topic, it starts by fetching its
-descriptor from the Kademlia DHT. After some sanity checks, such as
-checking if the node is already part of the dissemination tree, we use the
-Kadmelia DHT to find the closest known peer to the author of the
-topic. Keep in mind that we are not hitting the network and performing a
-Kadmelia lookup operation, we are resorting to information previously stored
-locally by the DHT in its K buckets. The node stores the closest
-known peer as its parent in this topic dissemination tree. The join request is
-then forwarded to it where the sender peer ID is extracted and used
-as its child in this topic dissemination tree, followed by repeating the whole
-process. This recursive operation, across multiple nodes in the network, ends
-when the join request hits a node that is either already part of the
-dissemination tree for this topic or, the actual author of the topic. Algorithm
-\ref{alg:subscribe} provides a more detailed generic procedure to be used at
-every node when receiving or sending a subscription request (or a join request
-as we call it) and Figure \ref{fig:pulsarcast-subscription-flow} tries to
-provide a visual representation of the whole subscription flow. In order to
+descriptor from the Kademlia DHT. After some sanity checks, such as checking if
+the node is already part of the dissemination tree, we use the Kadmelia DHT to
+find the closest known peer to the author of the topic. Keep in mind that we
+are not hitting the network and performing a Kadmelia lookup operation, we are
+resorting to information previously stored locally by the DHT in its K buckets.
+The node stores the closest known peer as its parent in this topic
+dissemination tree. The join request is then forwarded to it where the sender
+peer ID is extracted and used as its child in this topic dissemination tree,
+followed by repeating the whole process. This recursive operation, across
+multiple nodes in the network, ends when the join request hits a node that is
+either already part of the dissemination tree for this topic or, the actual
+author of the topic. Algorithm \ref{alg:subscribe} provides a more detailed
+generic procedure to be used at every node when receiving or sending a
+subscription request (or a join request as we call it). Figure
+\ref{fig:pulsarcast-subscription-flow} in Appendix \ref{section:appendix}
+provides a visual representation of the whole subscription flow. In order to
 maintain the dissemination trees, every node must keep some state of its
 neighbours for every topic. If by some chance a node is unable to connect to a
 neighbour, a retry mechanism is in place for a limited amount of retries (a
@@ -274,13 +274,6 @@ through the subscription procedure again.
     \label{alg:subscribe}
 \end{algorithm}
 
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.4\textwidth]{img/pulsarcast-subscription-flow.png}
-  \caption{Overview of the flow for creating a new subscription}
-  \label{fig:pulsarcast-subscription-flow}
-\end{figure}
-
 Considering the topic creation and subscription management previously discussed
 we can see that event dissemination becomes easier to handle, almost as a
 consequence of the way the subscription management is built, and dissemination
@@ -300,22 +293,8 @@ topic, it can configure:
 These options are \emph{requestToPublish}, \emph{allowedPublishers} and
 \emph{eventLinking}, all kept under the meta property of the topic descriptor.
 Figures \ref{fig:pulsarcast-publish-order-guarantee} and
-\ref{fig:pulsarcast-publish-custom} provide visual aids to how these options
-come together for event dissemination.
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-order-guarantee.png}
-  \caption{Event dissemination mechanism for a topic with only the author allowed to publish, last seen event linking and request to publish allowed. This scenario provides order guarantee.}
-  \label{fig:pulsarcast-publish-order-guarantee}
-\end{figure}
-
-\begin{figure}[hb!]
-  \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-custom.png}
-  \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
-  \label{fig:pulsarcast-publish-custom}
-\end{figure}
+\ref{fig:pulsarcast-publish-custom} in Appendix \ref{section:appendix} provide
+visual aids to how these options come together for event dissemination.
 
 When a node wants to publish an event in a topic, it starts by fetching the
 topic descriptor, first locally and then, if it is not present, from the

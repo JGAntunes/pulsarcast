@@ -3,61 +3,8 @@
 \section{Evaluation}
 \label{section:evaluation}
 
-As part of our implementation, we needed a way to test our Pulsarcast system.
-However we had a set of specific requirements that made our choice of tools
-harder. We needed something that fulfilled the following:
-
-\begin{itemize}
-  \item Easily deploy and test different versions of our module.
-  \item Run tests not only on Pulsarcast but also on IPFS' own pub-sub
-    implementation.
-  \item Able to extract relevant usage metrics.
-  \item Simulate network constraints such as latency.
-  \item Able to run locally but easily scalable to a large network.
-  \item Can be controlled from a central point, while being able to interact
-    with specific nodes in the system.
-  \item Easy to create scripts for, so that we could automate as much of our
-    test suite as possible.
-\end{itemize}
-
-To achieve this we relied on containers, specifically
-Docker~\footnote{\url{https://www.docker.com/products/container-runtime}}
-containers, which we used to create a containerised version of our module. To
-orchestrate our containerised application we used
-Kubernetes~\footnote{\url{https://kubernetes.io/}}, an open source
-orchestration platform based on Google's learnings on running containerised
-workloads at scale~\footnote{\url{https://research.google/pubs/pub43438/}}, and
-one of the most popular solutions in the field.
-
-To aggregate, correlate and analyse metrics and logs we used
-Elasticsearch~\footnote{\url{https://www.elastic.co/products/elasticsearch}},
-Beats~\footnote{\url{https://www.elastic.co/products/beats}},
-Logstash~\footnote{\url{https://www.elastic.co/products/logstash}} and
-Kibana~\footnote{\url{https://www.elastic.co/products/kibana}}. In order to
-simulate abnormal network conditions we relied on
-Toxiproxy~\footnote{\url{http://toxiproxy.io}}, a TCP proxy that,
-programatically through an HTTP API, allowed us to inject multiple kinds of
-faults.
-
-As we know it, Pulsarcast is just a module that applications can use to build
-on top of. In order to test it we created a fork of JS
-IPFS~\footnote{\url{https://github.com/jgantunes/js-ipfs}} where we integrated
-Pulsarcast. This not only provided us with a command line interfaace (CLI) and
-an HTTP API to interact with our system, but it also gave us direct access to
-IPFS' own pub-sub module, Floodsub, to which we wanted to compare our module.
-
-Figure \ref{fig:ipfs-testbed-and-metrics} provides an architectural overview of
-our system. All of the projects and code we created for the testbed are
-open
-source~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-testbed}}~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed}}~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed-cli}}.
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=0.45\textwidth]{img/ipfs-testbed-and-metrics.png}
-  \caption{Overview of our ipfs-testbed deployment and our metrics/logs
-  pipeline}
-  \label{fig:ipfs-testbed-and-metrics}
-\end{figure}
+A detailed description of our testbed can be seen in Appendix
+\ref{ap:sub:testbed}.
 
 Our whole setup consisted of a total of 5 VMs~\footnote{Special thanks to
 Microsoft and the Azure team for supporting our efforts and offering us free
@@ -164,9 +111,8 @@ For Pulsarcast without order guarantee our fultilment results were the following
 \end{itemize}
 \end{itemize}
 
-Figures \ref{fig:graph-pulsarcast-event-fulfillment-comparison},
-\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} and
-\ref{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison} show
+Figures \ref{fig:graph-pulsarcast-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-event-percentage-fulfillment-comparison} show
 us a comparison of event fulfilment rates across topics. A couple of factors
 contributed to the discrepancy between the values of the first and the second
 executions. The first one is an implementation detail in our Javascript
@@ -201,13 +147,6 @@ first test run and 0.6 and 1.25 in the second one.
   \label{fig:graph-pulsarcast-event-percentage-fulfillment-comparison}
 \end{figure}
 
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
-  \caption{Pulsarcast without order guarantee and latency - Comparison of percentage of events fulfilled by topic}
-  \label{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison}
-\end{figure}
-
 For Pulsarcast with order guarantee our fultilment results were the following:
 \begin{itemize}
 \item Under normal network conditions
@@ -222,9 +161,8 @@ For Pulsarcast with order guarantee our fultilment results were the following:
 \end{itemize}
 \end{itemize}
 
-Figures \ref{fig:graph-pulsarcast-order-event-fulfillment-comparison},
-\ref{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison} and
-\ref{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison} show
+Figures \ref{fig:graph-pulsarcast-order-event-fulfillment-comparison} and
+\ref{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison} show
 us a comparison of event fulfilment rates across topics. Both executions saw 2
 nodes being terminated due to limitations on the resources available to the
 testbed, specifically CPU. These executions put a lot of stress into the root
@@ -254,25 +192,6 @@ second execution, between 3 and 4.5 vCPUs in the first test run and 0.93 and
   \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast with order guarantee - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
-  \caption{Pulsarcast with order guarantee and latency - Comparison of percentage of events fulfilled by topic}
-  \label{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
-\end{figure}
-
-It is important to highlight that, for all of the Pulsarcast executions we have
-described so far, network and memory usage across the cluster always grew
-linearly with the number of events received. Same for the RPC messages sent and
-received, as we can see from Figure \ref{fig:graph-pulsarcast-rpc}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-rpc.png}
-  \caption{Pulsarcast without order guarantee - Comparison of events received and RPC injected in the system}
-  \label{fig:graph-pulsarcast-rpc}
 \end{figure}
 
 Finally our Floodsub scenario executions gave us the following
@@ -317,18 +236,6 @@ cluster, three times as much for the respective Pulsarcast experiments.
   \label{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison}
 \end{figure}
 
-One aspect that we would like to highlight is the fact that we are not only
-compressing months of data into a largely shorter timepsan, we are also
-simulating interactions made by thousands of users into a much smaller set of
-nodes (one hundred). All of this of course in an environment based on
-virtualisation techniques and with a limited set of resources. This experiment
-is essentially pushing the boundaries of what both systems would handle on a
-real world scenario. Equally important to note is that, for Pulsarcast, every
-event effectively published, is stored in the DHT. So, it is possible for any
-application using Pulsarcast to resolve past or missing events from the event
-tree. This is the cornerstone of Pulsarcast's eventual delivery guarantees,
-hence why it is essential to look at the percentage of events effectively
-published as well as the subscription coverage for these same events. Taking
-those same numbers into consideration we can see a considerably high coverage
-percentage, with the lowest being 62\% for the order guarantee test with
-latency injected.
+Further details and considerations about our evaluation can be seen in Appendix
+\ref{ap:sub:detailed-results}.
+
