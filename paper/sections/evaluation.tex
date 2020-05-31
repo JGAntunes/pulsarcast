@@ -20,25 +20,24 @@ harder. We needed something that fulfilled the following:
     test suite as possible.
 \end{itemize}
 
-Out of this list, a core principle that can be extracted is
-reproducibility. Reproducibility allows us to run our testbed locally or in a
-cloud service somewhere in the world and still expect the same behaviour and
-results. Reproducibility is usually achieved through virtualisation mechanisms
-that allow a certain workload to behave and act the same, whether we are
-running it locally in our workstation or in a machine with different
-specifications in the other end of the world. Nowadays this is most commonly
-done through containerisation
-techniques~\footnote{\url{https://www.freebsd.org/doc/handbook/jails.html}}~\footnote{\url{https://blog.jessfraz.com/post/containers-zones-jails-vms}}
-with tools such as
-Docker~\footnote{\url{https://www.docker.com/products/container-runtime}}, which we
-used to create a containerised version of our module. To orchestrate our
-containerised application we used Kubernetes~\footnote{\url{https://kubernetes.io/}},
-an open source orchestration platform based on Google's learnings on running
-containerised workloads at
-scale~\footnote{\url{https://research.google/pubs/pub43438/}}, and one of the most
-popular solutions in the field.
+To achieve this we relied on containers, specifically
+Docker~\footnote{\url{https://www.docker.com/products/container-runtime}}
+containers, which we used to create a containerised version of our module. To
+orchestrate our containerised application we used
+Kubernetes~\footnote{\url{https://kubernetes.io/}}, an open source
+orchestration platform based on Google's learnings on running containerised
+workloads at scale~\footnote{\url{https://research.google/pubs/pub43438/}}, and
+one of the most popular solutions in the field.
 
-To aggregate, correlate and analyse metrics and logs we used Elasticsearch~\footnote{\url{https://www.elastic.co/products/elasticsearch}}, Beats~\footnote{\url{https://www.elastic.co/products/beats}}, Logstash~\footnote{\url{https://www.elastic.co/products/logstash}} and Kibana~\footnote{\url{https://www.elastic.co/products/kibana}}. In order to simulate abnormal network conditions we relied on Toxiproxy~\footnote{\url{http://toxiproxy.io}}, a TCP proxy that, programatically through an HTTP API, allowed us to inject multiple kinds of faults.
+To aggregate, correlate and analyse metrics and logs we used
+Elasticsearch~\footnote{\url{https://www.elastic.co/products/elasticsearch}},
+Beats~\footnote{\url{https://www.elastic.co/products/beats}},
+Logstash~\footnote{\url{https://www.elastic.co/products/logstash}} and
+Kibana~\footnote{\url{https://www.elastic.co/products/kibana}}. In order to
+simulate abnormal network conditions we relied on
+Toxiproxy~\footnote{\url{http://toxiproxy.io}}, a TCP proxy that,
+programatically through an HTTP API, allowed us to inject multiple kinds of
+faults.
 
 As we know it, Pulsarcast is just a module that applications can use to build
 on top of. In order to test it we created a fork of JS
@@ -61,7 +60,7 @@ source~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-
 \end{figure}
 
 Our whole setup consisted of a total of 5 VMs~\footnote{Special thanks to
-Microsoft and the Azure team for supporting our efforts and offer us free
+Microsoft and the Azure team for supporting our efforts and offering us free
 credits} acting as Kubernetes Worker nodes, each with two vCPUs, 16 GiB of RAM
 and 32 GiB of storage. In our cluster, besides other operational bits, we ran 3
 Elasticsearch instances, 1 Logstash instance, 1 Kibana and a total of 100 IPFS
@@ -80,12 +79,11 @@ consisting of a sample of approximately 25000 comments in a total of 23 topics
 (known as subreddits in the platform)~\footnote{\url{https://github.com/JGAntunes/pulsarcast-test-harness}}.
 
 The following graphs give us a distribution analysis of events published per
-topic (Figure \ref{fig:events-to-be-publisher-per-topic}), subscriptions per
-topic (Figure \ref{fig:subscriptions-per-topic}) and subscription distribution
-per nodes (Figure \ref{fig:subscription-distribution-per-node}). Given our
-dataset choice, we aimed for a non-uniform subscription distribution per topic
-and, as it would be expected in a real-world scenario, the distribution of
-events follows a power law based on their popularity. 
+topic (Figure \ref{fig:events-to-be-publisher-per-topic}) and subscriptions per
+topic (Figure \ref{fig:subscriptions-per-topic}). Given our dataset choice, we
+aimed for a non-uniform subscription distribution per topic and, as it would be
+expected in a real-world scenario, the distribution of events follows a power
+law based on their popularity. 
 
 \begin{figure}[!htb]
   \centering
@@ -99,13 +97,6 @@ events follows a power law based on their popularity.
   \includegraphics[width=0.35\textwidth]{img/subscriptions-per-topic.png}
   \caption{Subscription distribution per topic}
   \label{fig:subscriptions-per-topic}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=0.4\textwidth]{img/subscription-distribution-per-node.png}
-  \caption{Subscription distribution per number of nodes}
-  \label{fig:subscription-distribution-per-node}
 \end{figure}
 
 For each execution, we look to extract two key groups of data: resource usage
@@ -143,9 +134,8 @@ through the dissemination trees before being effectively published
 two different metrics allows us to better analyse and distinguish the different
 behaviours of the system.
 
-It is essential to keep in mind that some of the metrics under the QoS group
-only make sense in Pulsarcast test runs, hence will be ignored when running the
-baseline Floodsub solution.
+Some of the metrics under the QoS group only make sense in Pulsarcast test
+runs, hence will be ignored when running the baseline Floodsub solution.
 
 We ran 3 different scenarios under 2 different sets of network conditions to an
 effective total of 6 different executions. For each of the 3 different
@@ -275,8 +265,8 @@ second execution, between 3 and 4.5 vCPUs in the first test run and 0.93 and
 
 It is important to highlight that, for all of the Pulsarcast executions we have
 described so far, network and memory usage across the cluster always grew
-linearly with the number of events received. Same for the RPC messages sent, as
-we can see from Figure \ref{fig:graph-pulsarcast-rpc}
+linearly with the number of events received. Same for the RPC messages sent and
+received, as we can see from Figure \ref{fig:graph-pulsarcast-rpc}
 
 \begin{figure}[!htb]
   \centering
@@ -333,17 +323,12 @@ simulating interactions made by thousands of users into a much smaller set of
 nodes (one hundred). All of this of course in an environment based on
 virtualisation techniques and with a limited set of resources. This experiment
 is essentially pushing the boundaries of what both systems would handle on a
-real world scenario. It is also important to note that the percentage of events
-actually published is not at all a useful metric for Floodsub, given no
-acknowledgement whatsoever is made by the network when publishing an event,
-making it irrelevant.
-
-One crucial property of Pulsarcast that is important to remember is
-that, for every event effectively published, we store it in the DHT.
-So, it is possible for any application using Pulsarcast to resolve past or
-missing events from the event tree. This is the cornerstone of Pulsarcast's
-eventual delivery guarantees, hence why it is essential to look at the
-percentage of events effectively published as well as the subscription coverage
-for these same events. Taking those same numbers into consideration we can see
-a considerably high coverage percentage, with the lowest being 62\% for the
-order guarantee test with latency injected.
+real world scenario. Equally important to note is that, for Pulsarcast, every
+event effectively published, is stored in the DHT. So, it is possible for any
+application using Pulsarcast to resolve past or missing events from the event
+tree. This is the cornerstone of Pulsarcast's eventual delivery guarantees,
+hence why it is essential to look at the percentage of events effectively
+published as well as the subscription coverage for these same events. Taking
+those same numbers into consideration we can see a considerably high coverage
+percentage, with the lowest being 62\% for the order guarantee test with
+latency injected.
