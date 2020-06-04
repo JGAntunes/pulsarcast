@@ -24,9 +24,9 @@ discovery, content discovery and to bootstrap our other overlay, our per-topic
 dissemination trees. These trees are critical for us to disseminate information
 across our decentralised network.
 
-When a peer publishes an event or creates a new topic a set of the overlays
+When a peer publishes an event or creates a new topic, a set of the overlays
 previously described is used accordingly. For Pulsarcast, both of these
-actions, happen to take a similar course. That is because the system views
+actions happen to take a similar course. That is because the system views
 these pieces of information (or descriptors as we call it) as fairly similar,
 given their importance.
 
@@ -60,13 +60,13 @@ This is the core of Pulsarcast's eventual delivery guarantees.
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.45\textwidth]{img/pulsarcast-dag.png}
+  \includegraphics[width=0.45\textwidth]{../images/pulsarcast-dag.png}
   \caption{Representation of the Pulsarcast DAG}
   \label{fig:pulsarcast-dag}
 \end{figure}
 
 Given we are discussing addressability and linking between content, the
-representation used for our identifiers is an important part of our system
+representation used for our identifiers is an essential part of our system
 specification. That was one of the main reasons for us to borrow inspiration
 from systems like IPFS and decided to use \emph{CIDs} (Content
 Identifiers)~\footnote{\url{https://github.com/multiformats/cid}}.  A CID is a
@@ -152,7 +152,7 @@ accordingly (fetch it or not). Depending on the type of topic we have at hand
 (something we will cover further in this document) this parent link can have
 different meanings and relevance.
 
-The parent links in the topic descriptor acts as a reference to a previous
+The parent links in the topic descriptor act as a reference to a previous
 version of this same topic. Keep in mind that data in Pulsarcast is immutable.
 As such, one cannot update content that has already been published and
 disseminated. We can, however, create a new reference of it and link to what we
@@ -164,7 +164,7 @@ the topic metadata for example or additions of new sub-topics.
 In topic descriptors, sub-topic links are indexed under a \emph{\#} key.
 Commonly, these are indexed by name, but it is not mandatory, it is actually up
 to the topic and consequently its owner to choose accordingly.  There is no
-limit to how many sub-topics a topic can have. One significant note though is
+limit to how many sub-topics a topic can have. One important note though is
 that every topic comes with a default meta topic as a sub-topic. The idea is
 for this meta topic to be used to disseminate changes for the original topic
 descriptor.
@@ -177,7 +177,7 @@ which is the publisher field. This is because the producer of the content
 dissemination trees (publisher) might not be the same peer.
 
 Before we can speak about a new subscription, a topic must already exist. In
-order for this to happen a node starts by creating the meta topic descriptor.
+order for this to happen, a node starts by creating the meta topic descriptor.
 This meta topic descriptor is to be used to disseminate any changes relative to
 the topic descriptor at hand and is linked as a sub-topic of it. Procedure
 wise, the meta topic is created just like any other topic, with the same
@@ -221,27 +221,26 @@ procedure to create a new topic.
 With the topic descriptor stored and available to the whole network, its
 creator will act as the root node in this newly created topic dissemination
 tree. When a node wants to subscribe to this topic, it starts by fetching its
-descriptor from the Kademlia DHT. After some sanity checks, such as
-checking if the node is already part of the dissemination tree, we use the
-Kadmelia DHT to find the closest known peer to the author of the
-topic. Keep in mind that we are not hitting the network and performing a
-Kadmelia lookup operation, we are resorting to information previously stored
-locally by the DHT in its K buckets. The node stores the closest
-known peer as its parent in this topic dissemination tree. The join request is
-then forwarded to it where the sender peer ID is extracted and used
-as its child in this topic dissemination tree, followed by repeating the whole
-process. This recursive operation, across multiple nodes in the network, ends
-when the join request hits a node that is either already part of the
-dissemination tree for this topic or, the actual author of the topic. Algorithm
-\ref{alg:subscribe} provides a more detailed generic procedure to be used at
-every node when receiving or sending a subscription request (or a join request
-as we call it) and Figure \ref{fig:pulsarcast-subscription-flow} tries to
-provide a visual representation of the whole subscription flow. In order to
-maintain the dissemination trees, every node must keep some state of its
-neighbours for every topic. If by some chance a node is unable to connect to a
-neighbour, a retry mechanism is in place for a limited amount of retries (a
-configurable parameter). If the node is still unable to connect, then it goes
-through the subscription procedure again.
+descriptor from the Kademlia DHT. After some sanity checks, such as checking if
+the node is already part of the dissemination tree, we use the Kadmelia DHT to
+find the closest known peer to the author of the topic. Keep in mind that we
+are not hitting the network and performing a Kadmelia lookup operation, we are
+resorting to information previously stored locally by the DHT in its K buckets.
+The node stores the closest known peer as its parent in this topic
+dissemination tree. The join request is then forwarded to it where the sender
+peer ID is extracted and used as its child in this topic dissemination tree,
+followed by repeating the whole process. This recursive operation, across
+multiple nodes in the network, ends when the join request hits a node that is
+either already part of the dissemination tree for this topic or, the actual
+author of the topic. Algorithm \ref{alg:subscribe} provides a general procedure
+to be used at every node when receiving or sending a subscription request (or a
+join request as we call it) and Figure \ref{fig:pulsarcast-subscription-flow}
+tries to provide a visual representation of the whole subscription flow. In
+order to maintain the dissemination trees, every node must keep some state of
+its neighbours for every topic. If by some chance a node is unable to connect
+to a neighbour, a retry mechanism is in place for a limited amount of retries
+(a configurable parameter). If the node is still unable to connect, then it
+goes through the subscription procedure again.
 
 \begin{algorithm}
   \SetAlgoLined
@@ -276,7 +275,7 @@ through the subscription procedure again.
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/pulsarcast-subscription-flow.png}
+  \includegraphics[width=0.4\textwidth]{../images/pulsarcast-subscription-flow.png}
   \caption{Overview of the flow for creating a new subscription}
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
@@ -305,14 +304,14 @@ come together for event dissemination.
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-order-guarantee.png}
+  \includegraphics[width=0.3\textwidth]{../images/pulsarcast-publish-order-guarantee.png}
   \caption{Event dissemination mechanism for a topic with only the author allowed to publish, last seen event linking and request to publish allowed. This scenario provides order guarantee.}
   \label{fig:pulsarcast-publish-order-guarantee}
 \end{figure}
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-custom.png}
+  \includegraphics[width=0.3\textwidth]{../images/pulsarcast-publish-custom.png}
   \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
   \label{fig:pulsarcast-publish-custom}
 \end{figure}
@@ -321,17 +320,17 @@ When a node wants to publish an event in a topic, it starts by fetching the
 topic descriptor, first locally and then, if it is not present, from the
 Kadmelia DHT. The node then checks if it is allowed to publish through the
 topic configuration whitelist mechanism. This option, \emph{allowedPublishers},
-can either be enabled and, if so, a list of nodes is provided that is checked
-before publishing, or it can be disabled, and in that scenario, every node can
-publish a message. If the node cannot publish the message, it will check if it
-can submit a request to publish. This request to publish is another option set
-in the topic descriptor, through the \emph{requestToPublish} field, that, if
-enabled, allows every node in the network to submit these special requests.
+can be enabled and, if so, a list of nodes is provided that is checked before
+publishing. Alternatively, it can be disabled, and in that scenario, every node
+can publish a message. If the node cannot publish the message, it will check if
+it can submit a request to publish. This request to publish is another option
+set in the topic descriptor, through the \emph{requestToPublish} field, that,
+if enabled, allows every node in the network to submit these special requests.
 Optionally, it can also be a whitelist of nodes allowed to submit these. When a
 node forwards a request to publish across the network, it propagates across the
 dissemination tree (from children nodes to parents) until it eventually finds a
 node which is allowed to publish this event. This will dictate the difference
-in the publisher (node who actually publishes the content) and the author (node
+in the publisher (node who publishes the content) and the author (node
 responsible for creating the content in the first place).
 
 Upon receiving a publish event request, whether if it was initiated at this

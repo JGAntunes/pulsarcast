@@ -14,17 +14,17 @@ harder. We needed something that fulfilled the following:
   \item Able to extract relevant usage metrics.
   \item Simulate network constraints such as latency.
   \item Able to run locally but easily scalable to a large network.
-  \item Can be controlled from a central point, while being able to interact
+  \item Can be controlled from a central point while being able to interact
     with specific nodes in the system.
   \item Easy to create scripts for, so that we could automate as much of our
     test suite as possible.
 \end{itemize}
 
-To achieve this we relied on containers, specifically
+To achieve this, we relied on containers, specifically
 Docker~\footnote{\url{https://www.docker.com/products/container-runtime}}
 containers, which we used to create a containerised version of our module. To
 orchestrate our containerised application we used
-Kubernetes~\footnote{\url{https://kubernetes.io/}}, an open source
+Kubernetes~\footnote{\url{https://kubernetes.io/}}, an open-source
 orchestration platform based on Google's learnings on running containerised
 workloads at scale~\footnote{\url{https://research.google/pubs/pub43438/}}, and
 one of the most popular solutions in the field.
@@ -40,9 +40,9 @@ programatically through an HTTP API, allowed us to inject multiple kinds of
 faults.
 
 As we know it, Pulsarcast is just a module that applications can use to build
-on top of. In order to test it we created a fork of JS
+on top of. In order to test it, we created a fork of JS
 IPFS~\footnote{\url{https://github.com/jgantunes/js-ipfs}} where we integrated
-Pulsarcast. This not only provided us with a command line interfaace (CLI) and
+Pulsarcast. This not only provided us with a command-line interface (CLI) and
 an HTTP API to interact with our system, but it also gave us direct access to
 IPFS' own pub-sub module, Floodsub, to which we wanted to compare our module.
 
@@ -53,7 +53,7 @@ source~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.45\textwidth]{img/ipfs-testbed-and-metrics.png}
+  \includegraphics[width=0.45\textwidth]{../images/ipfs-testbed-and-metrics.png}
   \caption{Overview of our ipfs-testbed deployment and our metrics/logs
   pipeline}
   \label{fig:ipfs-testbed-and-metrics}
@@ -64,7 +64,7 @@ Microsoft and the Azure team for supporting our efforts and offering us free
 credits} acting as Kubernetes Worker nodes, each with two vCPUs, 16 GiB of RAM
 and 32 GiB of storage. In our cluster, besides other operational bits, we ran 3
 Elasticsearch instances, 1 Logstash instance, 1 Kibana and a total of 100 IPFS
-Testbed deployments (as described aboe). Because we wanted to avoid resource
+Testbed deployments (as described above). Because we wanted to avoid resource
 starvation and to better take advantage of the Kubernetes scheduler, our
 testbed deployments allocate 440 MiB of memory per deployment, each burstable
 to a maximum of 500 MiB. During our whole test execution, periodic HTTP health
@@ -87,14 +87,14 @@ law based on their popularity.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.35\textwidth]{img/events-to-be-publisher-per-topic.png}
+  \includegraphics[width=0.35\textwidth]{../images/events-to-be-publisher-per-topic.png}
   \caption{Event distribution per topic with log scale}
   \label{fig:events-to-be-publisher-per-topic}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.35\textwidth]{img/subscriptions-per-topic.png}
+  \includegraphics[width=0.35\textwidth]{../images/subscriptions-per-topic.png}
   \caption{Subscription distribution per topic}
   \label{fig:subscriptions-per-topic}
 \end{figure}
@@ -189,21 +189,21 @@ first test run and 0.6 and 1.25 in the second one.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-event-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-event-fulfillment-comparison.png}
   \caption{Pulsarcast without order guarantee - Comparison of events fulfilled by topic in a log scale}
   \label{fig:graph-pulsarcast-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast without order guarantee - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-event-percentage-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast without order guarantee and latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison}
 \end{figure}
@@ -244,21 +244,21 @@ second execution, between 3 and 4.5 vCPUs in the first test run and 0.93 and
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-event-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-order-event-fulfillment-comparison.png}
   \caption{Pulsarcast with order guarantee - Comparison of events fulfilled by topic in a log scale}
   \label{fig:graph-pulsarcast-order-event-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-order-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast with order guarantee - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-order-event-percentage-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast with order guarantee and latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
 \end{figure}
@@ -270,7 +270,7 @@ received, as we can see from Figure \ref{fig:graph-pulsarcast-rpc}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-rpc.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-rpc.png}
   \caption{Pulsarcast without order guarantee - Comparison of events received and RPC injected in the system}
   \label{fig:graph-pulsarcast-rpc}
 \end{figure}
@@ -305,14 +305,14 @@ cluster, three times as much for the respective Pulsarcast experiments.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-floodsub-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-floodsub-event-percentage-fulfillment-comparison.png}
   \caption{Floodsub - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-floodsub-event-percentage-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-floodsub-latency-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-floodsub-latency-event-percentage-fulfillment-comparison.png}
   \caption{Floodsub with latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison}
 \end{figure}

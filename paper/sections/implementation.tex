@@ -36,7 +36,7 @@ identifiers).
 
 \begin{figure}[hb!]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/pulsarcast-in-libp2p.png}
+  \includegraphics[width=0.4\textwidth]{../images/pulsarcast-in-libp2p.png}
   \caption{Our Pulsarcast module in the libp2p ecosystem}
   \label{fig:pulsarcast-in-libp2p}
 \end{figure}
@@ -48,7 +48,7 @@ Pulsarcast has five classes. These are:
   \item
     Pulsarcast - Our main class, responsible for holding the state of our node, managing peer lists and connections. It extends the built-in \verb|EventEmitter| class~\footnote{\url{https://nodejs.org/api/events.html}}, making our class capable of reproducing the event emitter pattern~\footnote{\url{https://nodejs.dev/the-nodejs-event-emitter}}, the mechanism we use to bubble up new Pulsarcast events to the application level.
   \item
-		Peer - An abstraction for the state of each peer, including connections, identifiers, adresses and dissemination trees.
+		Peer - An abstraction for the state of each peer, including connections, identifiers, addresses and dissemination trees.
   \item
     TopicNode - Abstracts the Topic descriptor for our Merkle DAG.
   \item
@@ -58,7 +58,7 @@ Pulsarcast has five classes. These are:
 \end{itemize}
 
 Listing \ref{pulsarcast-usage-example} provides a usage example of our
-Javascript module. Keep in mind that this is a oversimplified example of
+Javascript module. Keep in mind that this is an oversimplified example of
 course, with a single node, its purpose is to understand how the
 API~\footnote{The full documented API for our module - \url{https://github.com/JGAntunes/js-pulsarcast/blob/547ff33527f0df8c751d5fcd73d559fce59cdb77/docs/api.md}}
 comes together and allows applications to integrate with it.

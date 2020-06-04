@@ -8,21 +8,21 @@ an expanded view of Pulsarcast's architecture and implementation.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.4\textwidth]{img/pulsarcast-subscription-flow.png}
+  \includegraphics[width=0.4\textwidth]{../images/pulsarcast-subscription-flow.png}
   \caption{Overview of the flow for creating a new subscription}
   \label{fig:pulsarcast-subscription-flow}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-order-guarantee.png}
+  \includegraphics[width=0.3\textwidth]{../images/pulsarcast-publish-order-guarantee.png}
   \caption{Event dissemination mechanism for a topic with only the author allowed to publish, last seen event linking and request to publish allowed. This scenario provides order guarantee.}
   \label{fig:pulsarcast-publish-order-guarantee}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.3\textwidth]{img/pulsarcast-publish-custom.png}
+  \includegraphics[width=0.3\textwidth]{../images/pulsarcast-publish-custom.png}
   \caption{Event dissemination mechanism for a topic with custom event linking and global publishers allowed}
   \label{fig:pulsarcast-publish-custom}
 \end{figure}
@@ -107,7 +107,7 @@ source~\footnote{\url{https://github.com/JGAntunes/helm-charts/tree/master/ipfs-
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.45\textwidth]{img/ipfs-testbed-and-metrics.png}
+  \includegraphics[width=0.45\textwidth]{../images/ipfs-testbed-and-metrics.png}
   \caption{Overview of our ipfs-testbed deployment and our metrics/logs
   pipeline}
   \label{fig:ipfs-testbed-and-metrics}
@@ -139,21 +139,21 @@ received, as we can see from Figure \ref{fig:graph-pulsarcast-rpc}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-rpc.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-rpc.png}
   \caption{Pulsarcast without order guarantee - Comparison of events received and RPC injected in the system}
   \label{fig:graph-pulsarcast-rpc}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast with order guarantee and latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-order-latency-event-percentage-fulfillment-comparison}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.4\textwidth]{img/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
+  \includegraphics[width=0.4\textwidth]{../images/graph-pulsarcast-latency-event-percentage-fulfillment-comparison.png}
   \caption{Pulsarcast without order guarantee and latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-pulsarcast-latency-event-percentage-fulfillment-comparison}
 \end{figure}
