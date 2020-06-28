@@ -328,13 +328,13 @@ procedure to create a new topic.
 			$parent \leftarrow newTopic.parent$\;
   	  \eIf(\tcp*[r]{Check if the topic has a parent link}){$parent == null$}{
 				$metaTopic \leftarrow CreateMetaTopicDescriptor(newTopic)$\;
+			  $StoreInDHT(metaTopic)$\;
   	  }{
 				$metaTopic \leftarrow parent.subTopics.meta$\;
 			}
 			$topicData \leftarrow CreateTopicDescriptor(newTopic, metaTopic)$\;
 			$Subscribe(metaTopic)$\;
 			$Subscribe(topicData)$\;
-			$StoreInDHT(metaTopic)$\;
 			$StoreInDHT(topicData)$\;
 			$Publish(metaTopic, topicData)$\tcp*[r]{Publish the new topic in the meta topic}\
   	}

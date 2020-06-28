@@ -203,13 +203,13 @@ procedure to create a new topic.
 			$parent \leftarrow newTopic.parent$\;
   	  \eIf{$parent == null$}{
 				$metaTopic \leftarrow CreateMetaTopic(newTopic)$\;
+			  $StoreInDHT(metaTopic)$\;
   	  }{
 				$metaTopic \leftarrow parent.subTopics.meta$\;
 			}
 			$topicData \leftarrow CreateTopic(newTopic, metaTopic)$\;
 			$Subscribe(metaTopic)$\;
 			$Subscribe(topicData)$\;
-			$StoreInDHT(metaTopic)$\;
 			$StoreInDHT(topicData)$\;
 			$Publish(metaTopic, topicData)$\
   	}
