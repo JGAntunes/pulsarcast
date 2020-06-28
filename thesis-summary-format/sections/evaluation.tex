@@ -3,20 +3,19 @@
 \section{Evaluation}
 \label{section:evaluation}
 
-A detailed description of our testbed can be seen in Appendix
-\ref{ap:sub:testbed}.
-
-Our whole setup consisted of a total of 5 VMs~\footnote{Special thanks to
-Microsoft and the Azure team for supporting our efforts and offering us free
-credits} acting as Kubernetes Worker nodes, each with two vCPUs, 16 GiB of RAM
-and 32 GiB of storage. In our cluster, besides other operational bits, we ran 3
-Elasticsearch instances, 1 Logstash instance, 1 Kibana and a total of 100 IPFS
-Testbed deployments (as described aboe). Because we wanted to avoid resource
+Our whole setup consisted of a custom
+testbed~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed}}~\footnote{\url{https://github.com/JGAntunes/ipfs-testbed-cli}},
+with a total of 5 VMs~\footnote{Special thanks to Microsoft and the Azure team
+for supporting our efforts and offering us free credits} acting as Kubernetes
+Worker nodes, each with two vCPUs, 16 GiB of RAM and 32 GiB of storage. In
+our cluster, besides other operational bits, we ran 3 Elasticsearch
+instances, 1 Logstash instance, 1 Kibana and a total of 100 IPFS Testbed
+deployments (as described aboe). Because we wanted to avoid resource
 starvation and to better take advantage of the Kubernetes scheduler, our
 testbed deployments allocate 440 MiB of memory per deployment, each burstable
-to a maximum of 500 MiB. During our whole test execution, periodic HTTP health
-checks (part of the Kubernetes platform) make sure our deployments are working
-accordingly.
+to a maximum of 500 MiB. During our whole test execution, periodic HTTP
+health checks (part of the Kubernetes platform) make sure our deployments are
+working accordingly.
 
 To test our system accordingly, we wanted a dataset that could simulate a
 real-life scenario as much as possible. We chose to use a dataset of
@@ -235,7 +234,4 @@ cluster, three times as much for the respective Pulsarcast experiments.
   \caption{Floodsub with latency - Comparison of percentage of events fulfilled by topic}
   \label{fig:graph-floodsub-latency-event-percentage-fulfillment-comparison}
 \end{figure}
-
-Further details and considerations about our evaluation can be seen in Appendix
-\ref{ap:sub:detailed-results}.
 

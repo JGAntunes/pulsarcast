@@ -234,9 +234,7 @@ multiple nodes in the network, ends when the join request hits a node that is
 either already part of the dissemination tree for this topic or, the actual
 author of the topic. Algorithm \ref{alg:subscribe} provides a more detailed
 generic procedure to be used at every node when receiving or sending a
-subscription request (or a join request as we call it). Figure
-\ref{fig:pulsarcast-subscription-flow} in Appendix \ref{section:appendix}
-provides a visual representation of the whole subscription flow. In order to
+subscription request (or a join request as we call it).  In order to
 maintain the dissemination trees, every node must keep some state of its
 neighbours for every topic. If by some chance a node is unable to connect to a
 neighbour, a retry mechanism is in place for a limited amount of retries (a
@@ -292,9 +290,6 @@ topic, it can configure:
 
 These options are \emph{requestToPublish}, \emph{allowedPublishers} and
 \emph{eventLinking}, all kept under the meta property of the topic descriptor.
-Figures \ref{fig:pulsarcast-publish-order-guarantee} and
-\ref{fig:pulsarcast-publish-custom} in Appendix \ref{section:appendix} provide
-visual aids to how these options come together for event dissemination.
 
 When a node wants to publish an event in a topic, it starts by fetching the
 topic descriptor, first locally and then, if it is not present, from the
