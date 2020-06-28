@@ -1,10 +1,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {algocf}{\numberline {1}{\ignorespaces Create a new topic}}{28}{algocf.1}% 
-\contentsline {algocf}{\numberline {2}{\ignorespaces Join request handler for each node}}{29}{algocf.2}% 
-\contentsline {algocf}{\numberline {3}{\ignorespaces Event handler for each node}}{32}{algocf.3}% 
-\contentsline {algocf}{\numberline {4}{\ignorespaces Event forwarding function}}{33}{algocf.4}% 
+\contentsline {algocf}{\numberline {1}{\ignorespaces Create a new topic}}{28}{algocf.1}
+\contentsline {algocf}{\numberline {2}{\ignorespaces Join request handler for each node}}{29}{algocf.2}
+\contentsline {algocf}{\numberline {3}{\ignorespaces Event handler for each node}}{32}{algocf.3}
+\contentsline {algocf}{\numberline {4}{\ignorespaces Event forwarding function}}{33}{algocf.4}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
