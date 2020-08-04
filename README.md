@@ -60,7 +60,8 @@ and quite promising solution within the pub-sub and peer to peer ecosystem.
 
 ## Publications & Talks
 
-> [SOON™](http://i0.kym-cdn.com/photos/images/original/000/117/014/GsE3k.jpg)
+- [Pulsarcast: Scalable and reliable pub-sub over P2P networks](https://www.youtube.com/watch?v=D2UKQPKMjr4) - Protocol Labs research talk
+- [Testing P2P Applications with Kubernetes and Toxiproxy](https://www.youtube.com/watch?v=pP0fS-FCsjE) - IPFS community talk
 
 ## Acknowledgements
 
