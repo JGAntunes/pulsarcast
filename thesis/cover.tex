@@ -19,7 +19,7 @@
 % ---------------------------------------------------------
 %  MASTER THESIS DISSERTATION TITLE
 % ---------------------------------------------------------
-{\LARGE \textbf{\Title}}\\[1.0cm]
+{\LARGE \textbf{\Title}}\\[0.5cm]
 % ---------------------------------------------------------
 %  MASTER THESIS DISSERTATION SUBTITLE
 % ---------------------------------------------------------
@@ -31,7 +31,7 @@
 % ---------------------------------------------------------
 %  DISSERTATION DEGREE
 % -----------------------------------------------------------------
-{\large Thesis to obtain the Master of Science Degree in}\\[1.0cm]
+{\large Thesis to obtain the Master of Science Degree in}\\[0.3cm]
 % -----------------------------------------------------------------
 %  COURSE NAME
 % -----------------------------------------------------------------
@@ -40,24 +40,17 @@
 % -----------------------------------------------------------------
 %  ADVISORS NAME
 % ---------------------------------------------------------
-\begin{minipage}[t]{.4\textwidth}
+\begin{minipage}[t]{1\textwidth}
   \center
-  \begin{flushright}
-    {\large Supervisors:~~}
-  \end{flushright}
-\end{minipage}%
-\begin{minipage}[t]{.6\textwidth}
-  \center
-  \begin{flushleft}
-    {\Supervisors}
-  \end{flushleft}
-\end{minipage}\\
+  {\large Supervisors: \FirstSupervisor}\\
+  {\large \SecondSupervisor}
+\end{minipage}\\[1.0cm]
 %
-\if\IsFinalVersion 1
-  \vspace*{\finalAdvisorsSpacing}
-\else
-  \vspace*{\draftAdvisorsSpacing}
-\fi
+% \if\IsFinalVersion 1
+%   \vspace*{\finalAdvisorsSpacing}
+% \else
+%   \vspace*{\draftAdvisorsSpacing}
+% \fi
 % ---------------------------------------------------------
 %  JURI NAMES:
 %  - PRESIDENT
