@@ -8,7 +8,7 @@
 - Advisors: 
   - [Luís Veiga](http://www.gsd.inesc-id.pt/~lveiga/)
   - [David Dias](http://daviddias.me/)
-- 2017-2020
+- 2017-2021
 
 ## Implementation
 
@@ -60,6 +60,8 @@ and quite promising solution within the pub-sub and peer to peer ecosystem.
 
 ## Publications & Talks
 
+- [J. Antunes, D. Dias and L. Veiga, "Pulsarcast: Scalable, Reliable Pub-Sub over P2P Nets," 2021 IFIP Networking Conference (IFIP Networking), 2021, pp. 1-6, doi: 10.23919/IFIPNetworking52078.2021.9472799.](https://ieeexplore.ieee.org/document/9472799)
+  - [Paper](http://dl.ifip.org/db/conf/networking/networking2021/1570711719.pdf)
 - [Pulsarcast: Scalable and reliable pub-sub over P2P networks](https://www.youtube.com/watch?v=D2UKQPKMjr4) - Protocol Labs research talk
 - [Testing P2P Applications with Kubernetes and Toxiproxy](https://www.youtube.com/watch?v=pP0fS-FCsjE) - IPFS community talk
 
