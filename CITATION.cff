@@ -1,0 +1,43 @@
+title: "Pulsarcast: Scalable and reliable pub-sub over P2P networks"
+abstract: "The publish-subscribe paradigm is a wildly popular form of communication in complex distributed systems. The properties offered by it make it an ideal solution for a multitude of applications, ranging from social media to content streaming and stock exchange platforms. Consequently, a lot of research exists around it, with solutions ranging from centralised message brokers, to fully decentralised scenarios (peer to peer).
+
+Within the pub-sub realm not every solution is the same of course and trade-offs are commonly made between the ability to distribute content as fast as possible or having the assurance that all the members of the network will receive the content they have subscribed to. Delivery guarantees is something quite common within the area of centralised pub-sub solutions, there is, however, a clear lack of decentralised systems accounting for this. Specifically, a reliable system with the ability to provide message delivery guarantees and, more importantly, persistence guarantees. To this end, we present Pulsarcast, a decentralised, highly scalable, pub-sub, topic based system seeking to give guarantees that are traditionally associated with a centralised architecture such as persistence and eventual delivery guarantees.
+
+The aim of Pulsarcast is to take advantage of the network infrastructure and protocols already in place. Relying on a structured overlay and a graph based data structure, we build a set of dissemination trees through which our events will be distributed. Our work also encompasses a software module that implements Pulsarcast, with our experimental results showing that is a viable and quite promising solution within the pub-sub and peer to peer ecosystem."
+cff-version: 1.2.0
+authors:
+  - family-names: Antunes
+    given-names: João
+    orcid: "https://orcid.org/0000-0001-9062-4922"
+  - family-names: Dias
+    given-names: David
+  - family-names: Veiga
+    given-names: Luís
+    orcid: "https://orcid.org/0000-0002-9285-0736"
+keywords:
+  - p2p
+  - publish-subscribe
+  - decentralised
+  - reliability
+  - persistence
+  - "eventual delivery"
+message: "My M.Sc. Thesis at Técnico, Universidade de Lisboa. If you cite this work, please cite the article from the preferred-citation"
+repository: "https://github.com/jgantunes/pulsarcast"
+repository-code: "https://github.com/jgantunes/js-pulsarcast"
+preferred-citation:
+  title: "Pulsarcast: Scalable, Reliable Pub-Sub over P2P Nets"
+  abstract: "The publish-subscribe paradigm is a wildly popular form of communication in complex distributed systems. The properties offered by it make it an ideal solution for a multitude of applications, ranging from social media to content streaming and stock exchange platforms. Consequently, a lot of research exists around it, with solutions ranging from centralised message brokers, to fully decentralised scenarios (peer to peer). Within the pub-sub realm not every solution is the same of course and trade-offs are commonly made between the ability to distribute content as fast as possible or having the assurance that all the members of the network will receive the content they have subscribed to. Delivery guarantees is something quite common within the area of centralised pub-sub solutions, there is, however, a clear lack of decentralised systems accounting for this. Specifically, a reliable system with the ability to provide message delivery guarantees and, more importantly, persistence guarantees. To this end, we present Pulsarcast, a decentralised, highly scalable, pub-sub, topic based system seeking to give guarantees that are traditionally associated with a centralised architecture, such as persistence and eventual delivery guarantees. The aim of Pulsarcast is to take advantage of the network infrastructure and protocols already in place. Relying on a structured overlay and a graph based data structure, we build a set of dissemination trees through which our events will be distributed. Our work also encompasses a software module that implements Pulsarcast, with our experimental results showing that is a viable and quite promising solution within the pub-sub and peer to peer ecosystem."
+  authors:
+    - family-names: Antunes
+      given-names: João
+      orcid: "https://orcid.org/0000-0001-9062-4922"
+    - family-names: Dias
+      given-names: David
+    - family-names: Veiga
+      given-names: Luís
+      orcid: "https://orcid.org/0000-0002-9285-0736"
+  date-released: "2021-06-21"
+  identifiers:
+    - description: "2021 IFIP Networking Conference (IFIP Networking) workshop publication"
+      type: doi
+      value: 10.23919/ifipnetworking52078.2021.9472799
