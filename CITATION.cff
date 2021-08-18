@@ -37,7 +37,4 @@ preferred-citation:
       given-names: Luís
       orcid: "https://orcid.org/0000-0002-9285-0736"
   date-released: "2021-06-21"
-  identifiers:
-    - description: "2021 IFIP Networking Conference (IFIP Networking) workshop publication"
-      type: doi
-      value: 10.23919/ifipnetworking52078.2021.9472799
+  doi: "10.23919/ifipnetworking52078.2021.9472799"
